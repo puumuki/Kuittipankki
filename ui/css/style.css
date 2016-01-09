@@ -1,0 +1,66 @@
+.top-margin {
+	margin-top: 10px;
+}
+
+.bottom-margin {
+  margin-bottom: 10px;
+}
+
+.btn-file {
+    position: relative;
+    overflow: hidden;
+    border: solid 1px black;
+}
+.btn-file input[type=file] {
+    position: absolute;
+    top: 0;
+    right: 0;
+    min-width: 100%;
+    min-height: 100%;
+    font-size: 100px;
+    text-align: right;
+    filter: alpha(opacity=0);
+    opacity: 0;
+    outline: none;
+    background: white;
+    cursor: inherit;
+    display: block;
+}
+
+.badge-danger {
+  background-color: #d43f3a;
+}
+
+.badge-warning {
+  background-color: #d58512;
+}
+
+.badge-success {
+  background-color: #398439;
+}
+
+.badge-info {
+  background-color: #269abc;
+}
+
+.badge-inverse {
+  background-color: #333333;
+}
+
+.badge-highlight {
+    cursor: pointer;
+    border: 2px solid #028af4;
+}
+
+.dropzone {
+  border: 3px dashed #028af4;
+  border-radius: 10px;
+}
+
+.bootstrap-tagsinput {
+  display: block !important;
+}
+
+.title {
+  color: black !important;
+}

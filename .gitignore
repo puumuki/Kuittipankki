@@ -1,0 +1,5 @@
+server/node_modules/*
+server/pictures/*
+ui/bower_components/*
+ui/node_modules/*
+server/.editorconfig

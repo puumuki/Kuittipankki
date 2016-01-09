@@ -1,0 +1,86 @@
+
+<div class="container bottom-margin">
+  <div class="hero-unit">
+    
+
+    <div class="row" data-id="{{id}}">
+      <div class="col-md-8 col-md-offset-2 col-sm-12 col-xs-12">
+
+        <h1 class="title">{{name}}</h1>
+
+        <div class="row top-margin "> 
+          <div class="col-md-3 col-sm-3">
+            <label for="name">Tuotteen nimi</label>
+          </div>
+          <div class="col-md-9 col-sm-9">
+            <input id="name" type="text" name="name" placeholder="Tuotteen nimi" class="form-control" value="{{name}}" />
+          </div>
+        </div>
+
+        <div class="row top-margin ">
+          <div class="col-md-3 col-sm-3">
+            <label for="purchaseDate">Hankintapäivä</label>
+          </div>
+          <div class="col-md-9 col-sm-9">
+            <input id="purchaseDate" type="text" name="purchaseDate" class="datepicker form-control" value="{{{datetime purchaseDate}}}" />
+          </div>
+        </div>
+
+        <div class="row top-margin ">
+          <div class="col-md-3 col-sm-3">
+            <label for="warrantlyEndDate">Takuupäättyy</label>
+          </div>
+          <div class="col-md-9 col-sm-9 text-left">
+            <input id="warrantlyEndDate" type="text" name="warrantlyEndDate" class="datepicker form-control" value="{{{datetime warrantlyEndDate}}}" />
+          </div>
+        </div>       
+
+        <div class="row top-margin ">
+          <div class="col-md-3 col-sm-3">
+            <label for="varrantlyend">Kauppa</label>
+          </div>
+          <div class="col-md-9 col-sm-9">
+            <input type="text" name="store" placeholder="Hankintapaikka" class="form-control" value="{{store}}" />
+          </div>
+        </div>
+
+        <div class="row top-margin ">
+          <div class="col-md-3 col-sm-3 col-xs-12">
+            <label for="varrantlyend">Rekisteröity</label>
+          </div>
+          <div class="col-md-9 col-sm-9 col-xs-12">
+            <input type="text" name="registered" class="datepicker form-control" value="{{{datetime registered}}}" />
+          </div>
+        </div>   
+
+        <div class="row top-margin ">
+          <div class="col-md-3 col-sm-3 col-xs-12">
+            <label for="varrantlyend">Avainsanat</label>
+          </div>
+          <div class="col-md-9 col-sm-9 col-xs-12">
+            <input type="text" name="tags" class="tags form-control" value="{{tags}}" />
+          </div>
+        </div>   
+
+        <div class="row top-margin">
+          <div class="col-md-12 dropzone">
+          </div>
+        </div>
+
+        <div class="row top-margin">
+          <div class="col-md-12 text-right">
+            <button type="button" name="save" class="btn btn-default">Tallenna</button>
+            {{#if id}}
+            <a href="#receipt/view/{{id}}">
+              <button type="button" name="cancel" class="btn btn-default">Peruuta</button>
+            </a>
+            {{else}}
+            <a href="#">
+              <button type="button" name="cancel" class="btn btn-default">Peruuta</button>
+            </a>
+            {{/if}}
+          </div>
+        </div>
+      </div>
+    </div>
+</div>

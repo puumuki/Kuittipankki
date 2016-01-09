@@ -1,0 +1,59 @@
+
+<div class="container">
+
+  <div class="row">
+    <div class="col-md-12">
+      <div class="btn-group" role="group" aria-label="...">
+        <button data-sort="name" data-order="{{sort.order}}" type="button" class="btn btn-default sort">Nimi</button>
+        <button data-sort="created" data-order="{{sort.order}}" type="button" class="btn btn-default sort">Päivämäärä</button>
+      </div>
+
+      <div class="btn-group pull-right" role="group" aria-label="...">
+        <a href="#/receipt/new">
+          <button data-sort="name" type="button" class="btn btn-default">Uusi</button>
+        </a>
+      </div>
+
+      <div class="clearfix"></div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12">
+
+      <div class="list-group top-margin">
+          {{#each receipts}}
+               <a href="#receipt/view/{{id}}" class="list-group-item">
+                  <b>{{name}}</b> {{datetime created}}
+                  {{#each tags}}
+                      <span class="badge badge-info">{{this}}</span>
+                  {{/each}}
+              </a>
+          {{else}}
+              <a href="#" class="list-group-item">
+                Ei yhtään kuitteja saatavilla       
+              </a>
+          {{/each}}
+      </div>
+
+      <nav class="text-center">
+        <ul class="pagination">
+          <li>
+            <a href="#/{{previousPage}}" aria-label="Previous">
+              <span aria-hidden="true">&laquo;</span>
+            </a>
+          </li>
+          {{#each pages}}
+              <li {{#if active}}class="active"{{/if}}><a href="#/{{page}}">{{page}}</a></li>
+          {{/each}}
+          <li>
+            <a href="#/{{nextPage}}" aria-label="Next">
+              <span aria-hidden="true">&raquo;</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+
+</div>

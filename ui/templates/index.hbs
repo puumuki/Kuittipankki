@@ -1,0 +1,66 @@
+
+<div class="container">
+  <div class="hero-unit">
+    <a href="#receipt"><h1>Kuitti</h1></a>
+
+    <div class="row">
+      <div class="col-md-6">
+        <div class="row top-margin "> 
+          <div class="col-md-5"><label for="product-name">Tuote</label></div>
+          <div class="col-md-6">
+            <input id="product-name" type="text" name="date" class="form-control" >
+          </div>
+        </div>
+
+        <div class="row top-margin ">
+          <div class="col-md-5"><label for="date">Hankintapäivä</label></div>
+          <div class="col-md-6">
+            <input type="date" name="date" class="form-control" >
+          </div>
+        </div>
+
+        <div class="row top-margin ">
+          <div class="col-md-5"><label for="varrantlyend">Takuupäättyy</label></div>
+          <div class="col-md-6 text-left">
+            <input id="varrantlyend" type="date" name="varrantlyends" class="form-control" >
+          </div>
+        </div>
+
+        <div class="row top-margin ">
+          <div class="col-md-5"><label for="varrantlyend">Kauppa</label></div>
+          <div class="col-md-6">
+            <input type="text" name="varrantlyends" class="form-control" >
+          </div>
+        </div>
+
+        <div class="row top-margin ">
+          <div class="col-md-5"><label for="receipt">Kuitti</label></div>
+          <div class="col-md-6">
+                <div class="input-group">
+                    <span class="input-group-btn">
+                        <span class="btn btn-primary btn-file">
+                            Selaa&hellip; <input type="file" multiple>
+                        </span>
+                    </span>
+                    <input type="text" class="form-control" readonly>
+                </div>
+                <span class="help-block">
+                    Try selecting one or more files and watch the feedback
+                </span>
+          </div>
+        </div>   
+      </div>
+
+      <div class="col-md-6">
+        <img src="static/biltema-terasmittanauha.jpg" class="img-rounded" height="300">
+      </div>
+    </div>
+
+    <div class="row top-margin ">
+      <div class="col-md-12">
+        <button type="button" class="btn btn-default">Tallenna</button>
+        <button type="button" class="btn btn-default">Peruuta</button>
+      </div>
+    </div>
+  </div>
+</div>
