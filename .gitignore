@@ -3,3 +3,4 @@ server/pictures/*
 ui/bower_components/*
 ui/node_modules/*
 server/.editorconfig
+server/settings.js
