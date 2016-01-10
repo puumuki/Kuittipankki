@@ -8,11 +8,13 @@
         <button data-sort="created" data-order="{{sort.order}}" type="button" class="btn btn-default sort">Päivämäärä</button>
       </div>
 
+      {{#if authenticated}}
       <div class="btn-group pull-right" role="group" aria-label="...">
         <a href="#/receipt/new">
           <button data-sort="name" type="button" class="btn btn-default">Uusi</button>
         </a>
       </div>
+      {{/if}}
 
       <div class="clearfix"></div>
     </div>
@@ -22,20 +24,21 @@
     <div class="col-md-12">
 
       <div class="list-group top-margin">
-          {{#each receipts}}
-               <a href="#receipt/view/{{id}}" class="list-group-item">
-                  <b>{{name}}</b> {{datetime created}}
-                  {{#each tags}}
-                      <span class="badge badge-info">{{this}}</span>
-                  {{/each}}
-              </a>
-          {{else}}
-              <a href="#" class="list-group-item">
-                Ei yhtään kuitteja saatavilla       
-              </a>
-          {{/each}}
+        {{#each receipts}}
+           <a href="#receipt/view/{{id}}" class="list-group-item">
+            <b>{{name}}</b> {{datetime created}}
+            {{#each tags}}
+              <span class="badge badge-info">{{this}}</span>
+            {{/each}}
+          </a>
+        {{else}}
+          <a href="#" class="list-group-item">
+            Ei yhtään kuitteja saatavilla       
+          </a>
+        {{/each}}
       </div>
 
+      {{#if showPagination}}
       <nav class="text-center">
         <ul class="pagination">
           <li>
@@ -44,7 +47,7 @@
             </a>
           </li>
           {{#each pages}}
-              <li {{#if active}}class="active"{{/if}}><a href="#/{{page}}">{{page}}</a></li>
+              <li {{#if active}}class="active"{{/if}}><a href="#receipts/{{page}}">{{page}}</a></li>
           {{/each}}
           <li>
             <a href="#/{{nextPage}}" aria-label="Next">
@@ -53,6 +56,7 @@
           </li>
         </ul>
       </nav>
+      {{/if}}
     </div>
   </div>
 

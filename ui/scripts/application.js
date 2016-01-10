@@ -4,20 +4,14 @@ define(function(require) {
   var Backbone = require('backbone'), 
       Communicator = require('communicator'), 
       Router = require('router'), 
-      MenuView = require('menu-view'),
       $ = require('jquery'), 
-      ReceiptListView = require('receipt-list-view');
+      userService = require('user-service');
 
-	var App = new Backbone.Marionette.Application();
+  var App = new Backbone.Marionette.Application();
 
   App.router = new Router();
 
-  App.navigate = function(url) {
-    console.log('Navigating to '+url);
-    //window.location.href = url;
-    window.location.href = '#receipt/4';
-  }
-
+    //TODO: mode datapicker to seperated class
    $.datepicker.regional['fi'] = {
                closeText: 'Sulje',
                prevText: '&laquo;Edellinen',
@@ -40,24 +34,25 @@ define(function(require) {
       
   $.datepicker.setDefaults($.datepicker.regional['fi']);
 
-	/* Add application regions here */
-	App.addRegions({});
+  /* Add application regions here */
+  App.addRegions({});
 
-	/* Add initializers here */
-	App.addInitializer( function () {
+  /* Add initializers here */
+  App.addInitializer( function () {
     
-    var menu = new MenuView();
-    menu.setElement($('#menu'));
-    menu.render();
+    userService.fetchAuthenticatedUser().then(function(user) {
+      Communicator.mediator.trigger('app:user:authenticated', user);
+    });
 
-		//document.body.innerHTML = indexTemplate({ success: "CONGRATS!" });
-		Communicator.mediator.trigger("APP:START");
+
+    //document.body.innerHTML = indexTemplate({ success: "CONGRATS!" });
+    Communicator.mediator.trigger("app:start");
     Backbone.history.start();
 
-	});
+  });
 
   //Exposing Application to global scope
   window.App = App;
 
-	return App;
+  return App;
 });

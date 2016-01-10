@@ -5,3 +5,6 @@ ui/node_modules/*
 server/.editorconfig
 server/settings.js
 todo.txt
+server/data/receipts.json
+
+server/data/users.json

@@ -7,6 +7,7 @@ require.config({
     'backbone.marionette', 
     'bootstrap', 
     'bootstraptagsinput',
+    'backbone_bootstrap_modal',
     'dropzone', 
     'main'
   ],
@@ -45,6 +46,8 @@ require.config({
     underscore: '../bower_components/underscore-amd/underscore',
 
     bootstrap: 'bower_components/bootstrap/dist/js/bootstrap.js',
+
+    backbone_bootstrap_modal: '../bower_components/backbone.bootstrap-modal/src/backbone.bootstrap-modal.js',
 
     bootstraptagsinput: '../bower_components/bootstrap-tagsinput/dist/bootstrap-tagsinput.min',
 

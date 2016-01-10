@@ -77,4 +77,17 @@ router.get('/user/:id', function(req, res) {
   });
 });
 
+/* GET - Authenticated user */
+router.get('/userauthenticated', function(req, res) {
+  if( req.user ) {
+    res.send({
+      id: req.user.id,
+      username: req.user.username
+    });
+  } else {
+    res.status(403);
+    res.send({message:'Unauthrorized'});
+  }
+});
+
 module.exports = router;

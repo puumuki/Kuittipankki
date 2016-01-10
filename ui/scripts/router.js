@@ -4,24 +4,33 @@ define(function(require) {
   var ReceiptView = require('receipt-view');
   var ReceiptListView = require('receipt-list-view');
   var ReceiptEditView = require('receipt-edit-view');
+  var LoginView = require('login-view');
   var PictureView = require('picture-view');
-
+  var MenuView = require('menu-view');
   var Receipt = require('receipt');
-  var regionManager = require('regionManager');
+  var regionManager = require('region-manager');
   var receiptService = require('receipt-service');
-  
+  var userService = require('user-service');
+  var menuRegion = regionManager.addRegion('menu','#menu');
   var contentRegion = regionManager.addRegion('content','#content');
+  var Communicator = require('communicator');
+
+  contentRegion.show(new LoginView());
+
+  menuRegion.show(new MenuView());
 
   var ApplicationRouter = Backbone.Router.extend({
 
     routes: {
       "" : "receiptList",
-      ":page": "receiptList",
+      "receipts/:page":"receiptList",
       "receipt/view/:id": "receipt",    // #help
       "receipt/edit/:id": "editReceipt",
       "receipt/edit": "editReceipt",
       "receipt/new": "newReceipt",
-      "picture/:image": "picture"
+      "picture/:image": "picture",
+      "login": "login",
+      "logout": "logout"
     },
 
     receipt: function(id) {
@@ -75,6 +84,7 @@ define(function(require) {
           model: receipt
         }));
       }).fail(function(error) {
+        console.log(";D;D;",error);
         //TODO: Teepäs tähän virheenkäsittely
         console.error(error);
       });
@@ -96,6 +106,19 @@ define(function(require) {
         //TODO: Teepäs tähän utiliteetti dialogi error hässäkkä
         console.error("Could not fetch receipts", error);        
       });
+    },
+
+    login: function() {
+      contentRegion.show(new LoginView());
+    },
+
+    logout: function() {
+      userService.logout().then(function(data) {
+        Communicator.mediator.trigger('app:user:logout');
+        console.log(data.message);
+      }).fail(function(error) {
+        console.error("Error happened during logout", error);
+      })
     }
 
   });

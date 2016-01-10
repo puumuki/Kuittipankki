@@ -3,6 +3,8 @@ define(function(require) {
   var Backbone = require('backbone');
   var template = require('hbs!tmpl/receipt-list');
   var ReceiptCollection = require('receipt-collection');
+  var userService = require('user-service');
+  var Communicator = require('communicator');
 
   var items = 10;
   var offset = 0;
@@ -28,6 +30,12 @@ define(function(require) {
 
       this.page = parseInt( opts.page, 10 );
       this.items = opts.items;
+
+      Communicator.mediator.on('app:user:logout', _.bind(this._logout,this));
+    },
+
+    _logout: function() {
+      this.render();
     },
 
     _sortBy: function(event) {
@@ -36,8 +44,6 @@ define(function(require) {
         attribute: $(event.currentTarget).data('sort'),
         order: $(event.currentTarget).data('order') === 'asc' ? 'desc' : 'asc',
       };
-
-      console.log( this.sort );
 
       this.render();
     },
@@ -93,10 +99,12 @@ define(function(require) {
                                           this.page * this.items );
 
       return {
+        authenticated: !!userService.getAuthenticatedUser(),
         previousPage: this._previousPage(),
         nextPage: this._nextPage(),
         size: this.collection.size(),
         pages: this._pages(this.page),
+        showPaging: this._countOfPages() > 1,
         sort: this.sort,
         receipts: _.map( slice, function(item) {
           return item.toJSON();

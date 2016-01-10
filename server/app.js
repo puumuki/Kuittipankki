@@ -6,12 +6,15 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var exphbs  = require('express-handlebars');
 var expressValidator = require('express-validator');
-
+var passport = require('passport');
+var expressSession = require('express-session')
 var uploads = require('./routes/upload');
 var routes = require('./routes/index');
 var users = require('./routes/user');
 var receipts = require('./routes/receipts');
 var settings = require('./settings');
+var authentication = require('./authentication');
+var _ = require('underscore');
 
 var app = express();
 
@@ -20,6 +23,11 @@ app.locals.ENV = env;
 app.locals.ENV_DEVELOPMENT = env == 'development';
 
 console.info("Starting app in " + env + " mode." );
+
+passport.use(authentication.authenticationStrategy);
+
+passport.serializeUser(authentication.serializeUser);
+passport.deserializeUser(authentication.deserializeUser);
 
 // view engine setup
 
@@ -40,10 +48,17 @@ app.use(bodyParser.urlencoded({
   extended: true
 }));
 
-app.use( expressValidator() );
+app.use(expressSession({ secret: 'ads32432afdsf' }));
+
+app.use(passport.initialize());
+app.use(passport.session());
+
+app.use(expressValidator() );
 
 app.use(cookieParser());
+
 app.use(express.static(path.join(__dirname,'..', 'ui')));
+
 app.use('/pictures', express.static(path.join(__dirname,'pictures')));
 
 app.use('/', uploads);
@@ -51,11 +66,17 @@ app.use('/', routes);
 app.use('/', users);
 app.use('/', receipts);
 
+app.get('/logout', function(req, res){
+  req.logout();
+  res.send({message:'Session terminated'});
+});
 
-//TODO validointi, autentikointi
-//https://github.com/flosse/json-file-store
-
-
+app.post('/login',
+  passport.authenticate('local', {failureFlash: false}),  
+  // If this function gets called, authentication was successful.
+  // `req.user` contains the authenticated user.
+  authentication.loginRouteResponse
+);
 
 /// catch 404 and forward to error handler
 app.use(function(req, res, next) {

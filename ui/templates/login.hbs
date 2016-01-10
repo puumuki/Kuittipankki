@@ -1,0 +1,25 @@
+<div class='login'> 
+  
+  <div class="row">
+    <div class="col-md-4 col-md-offset-4 col-sm-4 col-sm-offset-4">
+
+      <div class="panel panel-default">
+        <!-- Default panel contents -->
+        <div class="panel-heading">Kirjaudu sisään</div>
+        
+        <div class="panel-body">
+          {{#if loginFailed}}
+          <div class="alert alert-warning" role="alert">Kirjautuminen epäonnistui, tarkistahan käyttäjätunnus ja salasana, kiitos.</div>
+          {{/if}}
+
+          <input type="text" class="form-control" placeholder="Käyttäjätunnus" name="username" required autofocus>
+          <input type="password" class="form-control" placeholder="Salasana" name="password" required>
+          <br />
+          <button class="btn btn-lg btn-primary btn-block login-btn" type="button">Kirjaudu</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+</div>

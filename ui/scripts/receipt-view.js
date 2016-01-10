@@ -3,6 +3,9 @@ define(function(require) {
   var Backbone = require('backbone');
   var template = require('hbs!tmpl/receipt');
   var receiptService = require('receipt-service');
+  var userService = require('user-service');
+  var _ = require('underscore');
+  var communicator = require('communicator');
 
   var ReceiptView = Backbone.Marionette.ItemView.extend({
 
@@ -10,6 +13,10 @@ define(function(require) {
 
     events: {
       'click button[name="delete"]' : '_deleteReceipt'
+    },
+
+    initialize: function() {
+      communicator.mediator.on('app:user:logout', _.bind(this.render, this));
     },
 
     _deleteReceipt: function() {
@@ -20,6 +27,12 @@ define(function(require) {
       }).fail(function(error) {
         console.error(error);
         //TODO: Make error handling
+      });
+    },
+
+    serializeData: function() {
+      return _.extend(ReceiptView.__super__.serializeData.call(this), {
+        readonly: !userService.getAuthenticatedUser()
       });
     },
 

@@ -8,7 +8,7 @@ var path = require('path');
 var easyimg = require('easyimage');
 var multipart = require('connect-multiparty');
 var Q = require('q');
-
+var authentication = require('./../authentication');
 
 //TODO validointi, autentikointi
 //https://github.com/flosse/json-file-store
@@ -24,9 +24,6 @@ const mimeType = {
 
 function createThumbnail( image ) {
   var deferred = Q.defer();
-
-  //console.log( "src", path.join(uploadDirectory, image) );
-  //console.log( "dest", path.join(uploadDirectory, "thumbnail." + image) );
 
   easyimg.thumbnail({
     src: path.join(uploadDirectory, image),
@@ -45,11 +42,9 @@ function createThumbnail( image ) {
 }
 
 /* POST - upload */
-router.post('/upload', multipart(), function(req, res) {
+router.post('/upload', authentication.isAuthorized, multipart(), function(req, res) {
 
   var receiptID = req.headers['receipt-id'];
-
-  console.log("Receipt-ID",receiptID );
 
   fs.readFile(req.files.file.path, function (err, data) {
 

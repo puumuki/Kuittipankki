@@ -5,6 +5,9 @@ define(function(require) {
   var moment = require('momentjs');
   var receiptService = require('receipt-service');
   var fileUploadService = require('file-upload-service');
+  var Communicator = require('communicator');
+  var userService = require('user-service');
+  var _ = require('underscore');
 
   function formatDate(dateString) {
     return moment(dateString,'DD.MM.YYYY').format('YYYY-MM-DD HH:mm:ss');
@@ -15,7 +18,7 @@ define(function(require) {
     template: template,
 
     ui: {
-      'title':'.title',
+      'title':'.panel-heading',
       'name':'input[name="name"]',
       'store': 'input[name="store"]',
       'warrantlyEndDate': 'input[name="warrantlyEndDate"]',
@@ -31,7 +34,15 @@ define(function(require) {
       'click button[name="save"]':'_save',
       'click .dz-image-preview': '_openImage'
     },
+
+    initialize: function() {
+      Communicator.mediator.on("app:user:logout",_.bind(this._onLogout, this));
+    },
     
+    _onLogout: function() {
+      this.render();
+    },
+
     _badgeHover: function(event) {
       $(event.currentTarget).addClass('badge-highlight');
     },
@@ -79,11 +90,12 @@ define(function(require) {
     },
 
     serializeData: function() {
-      var data = this.model.toJSON();
-      data.tags = _.filter( this.model.get('tags'), function(tag) {
-        return tag !== "";
-      }).join(',');
-      return data;
+      return _.extend( this.model.toJSON(), {
+        tags: _.filter( this.model.get('tags'), function(tag) {
+          return tag !== "";
+        }).join(','),
+        readonly: !userService.getAuthenticatedUser()
+      });
     },
 
     readData: function() {
@@ -119,17 +131,25 @@ define(function(require) {
         this.dropzone.emit("complete", mockFile);
       }, this));
 
+      if( !userService.getAuthenticatedUser() ) {
+        this.dropzone.disable();  
+      }     
 
       return this;
     },
 
     render: function() {
       ReceiptEditView.__super__.render.apply(this, arguments);
+      
       this.$('.datepicker').datepicker();
       this.ui.purchaseDate.datepicker("setDate", new Date(this.model.get('purchaseDate')));
       this.ui.warrantlyEndDate.datepicker("setDate", new Date(this.model.get('warrantlyEndDate')));
       this.ui.registered.datepicker("setDate", new Date(this.model.get('registered')));
-      this.$(".tags").tagsinput();
+      
+      if(userService.getAuthenticatedUser()) {
+        this.$(".tags").tagsinput();  
+      }
+
       this._renderDropZone();
       return this;
     }
