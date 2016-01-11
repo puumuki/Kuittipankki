@@ -2,7 +2,7 @@ var Store = require("jfs");
 var _ = require('underscore');
 var LocalStrategy = require('passport-local').Strategy;
 var crypto = require('crypto');
-
+var logging = require('./logging');
 var storage = new Store('data/users.json', {saveId:true});
 
 function matchpasswords( user, password ) {
@@ -17,7 +17,7 @@ var authenticationStrategy = new LocalStrategy(
     storage.all(function(err, users) {
 
       if(err) {
-        console.log(err);
+        logging.error(err);
       }
 
       var user = _.find( users, function(user) {
@@ -25,17 +25,17 @@ var authenticationStrategy = new LocalStrategy(
       });
 
       if(!user) {
-        console.info("User not found ")
+        logging.info("User not found ")
         return done(null, false, {message:"User not found"});  
       } 
       else if(matchpasswords(user, password)) {
-        console.log("User ", user.username, " authenticated");
+        logging.info("User ", user.username, " authenticated");
         return done(null, {
           id: user.id,
           username: user.username
         });
       } else {
-        console.log("User ", user.username, " authentication failed");
+        logging.info("User ", user.username, " authentication failed");
         return done(null, false, {message:"User not found"});  
       }     
     });
@@ -57,7 +57,7 @@ function loginRouteResponse(req, res) {
   storage.get(req.session.passport.user, function(err, user) {
 
     if( err ) {
-      console.error("User not found", err);
+      logging.error("User not found", err);
       res.status(500);
       res.send({});
     } else {

@@ -3,6 +3,7 @@ var router = express.Router();
 var Store = require("jfs");
 var crypto = require('crypto');
 var _ = require('underscore');
+var logging = require('../logging');
 
 //TODO validointi, autentikointi
 //https://github.com/flosse/json-file-store

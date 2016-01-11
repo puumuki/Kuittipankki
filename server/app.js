@@ -15,6 +15,7 @@ var receipts = require('./routes/receipts');
 var settings = require('./settings');
 var authentication = require('./authentication');
 var _ = require('underscore');
+var logging = require('./logging');
 
 //Session are stored by default to .session file
 var FileStore = require('session-file-store')(expressSession);
@@ -25,7 +26,7 @@ var env = process.env.NODE_ENV || 'development';
 app.locals.ENV = env;
 app.locals.ENV_DEVELOPMENT = env == 'development';
 
-console.info("Starting app in " + env + " mode." );
+logging.info("Starting app in " + env + " mode." );
 
 passport.use(authentication.authenticationStrategy);
 

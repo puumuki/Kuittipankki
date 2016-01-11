@@ -10,6 +10,7 @@ var multipart = require('connect-multiparty');
 var Q = require('q');
 var authentication = require('./../authentication');
 var Store = require("jfs");
+var logging = require('../logging');
 
 var storage = new Store('data/receipts.json', {saveId:true});
 
@@ -46,7 +47,7 @@ function validateReceiptInfo( req, receiptId ) {
 
   storage.get(receiptId, function(err, receipt) {
     if(err || !receipt) {
-      console.log("Could not found receipt", receiptId);
+      logging.log("Could not found receipt", receiptId);
       deferred.reject(err);
     }
 
@@ -81,24 +82,24 @@ router.post('/upload', authentication.isAuthorized, multipart(), function(req, r
         fs.writeFile(filePath, data, function (err) {
 
           createThumbnail( filename ).then(function(image) {
-            console.log("SUCCESS", image );
+            logging.info("SUCCESS", image );
           })
           .fail(function(error) {
-            console.log("Error on creating thumbnail:",error);
+            logging.info("Error on creating thumbnail:",error);
           });
 
           if( err ) {
-            console.log("Error saving file", err);  
+            logging.info("Error saving file", err);  
           }
           
         });      
       } else {
-        console.info("Skipping file");
+        logging.info("Skipping file");
       }
       
-      console.info("Saving files", req.files.file.path );
+      logging.info("Saving files", req.files.file.path );
     }).fail(function(error) {
-      console.error("Error on uploading picture to server, receipt is not currently logged user receipt.", error);
+      logging.error("Error on uploading picture to server, receipt is not currently logged user receipt.", error);
     });
   });
 

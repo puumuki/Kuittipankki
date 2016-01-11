@@ -6,7 +6,7 @@ var validator = require('validator');
 var fs = require('fs');
 var path = require('path');
 var authentication = require('./../authentication');
-
+var logging = require('../logging');
 var storage = new Store('data/receipts.json', {saveId:true});
 var router = express.Router();
 
@@ -40,9 +40,6 @@ function filterPicturesByID(id, files) {
   });
 }
 
-//TODO: Siirrä validoinnin virhekäsittely middlewarelle
-//TODO: Tarkista pystyykö kuitin etsimistä siirtämään middlewarelle
-
 function sanitize(req){
   req.sanitize('picture').escape();
   req.sanitize('store').escape();
@@ -64,7 +61,7 @@ function validate(req) {
 }
   
 function errorHandler(req, res, error) {
-  console.error("Error",error);
+  logging.error("Error",error);
   res.status(500);
   res.send({});
 }
@@ -73,6 +70,7 @@ function errorHandler(req, res, error) {
 router.post('/receipt', authentication.isAuthorized, function(req, res) {
 
   if( !req.user ) {
+    logging.error("Unauthorized access, trying to create a new receipt");
     return res.status(403).send({message:'Unauthorized'});
   }
   
@@ -86,11 +84,12 @@ router.post('/receipt', authentication.isAuthorized, function(req, res) {
     res.status(400);
     res.send(JSON.stringify(errors));
   } else {
-      var receipt = req.body;
-      receipt.user_id = req.user.id;
-      var id = storage.saveSync(receipt);
-      receipt.id = id;
-      res.send(JSON.stringify( receipt ));
+    logging.error("Saving a new receipt", req.body.name);
+    var receipt = req.body;
+    receipt.user_id = req.user.id;
+    var id = storage.saveSync(receipt);
+    receipt.id = id;
+    res.send(JSON.stringify( receipt ));
   }  
 });
 
@@ -120,7 +119,8 @@ router.put('/receipt/:id', authentication.isAuthorized, function(req, res) {
       res.status(404);
       res.send({});
     } else {
-      
+      logging.error("Updating old receipt", req.body.name);
+
       receipt.user_id = req.user.id;
       receipt.name = req.body.name;
       receipt.picture = req.body.picture;

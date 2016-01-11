@@ -18,7 +18,8 @@
     "q": "^1.4.1",
     "serve-favicon": "^2.3.0",
     "session-file-store": "0.0.24",
-    "shortid": "^2.2.4"
+    "shortid": "^2.2.4",
+    "winston": "^2.1.1"
   },
   "devDependencies": {
     "grunt": "^0.4.5",
