@@ -8,3 +8,5 @@ todo.txt
 server/data/receipts.json
 
 server/data/users.json
+
+server/sessions/*
