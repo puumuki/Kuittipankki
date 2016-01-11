@@ -16,6 +16,9 @@ var settings = require('./settings');
 var authentication = require('./authentication');
 var _ = require('underscore');
 
+//Session are stored by default to .session file
+var FileStore = require('session-file-store')(expressSession);
+
 var app = express();
 
 var env = process.env.NODE_ENV || 'development';
@@ -48,7 +51,7 @@ app.use(bodyParser.urlencoded({
   extended: true
 }));
 
-app.use(expressSession({ secret: 'ads32432afdsf' }));
+app.use(expressSession({ store: new FileStore(), secret: 'ads32432afdsf' }));
 
 app.use(passport.initialize());
 app.use(passport.session());

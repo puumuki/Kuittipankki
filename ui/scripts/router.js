@@ -58,9 +58,12 @@ define(function(require) {
           collection: receiptCollection,
           page: page
         }));
-      }).fail(function(error) {
-        //TODO: Teepäs tähän utiliteetti dialogi error hässäkkä
-        console.error("Could not fetch receipts", error);
+      }).fail(function(data) {
+        console.error("Could not fetch receipts", data.error);
+        console.log(data);
+        if( data.res.status === 403 ) {
+          App.router.navigate('#login', {trigger:true});
+        }       
       });
     },
 
@@ -115,7 +118,7 @@ define(function(require) {
     logout: function() {
       userService.logout().then(function(data) {
         Communicator.mediator.trigger('app:user:logout');
-        console.log(data.message);
+        App.router.navigate("", {trigger:true});
       }).fail(function(error) {
         console.error("Error happened during logout", error);
       })

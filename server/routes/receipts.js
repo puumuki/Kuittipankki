@@ -51,6 +51,7 @@ function sanitize(req){
   req.sanitize('created').escape();
   req.sanitize('updated').escape();
   req.sanitize('purchaseDate').escape();
+  req.sanitize('description').escape();
 }
 
 function validate(req) {
@@ -130,6 +131,7 @@ router.put('/receipt/:id', authentication.isAuthorized, function(req, res) {
       receipt.created = req.body.created;
       receipt.updated = req.body.updated;
       receipt.purchaseDate = req.body.purchaseDate;
+      receipt.description = req.body.description;
 
       storage.saveSync(req.params['id'],receipt);
 
@@ -190,7 +192,7 @@ router.get('/receipt/:id', authentication.isAuthorized, function(req, res) {
     } else if( !receipt ) {
       res.status(404); 
       res.send(JSON.stringify(err));
-    } else if( receipt.user_id !== user.user_id ) {
+    } else if( receipt.user_id !== req.user.id ) {
       res.status(403);
       res.send({});
     } else {

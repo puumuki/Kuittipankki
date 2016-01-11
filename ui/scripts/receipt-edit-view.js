@@ -26,7 +26,8 @@ define(function(require) {
       'purchaseDate':'input[name="purchaseDate"]',
       'tags':'input[name="tags"]',
       'pictureName': 'input[name="pictureName"]',
-      'picturePreview': '.picturePreview'
+      'picturePreview': '.picturePreview',
+      'description': 'textarea[name="description"]'
     },
 
     events: {
@@ -78,6 +79,7 @@ define(function(require) {
       this.model.set('registered', formatDate( this.ui.registered.val() ));
       this.model.set('purchaseDate', formatDate( this.ui.purchaseDate.val() ));
       this.model.set('tags', this.ui.tags.val().split(',') );      
+      this.model.set('description', this.ui.description.val());
 
       var promise = receiptService.saveReceipt(this.model);
 

@@ -2,8 +2,13 @@ define(function(require) {
   
   var ReceiptCollection = require('receipt-collection');
   var Q = require('q');
+  var communicator = require('communicator');
 
   var _collection = new ReceiptCollection();
+
+  communicator.mediator.on('app:user:logout', function() {
+    _collection.reset(null);//Clear receipt in memory after logout
+  });
 
   /**
    * Fetch a receipt from the server or a memory if receipt is allready fetced.
@@ -79,8 +84,8 @@ define(function(require) {
         success: function() {
           deferred.resolve(_collection);
         },
-        error: function(error) {
-          deferred.reject(error);
+        error: function(error,res) {
+          deferred.reject({error: error, res: res});
         }
       });
     } else {

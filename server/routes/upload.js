@@ -9,9 +9,9 @@ var easyimg = require('easyimage');
 var multipart = require('connect-multiparty');
 var Q = require('q');
 var authentication = require('./../authentication');
+var Store = require("jfs");
 
-//TODO validointi, autentikointi
-//https://github.com/flosse/json-file-store
+var storage = new Store('data/receipts.json', {saveId:true});
 
 const uploadDirectory = path.join(__dirname,'..','pictures')
 
@@ -41,6 +41,24 @@ function createThumbnail( image ) {
   return deferred.promise;
 }
 
+function validateReceiptInfo( req, receiptId ) {
+  var deferred = Q.defer();
+
+  storage.get(receiptId, function(err, receipt) {
+    if(err || !receipt) {
+      console.log("Could not found receipt", receiptId);
+      deferred.reject(err);
+    }
+
+    //Check that receipt is user receipt
+    if( receipt.user_id === req.user.id ) {
+      deferred.resolve(true);
+    }
+  });
+
+  return deferred.promise;
+}
+
 /* POST - upload */
 router.post('/upload', authentication.isAuthorized, multipart(), function(req, res) {
 
@@ -48,33 +66,40 @@ router.post('/upload', authentication.isAuthorized, multipart(), function(req, r
 
   fs.readFile(req.files.file.path, function (err, data) {
 
-    var contentType = req.files.file.headers["content-type"];
-    var fileEnding = mimeType[contentType];
+    var promise = validateReceiptInfo(req, receiptID);
 
-    if( fileEnding && receiptID ) {
-      var generatedName = shortid.generate();
-      var filename = receiptID +'.'+ generatedName +"."+fileEnding;
-      var filePath = path.join( uploadDirectory, filename );
+    promise.then(function() {
 
-      fs.writeFile(filePath, data, function (err) {
+      var contentType = req.files.file.headers["content-type"];
+      var fileEnding = mimeType[contentType];
 
-        createThumbnail( filename ).then(function(image) {
-          console.log("SUCCESS", image );
-        })
-        .fail(function(error) {
-          console.log("Error on creating thumbnail:",error);
-        });
+      if( fileEnding && receiptID ) {
+        var generatedName = shortid.generate();
+        var filename = receiptID +'.'+ generatedName +"."+fileEnding;
+        var filePath = path.join( uploadDirectory, filename );
 
-        if( err ) {
-          console.log("Error saving file", err);  
-        }
-        
-      });      
-    } else {
-      console.info("Skipping file");
-    }
-    
-    console.info("Saving files", req.files.file.path );
+        fs.writeFile(filePath, data, function (err) {
+
+          createThumbnail( filename ).then(function(image) {
+            console.log("SUCCESS", image );
+          })
+          .fail(function(error) {
+            console.log("Error on creating thumbnail:",error);
+          });
+
+          if( err ) {
+            console.log("Error saving file", err);  
+          }
+          
+        });      
+      } else {
+        console.info("Skipping file");
+      }
+      
+      console.info("Saving files", req.files.file.path );
+    }).fail(function(error) {
+      console.error("Error on uploading picture to server, receipt is not currently logged user receipt.", error);
+    });
   });
 
   res.status(204).end();

@@ -30,7 +30,7 @@ define(function(require) {
       var promise = userService.authenticate(this.ui.username.val(), this.ui.password.val());
 
       promise.then(function(data) {
-        App.router.navigate("", {trigger:true});
+        App.router.receiptList();
       }).fail(_.bind(function(error) {
         this._loginFailed = true;
         this.render();
