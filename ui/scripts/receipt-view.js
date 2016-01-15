@@ -6,17 +6,29 @@ define(function(require) {
   var userService = require('user-service');
   var _ = require('underscore');
   var communicator = require('communicator');
+  var ConfirmationDialogView = require('confirmation-dialog-view');
+  var effectService = require('effect-service');
 
   var ReceiptView = Backbone.Marionette.ItemView.extend({
+
+    attachView: effectService.fadeIn,
 
     template: template,
 
     events: {
-      'click button[name="delete"]' : '_deleteReceipt'
+      'click button[name="delete"]' : '_deleteReceiptClick'
     },
 
     initialize: function() {
       communicator.mediator.on('app:user:logout', _.bind(this.render, this));
+    },
+
+    _deleteReceiptClick: function() {
+      var confirmationDialog = new ConfirmationDialogView({
+        title: "Kuitin poisto",
+        text: "Haluato varmasti poistaa kuitin?",
+        onOk: _.bind( this._deleteReceipt, this )
+      });
     },
 
     _deleteReceipt: function() {
@@ -38,6 +50,7 @@ define(function(require) {
 
     render: function() {
       ReceiptView.__super__.render.apply(this, arguments);
+      window.scrollTo( 0, 0 );
       return this;
     }
 

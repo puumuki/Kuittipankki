@@ -4,7 +4,23 @@
 
     <div class="row bottom-margin" data-id="{{id}}">
       <div class="col-md-12 col-sm-12 col-xs-12">
+        {{#if error}}
 
+        <div class="row top-margin ">
+          <div class="col-md-12 text-center">           
+            {{error.message}}
+          </div>
+        </div>
+
+        <div class="row top-margin ">
+          <div class="col-md-12 text-right">
+            <a href="#receipt/view/{{id}}">
+              <button type="button" name="cancel" class="btn btn-default">Takaisin</button>
+            </a>
+          </div>
+        </div>
+
+        {{else}}
         <div class="row top-margin ">
           <div class="col-md-12 text-right">           
             <button type="button" name="delete" class="btn btn-danger">Poista</button>
@@ -20,6 +36,7 @@
             <img class="col-md-12" src="{{img}}" />
           </div>
         </div>
+        {{/if}}
 
       </div>
     </div>

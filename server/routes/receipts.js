@@ -9,36 +9,7 @@ var authentication = require('./../authentication');
 var logging = require('../logging');
 var storage = new Store('data/receipts.json', {saveId:true});
 var router = express.Router();
-
-/**
- * Load pictures all pictures
- */
-function loadPictures() {
-  const fileTypes = ['bmp','png','jpg'];
-
-  var files = fs.readdirSync(path.join(__dirname,'..','pictures'));
-
-  files = _.filter(files, function(file) {
-    var parts = file.split('.');
-    var fileType = _.last(parts);
-    return _.indexOf( fileTypes, fileType ) >= 0;
-  })
-
-  return _.map( files, function(filename) {
-    return {
-      filename: filename,
-      thumbnail: 'thumbnail.' + filename,
-      size: fs.statSync(path.join(__dirname,'..','pictures', filename)).size
-    };
-  });
-}
-
-function filterPicturesByID(id, files) {
-  return _.filter(files, function(file) {
-    var parts = file.filename.split('.');
-    return _.first(parts) === id;
-  });
-}
+var pictureService = require('../picture-service');
 
 function sanitize(req){
   req.sanitize('picture').escape();
@@ -161,10 +132,10 @@ router.get('/receipts', authentication.isAuthorized, function(req, res) {
     if( err ) {
       errorHandler(req, res, err);
     } else {
-      var files = loadPictures();
+      var files = pictureService.loadPictures();
 
       var receipts = _.chain(receipts).map(function(receipt, id) {
-        receipt.pictures = filterPicturesByID(receipt.id, files);
+        receipt.pictures = pictureService.filterPicturesByReceiptID(receipt.id, files);
         return receipt;
       }).filter(function(receipt) {
         return (receipt.deleted === undefined || receipt.deleted === false) && receipt.user_id === req.user.id;
@@ -185,7 +156,8 @@ router.get('/receipt/:id', authentication.isAuthorized, function(req, res) {
 
     res.setHeader('Content-Type', 'application/json');
     
-    receipt.pictures = filterPicturesByID(receipt.id, loadPictures());
+    var pictures = pictureService.loadPictures();
+    receipt.pictures = pictureService.filterPicturesByReceiptID(receipt.id, pictures);
     
     if( err ) {
       errorHandler(req, res, err);

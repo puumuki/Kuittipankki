@@ -8,7 +8,7 @@ var exphbs  = require('express-handlebars');
 var expressValidator = require('express-validator');
 var passport = require('passport');
 var expressSession = require('express-session')
-var uploads = require('./routes/upload');
+var picture = require('./routes/picture');
 var routes = require('./routes/index');
 var users = require('./routes/user');
 var receipts = require('./routes/receipts');
@@ -65,7 +65,7 @@ app.use(express.static(path.join(__dirname,'..', 'ui')));
 
 app.use('/pictures', express.static(path.join(__dirname,'pictures')));
 
-app.use('/', uploads);
+app.use('/', picture);
 app.use('/', routes);
 app.use('/', users);
 app.use('/', receipts);

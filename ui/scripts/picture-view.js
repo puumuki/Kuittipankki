@@ -3,21 +3,60 @@ define(function(require) {
   var Backbone = require('backbone');
   var template = require('hbs!tmpl/picture')
 
+  var ConfirmationDialogView = require('confirmation-dialog-view');
+
+  var pictureService = require('picture-service');  
+
   var PictureView = Backbone.Marionette.ItemView.extend({
 
     template: template,
 
+    events : {
+      'click button[name="delete"]':'_onDeletePictureClick'
+    },
+
+    _onImageLoadError: function() {
+      this._error = {
+        message: "Kuvaa ei valitettavasti pystytty lataamaan."
+      };
+      this.render();
+    },
+
     serializeData: function() {
       return _.extend(this.options.receipt.toJSON(), {
-        img: this.options.image
-      } );
+        img: '/pictures/' + this.options.image,
+        error: this._error
+      });
+    },
+
+    _onDeletedPicture: function(response) {
+      this.options.receipt.removePicture( this.options.image );
+      App.router.navigate("/#receipt/view/" + this.options.receipt.get('id'), {trigger:true} );
+    },
+
+    _onDeletingFail: function(error) {
+      console.log("Error on deleting picture", error);
+    },
+
+    _onDeletePictureClick: function() {
+      var confirmationDialog = new ConfirmationDialogView({
+        title: "Kuvan poisto",
+        text: "Haluato varmasti poistaa kuvan?",
+        onOk: _.bind( this._deletePicture, this )
+      });
+    },
+
+    _deletePicture: function(event) {
+      pictureService.deletePicture(this.options.image)
+      .then(_.bind(this._onDeletedPicture, this))
+      .fail(_.bind(this._onDeletingFail, this));
     },
 
     render: function() {
       PictureView.__super__.render.apply(this, arguments);
+      this.$el.find('img').on('error', _.bind(this._onImageLoadError,this));
       return this;
     }
-
   });
 
   return PictureView;

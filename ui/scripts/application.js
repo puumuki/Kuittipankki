@@ -34,9 +34,6 @@ define(function(require) {
       
   $.datepicker.setDefaults($.datepicker.regional['fi']);
 
-  /* Add application regions here */
-  App.addRegions({});
-
   /* Add initializers here */
   App.addInitializer( function () {
     
@@ -44,9 +41,8 @@ define(function(require) {
       Communicator.mediator.trigger('app:user:authenticated', user);
     });
 
-
-    //document.body.innerHTML = indexTemplate({ success: "CONGRATS!" });
     Communicator.mediator.trigger("app:start");
+    
     Backbone.history.start();
 
   });

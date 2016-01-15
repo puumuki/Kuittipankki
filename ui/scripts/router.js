@@ -1,5 +1,6 @@
 define(function(require) {
 
+  var _ = require('underscore');
   var Backbone = require('backbone');
   var ReceiptView = require('receipt-view');
   var ReceiptListView = require('receipt-list-view');
@@ -8,15 +9,32 @@ define(function(require) {
   var PictureView = require('picture-view');
   var MenuView = require('menu-view');
   var Receipt = require('receipt');
+  var PageNotFoundView = require('page-not-found-view');
+
   var regionManager = require('region-manager');
   var receiptService = require('receipt-service');
   var userService = require('user-service');
-  var menuRegion = regionManager.addRegion('menu','#menu');
+  
+  /* Regions */
+  var menuRegion = regionManager.addRegion('menu','#menu'); 
+  var dialogRegion = regionManager.addRegion('dialog', '#dialog');
   var contentRegion = regionManager.addRegion('content','#content');
+
   var Communicator = require('communicator');
 
-  contentRegion.show(new LoginView());
+  var ContentRegion = Backbone.Marionette.Region.extend({});
 
+  Backbone.Marionette.Region.prototype.open = function(view){
+    if(_.isFunction( view.attachView )) {
+      _.bind( view.attachView, this)(view) ;
+    } else {
+      this.$el.html(view.el);
+    }
+  }
+
+  var contentRegion = regionManager.getRegion('content');
+
+  contentRegion.show(new LoginView());
   menuRegion.show(new MenuView());
 
   var ApplicationRouter = Backbone.Router.extend({
@@ -44,7 +62,7 @@ define(function(require) {
           model: receipt
         }));        
       }).fail(function(error) {
-        //TODO: Teepäs tähän utiliteetti dialogi error hässäkkä
+        contentRegion.show(new PageNotFoundView());
         console.error("Could not fetch receipts", error);        
       });
     }, 
@@ -75,6 +93,7 @@ define(function(require) {
           model: receipt
         }));    
       }).fail(function(error) {
+        contentRegion.show(new PageNotFoundView());
         //TODO: Teepäs tähän utiliteetti dialogi error hässäkkä
         console.error("Could not fetch receipts", error);        
       });
@@ -98,14 +117,13 @@ define(function(require) {
         id: _.first( image.split('.') )
       });
 
-      console.log( _.first( image.split('.') ));
-
       promise.then(function(receipt) {
         contentRegion.show(new PictureView({
           receipt: receipt,
-          image : 'pictures/'+image
+          image : image
         }));      
       }).fail(function(error) {
+        contentRegion.show(new PageNotFoundView());
         //TODO: Teepäs tähän utiliteetti dialogi error hässäkkä
         console.error("Could not fetch receipts", error);        
       });

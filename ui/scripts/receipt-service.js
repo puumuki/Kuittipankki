@@ -25,7 +25,12 @@ define(function(require) {
       var promise = fetchReceiptCollection();
 
       promise.then(function(collection) {
-        deferred.resolve(collection.get(options.id));
+        var receipt = collection.get(options.id);
+        if( receipt ) {
+          deferred.resolve(receipt);  
+        } else {
+          deferred.reject({ message: 'Receipt not found' });
+        }
       }).fail(function(error) {
         deferred.reject(error);
       });

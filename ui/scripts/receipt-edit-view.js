@@ -4,16 +4,18 @@ define(function(require) {
   var template = require('hbs!tmpl/receipt-edit');
   var moment = require('momentjs');
   var receiptService = require('receipt-service');
-  var fileUploadService = require('file-upload-service');
   var Communicator = require('communicator');
   var userService = require('user-service');
   var _ = require('underscore');
+  var effectService = require('effect-service');
 
   function formatDate(dateString) {
     return moment(dateString,'DD.MM.YYYY').format('YYYY-MM-DD HH:mm:ss');
   }
 
   var ReceiptEditView = Backbone.Marionette.ItemView.extend({
+
+    attachView: effectService.fadeIn,
 
     template: template,
 
@@ -62,7 +64,9 @@ define(function(require) {
       App.router.navigate("#picture/"+filename, {trigger:true});
     },
 
-    _fileUploaded: function() {
+    _fileUploaded: function(response, response2) {
+      console.log("Response", response);
+      console.log("Response2", response2);
       if( this.model.get('id') ) {
         this.model.fetch(null, {});  
       } else {
@@ -115,6 +119,9 @@ define(function(require) {
         dictDefaultMessage: "Raahaa kuvat ja pudota kuvat tähän, latausta varten.",
         headers: {
           "receipt-id":this.model.get('id')
+        },
+        init: function() {
+          
         }
       });
 
@@ -137,6 +144,14 @@ define(function(require) {
         this.dropzone.disable();  
       }     
 
+      //Cancel preview click on added file, file name is not 
+      this.dropzone.on("addedfile", function(file) {
+        file.previewElement.addEventListener("click", function(event) {
+          event.preventDefault();
+          event.stopPropagation();
+        });
+      });
+
       return this;
     },
 
@@ -153,6 +168,7 @@ define(function(require) {
       }
 
       this._renderDropZone();
+
       return this;
     }
   });
