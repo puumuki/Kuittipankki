@@ -49,6 +49,15 @@
             </div>
 
             <div class="row top-margin ">
+              <div class="col-md-3 col-sm-3">
+                <label for="varrantlyend">Tuotteen hinta</label>
+              </div>
+              <div class="col-md-9 col-sm-9">
+                <input type="text" name="price" placeholder="20 €" class="form-control" value="{{price}}" {{#if readonly }}readonly{{/if}} />
+              </div>
+            </div>            
+
+            <div class="row top-margin ">
               <div class="col-md-3 col-sm-3 col-xs-12">
                 <label for="varrantlyend">Rekisteröity</label>
               </div>

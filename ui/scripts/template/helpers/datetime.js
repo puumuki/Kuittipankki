@@ -4,8 +4,11 @@ define(function(require) {
   var Handlebars = require('handlebars');
 
   function dateTimeHelper(value) {
-    var stringDate = moment(value).format("DD.MM.YYYY");
-    return new Handlebars.SafeString(stringDate);
+    if( moment(value).isValid() ) {
+      return new Handlebars.SafeString(moment(value).format("DD.MM.YYYY"));
+    } else {
+      return "";
+    }
   }
 
   Handlebars.registerHelper('datetime', dateTimeHelper);

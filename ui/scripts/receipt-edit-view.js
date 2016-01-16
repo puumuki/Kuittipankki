@@ -1,4 +1,4 @@
-define(function(require) {
+  define(function(require) {
 
   var Backbone = require('backbone');
   var template = require('hbs!tmpl/receipt-edit');
@@ -10,7 +10,8 @@ define(function(require) {
   var effectService = require('effect-service');
 
   function formatDate(dateString) {
-    return moment(dateString,'DD.MM.YYYY').format('YYYY-MM-DD HH:mm:ss');
+    var date = moment(dateString,'DD.MM.YYYY');
+    return date.isValid() ? date.format('YYYY-MM-DD HH:mm:ss') : '';
   }
 
   var ReceiptEditView = Backbone.Marionette.ItemView.extend({
@@ -28,6 +29,7 @@ define(function(require) {
       'purchaseDate':'input[name="purchaseDate"]',
       'tags':'input[name="tags"]',
       'pictureName': 'input[name="pictureName"]',
+      'price': 'input[name="price"]',
       'picturePreview': '.picturePreview',
       'description': 'textarea[name="description"]'
     },
@@ -84,6 +86,7 @@ define(function(require) {
       this.model.set('purchaseDate', formatDate( this.ui.purchaseDate.val() ));
       this.model.set('tags', this.ui.tags.val().split(',') );      
       this.model.set('description', this.ui.description.val());
+      this.model.set('price', this.ui.price.val());
 
       var promise = receiptService.saveReceipt(this.model);
 
@@ -155,13 +158,20 @@ define(function(require) {
       return this;
     },
 
+    _setDateField: function(fieldName, value) {
+      if( value ) {
+        this.ui[fieldName].datepicker('setDate', new Date(value));
+      }
+    },
+
     render: function() {
       ReceiptEditView.__super__.render.apply(this, arguments);
       
       this.$('.datepicker').datepicker();
-      this.ui.purchaseDate.datepicker("setDate", new Date(this.model.get('purchaseDate')));
-      this.ui.warrantlyEndDate.datepicker("setDate", new Date(this.model.get('warrantlyEndDate')));
-      this.ui.registered.datepicker("setDate", new Date(this.model.get('registered')));
+
+      this._setDateField('purchaseDate', this.model.get('purchaseDate'));
+      this._setDateField('warrantlyEndDate', this.model.get('warrantlyEndDate'));
+      this._setDateField('registered', this.model.get('registered'));
       
       if(userService.getAuthenticatedUser()) {
         this.$(".tags").tagsinput();  

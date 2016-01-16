@@ -20,6 +20,7 @@ function sanitize(req){
   req.sanitize('updated').escape();
   req.sanitize('purchaseDate').escape();
   req.sanitize('description').escape();
+  req.sanitize('price').escape();
 }
 
 function validate(req) {
@@ -103,6 +104,7 @@ router.put('/receipt/:id', authentication.isAuthorized, function(req, res) {
       receipt.updated = req.body.updated;
       receipt.purchaseDate = req.body.purchaseDate;
       receipt.description = req.body.description;
+      receipt.price = req.body.price;
 
       storage.saveSync(req.params['id'],receipt);
 
