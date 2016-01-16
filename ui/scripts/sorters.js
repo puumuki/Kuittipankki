@@ -45,8 +45,29 @@ define(function(require) {
     };    
   };
 
+  var dateTimeSorter = function(attributeName) {
+    return function(a,b){
+
+      var format = 'YYYY-MM-DD hh:mm:ss';
+
+      var aValue = moment(  a.get(attributeName) ? a.get(attributeName) : "", format);
+      var bValue = moment(  b.get(attributeName) ? b.get(attributeName) : "", format)
+
+      var order = 0;
+
+      if(aValue.isBefore(bValue)) {
+        order = 1;
+      } else if(aValue.isAfter(bValue)) {
+        order = -1;
+      }
+
+      return this.reverse ? -(order) : order;
+    };    
+  };  
+
   return {
     alphabeticalSorter: alphabeticalSorter,
-    dateSorter: dateSorter
+    dateSorter: dateSorter,
+    dateTimeSorter:dateTimeSorter
   };
 });

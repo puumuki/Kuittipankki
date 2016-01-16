@@ -10,7 +10,8 @@ define(function(require) {
       sorters: {
         name: sorters.alphabeticalSorter('name'),
         created: sorters.dateSorter('created'),
-        updated: sorters.dateSorter('updated')
+        updated: sorters.dateSorter('updated'),
+        purchaseDate: sorters.dateTimeSorter('purchaseDate')
       }
   });
 
