@@ -9,6 +9,14 @@ define(function(require) {
 
     template: template,
 
+    ui: {
+      'navbarToggle': '.navbar-toggle'
+    },
+
+    events: {
+      'click .nav a' : '_onNavbarToggleClicked'
+    },
+
     initialize: function(){
       Communicator.mediator.on('app:user:authenticated',_.bind( this._onAuthenticated, this));
       Communicator.mediator.on('app:user:logout', _.bind( this._onLogout, this));
@@ -30,6 +38,14 @@ define(function(require) {
     _onAuthenticated: function(data) {
       this._userobject = data;
       this.render();
+    },
+
+    _onNavbarToggleClicked: function() {
+      this.render();
+    },
+
+    render: function() {
+      RecipeListView.__super__.render.call(this);
     }
 
   });

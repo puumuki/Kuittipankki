@@ -8,6 +8,7 @@
   var userService = require('user-service');
   var _ = require('underscore');
   var effectService = require('effect-service');
+  require('bootstraptagsinput');
 
   function formatDate(dateString) {
     var date = moment(dateString,'DD.MM.YYYY');

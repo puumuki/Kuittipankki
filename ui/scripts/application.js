@@ -4,15 +4,17 @@ define(function(require) {
   var Backbone = require('backbone'), 
       Communicator = require('communicator'), 
       Router = require('router'), 
-      $ = require('jquery'), 
+      $ = require('jquery'),
       userService = require('user-service');
+
+  require('jqueryui');
 
   var App = new Backbone.Marionette.Application();
 
   App.router = new Router();
 
-    //TODO: mode datapicker to seperated class
-   $.datepicker.regional['fi'] = {
+  //TODO: mode datapicker to seperated class
+  $.datepicker.regional['fi'] = {
                closeText: 'Sulje',
                prevText: '&laquo;Edellinen',
                nextText: 'Seuraava&raquo;',

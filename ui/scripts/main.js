@@ -1,9 +1,11 @@
 require([
   'backbone',
-  'application'
+  'application',
+  'jqueryui'
 ],
 function ( Backbone, App ) {
-    'use strict';
-
+  'use strict';
   App.start();
 });
+
+

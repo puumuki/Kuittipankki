@@ -8,6 +8,8 @@ define(function(require) {
   var communicator = require('communicator');
   var ConfirmationDialogView = require('confirmation-dialog-view');
   var effectService = require('effect-service');
+  var moment = require('momentjs');
+  require('moment-duration-format');
 
   var ReceiptView = Backbone.Marionette.ItemView.extend({
 
@@ -42,9 +44,17 @@ define(function(require) {
       });
     },
 
-    serializeData: function() {
+    _durationFromDate: function(date) {
+      var format = 'YYYY-MM-DD hh:mm:ss';
+      var purchaseDate = moment(date , format);
+      var diff =moment(moment()).diff(purchaseDate);
+      return moment.duration(diff,'ms').format("y [vuotta] d [päivää] h [tuntia]");
+    },
+
+    serializeData: function() {      
       return _.extend(ReceiptView.__super__.serializeData.call(this), {
-        readonly: !userService.getAuthenticatedUser()
+        readonly: !userService.getAuthenticatedUser(),
+        fromPurchase: this._durationFromDate(this.model.get('purchaseDate'))
       });
     },
 
@@ -53,7 +63,6 @@ define(function(require) {
       window.scrollTo( 0, 0 );
       return this;
     }
-
   });
 
   return ReceiptView;
