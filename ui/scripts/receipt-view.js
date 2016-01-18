@@ -9,6 +9,8 @@ define(function(require) {
   var ConfirmationDialogView = require('confirmation-dialog-view');
   var effectService = require('effect-service');
   var moment = require('momentjs');
+  var ImageDialogView = require('image-dialog-view');
+
   require('moment-duration-format');
 
   var ReceiptView = Backbone.Marionette.ItemView.extend({
@@ -18,11 +20,21 @@ define(function(require) {
     template: template,
 
     events: {
-      'click button[name="delete"]' : '_deleteReceiptClick'
+      'click button[name="delete"]' : '_deleteReceiptClick',
+      'click a.thumbnail': '_onImageClicked'
     },
 
     initialize: function() {
       communicator.mediator.on('app:user:logout', _.bind(this.render, this));
+    },
+
+    _onImageClicked: function(event) {
+      event.preventDefault();
+      var image = $(event.currentTarget).data('image');
+      new ImageDialogView({
+        title: "Kuva",
+        image: image
+      });
     },
 
     _deleteReceiptClick: function() {

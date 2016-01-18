@@ -6,6 +6,7 @@
   var receiptService = require('receipt-service');
   var Communicator = require('communicator');
   var userService = require('user-service');
+  var ImageDialogView = require('image-dialog-view');
   var _ = require('underscore');
   var effectService = require('effect-service');
   require('bootstraptagsinput');
@@ -63,8 +64,11 @@
     },
 
     _openImage: function(event) {
-      var filename = $(event.currentTarget).find('img').attr('alt');
-      App.router.navigate("#picture/"+filename, {trigger:true});
+      var filename = $(event.currentTarget).find('img').attr('alt');  
+      new ImageDialogView({
+        title: "Kuva",
+        image: filename
+      });
     },
 
     _fileUploaded: function(response, response2) {
