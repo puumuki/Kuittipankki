@@ -14,7 +14,7 @@ define(function(require) {
   App.router = new Router();
 
   //TODO: mode datapicker to seperated class
-  $.datepicker.regional['fi'] = {
+  $.datepicker.regional.fi = {
                closeText: 'Sulje',
                prevText: '&laquo;Edellinen',
                nextText: 'Seuraava&raquo;',
@@ -34,7 +34,7 @@ define(function(require) {
                 yearSuffix: ''
   };
       
-  $.datepicker.setDefaults($.datepicker.regional['fi']);
+  $.datepicker.setDefaults($.datepicker.regional.fi);
 
   /* Add initializers here */
   App.addInitializer( function () {
@@ -43,7 +43,7 @@ define(function(require) {
       Communicator.mediator.trigger('app:user:authenticated', user);
     });
 
-    Communicator.mediator.trigger("app:start");
+    Communicator.mediator.trigger('app:start');
     
     Backbone.history.start();
 

@@ -65,7 +65,7 @@ require.config({
 
     /* Alias text.js for template loading and shortcut the templates dir to tmpl */
     text: '../bower_components/requirejs-text/text',
-    tmpl: "../templates",
+    tmpl: '../templates',
 
     /* handlebars from the require handlerbars plugin below */
     handlebars: '../bower_components/require-handlebars-plugin/Handlebars',
@@ -75,7 +75,9 @@ require.config({
     json2: '../bower_components/require-handlebars-plugin/hbs/json2',
     hbs: '../bower_components/require-handlebars-plugin/hbs',
 
-    'moment-duration-format' : '../bower_components/moment-duration-format/lib/moment-duration-format'
+    'moment-duration-format' : '../bower_components/moment-duration-format/lib/moment-duration-format',
+
+    fuse: '../bower_components/fuse.js/src/fuse.min'   
   },
 
   hbs: {

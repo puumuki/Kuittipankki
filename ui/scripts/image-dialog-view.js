@@ -19,11 +19,6 @@ define(function(require) {
       'click button[name="ok"]': '_onOkButtonClick',
     },
 
-    _onImageClicked: function() {
-      var imageDialog = new ImageDialogView();
-
-    },
-
     _onOkButtonClick : function() {
       if( _.isFunction( this.options.onOk ) ) {
         this.options.onOk();
@@ -34,7 +29,7 @@ define(function(require) {
       return {
         title: this.options.title,
         image: this.options.image
-      }
+      };
     },
 
     render: function() {

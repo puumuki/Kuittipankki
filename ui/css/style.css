@@ -94,3 +94,27 @@ input[type="text"], .bootstrap-tagsinput, .shadow {
 .btn:hover {
   text-shadow: 0 0 10px rgba(255,255,255,1) , 0 0 20px rgba(255,255,255,1) , 0 0 30px rgba(255,255,255,1) , 0 0 40px #00ffff , 0 0 70px #00ffff , 0 0 80px #00ffff , 0 0 100px #00ffff ;
 }
+
+.navbar-nav a:hover {
+ color: black !important; 
+}
+
+.search-input {
+  width: 300px;
+  border-radius: 6px;
+}
+
+#content {
+  margin-top: 20px;
+}
+
+#menu-bar.navbar {
+  margin-bottom: 0px !important;
+}
+
+.large-close {
+  cursor: pointer;
+  font-size: 21px;
+  vertical-align: middle;
+  margin-left: 5px;
+}

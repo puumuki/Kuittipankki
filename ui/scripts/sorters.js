@@ -10,8 +10,8 @@ define(function(require) {
   var alphabeticalSorter = function(attributeName) {
     return function(a,b){
 
-      var aValue = a.get(attributeName) ? a.get(attributeName).toLowerCase() : "";
-      var bValue = b.get(attributeName) ? b.get(attributeName).toLowerCase() : "";
+      var aValue = a.get(attributeName) ? a.get(attributeName).toLowerCase() : '';
+      var bValue = b.get(attributeName) ? b.get(attributeName).toLowerCase() : '';
 
       var order = 0;
 
@@ -30,8 +30,8 @@ define(function(require) {
 
       var format = 'MM.DD.YYYY';
 
-      var aValue = moment(  a.get(attributeName) ? a.get(attributeName) : "", format);
-      var bValue = moment(  b.get(attributeName) ? b.get(attributeName) : "", format)
+      var aValue = moment(  a.get(attributeName) ? a.get(attributeName) : '', format);
+      var bValue = moment(  b.get(attributeName) ? b.get(attributeName) : '', format);
 
       var order = 0;
 
@@ -50,8 +50,8 @@ define(function(require) {
 
       var format = 'YYYY-MM-DD hh:mm:ss';
 
-      var aValue = moment(  a.get(attributeName) ? a.get(attributeName) : "", format);
-      var bValue = moment(  b.get(attributeName) ? b.get(attributeName) : "", format)
+      var aValue = moment(  a.get(attributeName) ? a.get(attributeName) : '', format);
+      var bValue = moment(  b.get(attributeName) ? b.get(attributeName) : '', format);
 
       var order = 0;
 

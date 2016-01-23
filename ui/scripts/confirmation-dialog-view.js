@@ -29,7 +29,7 @@ define(function(require) {
       return {
         title: this.options.title,
         text: this.options.text
-      }
+      };
     },
 
     render: function() {

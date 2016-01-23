@@ -17,12 +17,10 @@ define(function(require) {
   
   /* Regions */
   var menuRegion = regionManager.addRegion('menu','#menu'); 
-  var dialogRegion = regionManager.addRegion('dialog', '#dialog');
+  regionManager.addRegion('dialog', '#dialog');
   var contentRegion = regionManager.addRegion('content','#content');
 
   var Communicator = require('communicator');
-
-  var ContentRegion = Backbone.Marionette.Region.extend({});
 
   Backbone.Marionette.Region.prototype.open = function(view){
     if(_.isFunction( view.attachView )) {
@@ -30,25 +28,29 @@ define(function(require) {
     } else {
       this.$el.html(view.el);
     }
-  }
-
-  var contentRegion = regionManager.getRegion('content');
+  };
 
   contentRegion.show(new LoginView());
   menuRegion.show(new MenuView());
 
   var ApplicationRouter = Backbone.Router.extend({
 
+    initialize: function() {
+      this.on('route', function() {
+        Communicator.mediator.trigger('app:route');
+      });
+    },
+
     routes: {
-      "" : "receiptList",
-      "receipts/:page":"receiptList",
-      "receipt/view/:id": "receipt",    // #help
-      "receipt/edit/:id": "editReceipt",
-      "receipt/edit": "editReceipt",
-      "receipt/new": "newReceipt",
-      "picture/:image": "picture",
-      "login": "login",
-      "logout": "logout"
+      '' : 'receiptList',
+      'receipts/:page':'receiptList',
+      'receipt/view/:id': 'receipt',    // #help
+      'receipt/edit/:id': 'editReceipt',
+      'receipt/edit': 'editReceipt',
+      'receipt/new': 'newReceipt',
+      'picture/:image': 'picture',
+      'login': 'login',
+      'logout': 'logout'
     },
 
     receipt: function(id) {
@@ -63,7 +65,7 @@ define(function(require) {
         }));        
       }).fail(function(error) {
         contentRegion.show(new PageNotFoundView());
-        console.error("Could not fetch receipts", error);        
+        console.error('Could not fetch receipts', error);        
       });
     }, 
 
@@ -77,8 +79,7 @@ define(function(require) {
           page: page
         }));
       }).fail(function(data) {
-        console.error("Could not fetch receipts", data.error);
-        console.log(data);
+        console.error('Could not fetch receipts', data.error);
         if( data.res.status === 403 ) {
           App.router.navigate('#login', {trigger:true});
         }       
@@ -95,18 +96,17 @@ define(function(require) {
       }).fail(function(error) {
         contentRegion.show(new PageNotFoundView());
         //TODO: Teepäs tähän utiliteetti dialogi error hässäkkä
-        console.error("Could not fetch receipts", error);        
+        console.error('Could not fetch receipts', error);        
       });
     }, 
 
     newReceipt: function() {
       receiptService.saveReceipt(new Receipt()).then(function(receipt) {
-        console.log( receipt.get('id'))
         contentRegion.show(new ReceiptEditView({
           model: receipt
         }));
       }).fail(function(error) {
-        console.log(";D;D;",error);
+        console.log(';D;D;',error);
         //TODO: Teepäs tähän virheenkäsittely
         console.error(error);
       });
@@ -125,7 +125,7 @@ define(function(require) {
       }).fail(function(error) {
         contentRegion.show(new PageNotFoundView());
         //TODO: Teepäs tähän utiliteetti dialogi error hässäkkä
-        console.error("Could not fetch receipts", error);        
+        console.error('Could not fetch receipts', error);        
       });
     },
 
@@ -134,12 +134,12 @@ define(function(require) {
     },
 
     logout: function() {
-      userService.logout().then(function(data) {
+      userService.logout().then(function() {
         Communicator.mediator.trigger('app:user:logout');
-        App.router.navigate("", {trigger:true});
+        App.router.navigate('', {trigger:true});
       }).fail(function(error) {
-        console.error("Error happened during logout", error);
-      })
+        console.error('Error happened during logout', error);
+      });
     }
 
   });

@@ -32,15 +32,15 @@ define(function(require) {
       event.preventDefault();
       var image = $(event.currentTarget).data('image');
       new ImageDialogView({
-        title: "Kuva",
+        title: 'Kuva',
         image: image
       });
     },
 
     _deleteReceiptClick: function() {
-      var confirmationDialog = new ConfirmationDialogView({
-        title: "Kuitin poisto",
-        text: "Haluato varmasti poistaa kuitin?",
+      new ConfirmationDialogView({
+        title: 'Kuitin poisto',
+        text: 'Haluato varmasti poistaa kuitin?',
         onOk: _.bind( this._deleteReceipt, this )
       });
     },
@@ -49,7 +49,7 @@ define(function(require) {
       var promise = receiptService.deleteReceipt(this.model);
 
       promise.then(function(data) {
-        App.router.navigate("#", {trigger:true});
+        App.router.navigate('#', {trigger:true});
       }).fail(function(error) {
         console.error(error);
         //TODO: Make error handling
@@ -60,7 +60,7 @@ define(function(require) {
       var format = 'YYYY-MM-DD hh:mm:ss';
       var purchaseDate = moment(date , format);
       var diff =moment(moment()).diff(purchaseDate);
-      return moment.duration(diff,'ms').format("y [vuotta] d [päivää] h [tuntia]");
+      return moment.duration(diff,'ms').format('y [vuotta] d [päivää] h [tuntia]');
     },
 
     serializeData: function() {      

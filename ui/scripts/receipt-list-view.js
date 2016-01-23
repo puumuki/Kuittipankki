@@ -5,23 +5,24 @@ define(function(require) {
   var ReceiptCollection = require('receipt-collection');
   var userService = require('user-service');
   var Communicator = require('communicator');
+  var receiptService = require('receipt-service');
+  var _ = require('underscore');
 
   var items = 10;
-  var offset = 0;
 
   var ReceiptListView = Backbone.Marionette.ItemView.extend({
 
     template: template,
 
     events: {
-      "click button.sort" : "_sortBy"
+      'click button.sort' : '_sortBy'
     },
 
     initialize: function( options ) {
       this.sort = {
         attribute: 'name',
         order: 'asc'
-      }
+      };
 
       var opts = _.defaults( options, {
         page: 1,
@@ -32,6 +33,18 @@ define(function(require) {
       this.items = opts.items;
 
       Communicator.mediator.on('app:user:logout', _.bind(this._logout,this));
+      Communicator.mediator.on('app:receipt:search', _.bind(this._onReceiptSearch, this));
+      Communicator.mediator.on('app:receipt:searchend',_.bind(this._onReceiptSearchEnds, this));
+    },
+
+    _onReceiptSearchEnds: function() {
+      this.collection = receiptService.getReceiptCollection();
+      this.render();
+    },
+
+    _onReceiptSearch: function(search) {
+      this.collection = receiptService.searchReceipts(search);
+      this.render();
     },
 
     _logout: function() {

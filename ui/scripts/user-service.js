@@ -23,7 +23,7 @@ define(function(require) {
       data: { username: username, password: password },
       success: function(user) {
         _authenticatedUser = user;
-        Communicator.mediator.trigger("app:user:authenticated", user);
+        Communicator.mediator.trigger('app:user:authenticated', user);
         deferred.resolve(user);
       },
       error: function(error) {
@@ -69,7 +69,7 @@ define(function(require) {
       type: 'get',
       success: function(data) {
         _authenticatedUser=null;
-        Communicator.mediator.trigger("app:user:logout");
+        Communicator.mediator.trigger('app:user:logout');
         deferred.resolve(data);
       },
       error: function(error) {

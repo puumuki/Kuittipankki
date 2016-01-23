@@ -43,7 +43,7 @@
     },
 
     initialize: function() {
-      Communicator.mediator.on("app:user:logout",_.bind(this._onLogout, this));
+      Communicator.mediator.on('app:user:logout',_.bind(this._onLogout, this));
     },
     
     _onLogout: function() {
@@ -66,14 +66,14 @@
     _openImage: function(event) {
       var filename = $(event.currentTarget).find('img').attr('alt');  
       new ImageDialogView({
-        title: "Kuva",
+        title: 'Kuva',
         image: filename
       });
     },
 
     _fileUploaded: function(response, response2) {
-      console.log("Response", response);
-      console.log("Response2", response2);
+      console.log('Response', response);
+      console.log('Response2', response2);
       if( this.model.get('id') ) {
         this.model.fetch(null, {});  
       } else {
@@ -82,7 +82,6 @@
     },
 
     _save: function(e) {
-      var data = this.readData();
 
       this.model.set('name', this.ui.name.val() );
       this.model.set('store', this.ui.store.val() );
@@ -96,7 +95,7 @@
       var promise = receiptService.saveReceipt(this.model);
 
       promise.then(function(receipt) {
-        App.router.navigate("#receipt/view/"+receipt.get('id'), {trigger:true});
+        App.router.navigate('#receipt/view/'+receipt.get('id'), {trigger:true});
       }).fail(function(error) {
         console.log(error);
         //TODO: Implementoi virhekäsittely
@@ -106,7 +105,7 @@
     serializeData: function() {
       return _.extend( this.model.toJSON(), {
         tags: _.filter( this.model.get('tags'), function(tag) {
-          return tag !== "";
+          return tag !== '';
         }).join(','),
         readonly: !userService.getAuthenticatedUser()
       });
@@ -120,13 +119,13 @@
 
     _renderDropZone: function() {
 
-      this.dropzone = new window.Dropzone(this.$(".dropzone").get(0), {
-        url: "/upload", 
+      this.dropzone = new window.Dropzone(this.$('.dropzone').get(0), {
+        url: '/upload', 
         acceptedFiles: 'image/*', 
         addRemoveLinks: false,
-        dictDefaultMessage: "Raahaa kuvat ja pudota kuvat tähän, latausta varten.",
+        dictDefaultMessage: 'Raahaa kuvat ja pudota kuvat tähän, latausta varten.',
         headers: {
-          "receipt-id":this.model.get('id')
+          'receipt-id':this.model.get('id')
         },
         init: function() {
           
@@ -138,14 +137,14 @@
       _.each(this.model.get('pictures'), _.bind(function(picture) {
         var mockFile = { name: picture.filename, size: picture.size }; // here we get the file name and size as response 
 
-        var url = "pictures/"+mockFile.name;
+        var url = 'pictures/'+mockFile.name;
 
-        this.dropzone.emit("addedfile", mockFile);      
-        this.dropzone.emit("thumbnail", mockFile, url );
+        this.dropzone.emit('addedfile', mockFile);      
+        this.dropzone.emit('thumbnail', mockFile, url );
 
-        var thumb = this.dropzone.createThumbnailFromUrl(mockFile, url);
+        this.dropzone.createThumbnailFromUrl(mockFile, url);
 
-        this.dropzone.emit("complete", mockFile);
+        this.dropzone.emit('complete', mockFile);
       }, this));
 
       if( !userService.getAuthenticatedUser() ) {
@@ -153,8 +152,8 @@
       }     
 
       //Cancel preview click on added file, file name is not 
-      this.dropzone.on("addedfile", function(file) {
-        file.previewElement.addEventListener("click", function(event) {
+      this.dropzone.on('addedfile', function(file) {
+        file.previewElement.addEventListener('click', function(event) {
           event.preventDefault();
           event.stopPropagation();
         });
@@ -179,7 +178,7 @@
       this._setDateField('registered', this.model.get('registered'));
       
       if(userService.getAuthenticatedUser()) {
-        this.$(".tags").tagsinput();  
+        this.$('.tags').tagsinput();  
       }
 
       this._renderDropZone();

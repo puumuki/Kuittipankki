@@ -1,7 +1,7 @@
 define(function(require) {
   var Backbone = require('backbone');
   var Receipt = require('receipt');
-  var sorters = require('sorters')
+  var sorters = require('sorters');
 
   var ReceiptCollection = Backbone.Collection.extend({
       url: '/receipts',

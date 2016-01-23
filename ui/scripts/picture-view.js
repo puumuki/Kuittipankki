@@ -1,11 +1,10 @@
 define(function(require) {
 
   var Backbone = require('backbone');
-  var template = require('hbs!tmpl/picture')
-
+  var template = require('hbs!tmpl/picture');
   var ConfirmationDialogView = require('confirmation-dialog-view');
-
   var pictureService = require('picture-service');  
+  var _ = require('underscore');
 
   var PictureView = Backbone.Marionette.ItemView.extend({
 
@@ -17,7 +16,7 @@ define(function(require) {
 
     _onImageLoadError: function() {
       this._error = {
-        message: "Kuvaa ei valitettavasti pystytty lataamaan."
+        message: 'Kuvaa ei valitettavasti pystytty lataamaan.'
       };
       this.render();
     },
@@ -31,17 +30,17 @@ define(function(require) {
 
     _onDeletedPicture: function(response) {
       this.options.receipt.removePicture( this.options.image );
-      App.router.navigate("/#receipt/view/" + this.options.receipt.get('id'), {trigger:true} );
+      App.router.navigate('/#receipt/view/' + this.options.receipt.get('id'), {trigger:true} );
     },
 
     _onDeletingFail: function(error) {
-      console.log("Error on deleting picture", error);
+      console.log('Error on deleting picture', error);
     },
 
     _onDeletePictureClick: function() {
-      var confirmationDialog = new ConfirmationDialogView({
-        title: "Kuvan poisto",
-        text: "Haluato varmasti poistaa kuvan?",
+      new ConfirmationDialogView({
+        title: 'Kuvan poisto',
+        text: 'Haluato varmasti poistaa kuvan?',
         onOk: _.bind( this._deletePicture, this )
       });
     },

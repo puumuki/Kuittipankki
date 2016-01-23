@@ -1,10 +1,11 @@
 define(function(require){
 
+  var _ = require('underscore');
   var Backbone = require('backbone');
 
   var Receipt = Backbone.Model.extend({
     url: function() {
-      return this.get("id") ? "/receipt/" + this.get("id") : "/receipt";
+      return this.get('id') ? '/receipt/' + this.get('id') : '/receipt';
     },
 
     removePicture: function(pictureModel) {

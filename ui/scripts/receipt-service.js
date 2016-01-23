@@ -3,7 +3,7 @@ define(function(require) {
   var ReceiptCollection = require('receipt-collection');
   var Q = require('q');
   var communicator = require('communicator');
-
+  var Fuse = require('fuse');
   var _collection = new ReceiptCollection();
 
   communicator.mediator.on('app:user:logout', function() {
@@ -14,8 +14,8 @@ define(function(require) {
    * Fetch a receipt from the server or a memory if receipt is allready fetced.
    * Server fetch can be forced by passing options.fetch as a parameter.
    *
-   * @param options.fetch {Boolean}
-   * @return Q.promise 
+   * @param {Boolean} options.fetch 
+   * @return {Q.promise} promise object
    */
   function fetchReceipt( options ) {
 
@@ -47,7 +47,7 @@ define(function(require) {
    * shown in the UI. It's still accessible from server GET /receipt and PUT/receipt methods.
    *
    * @param receipt {Backbone.Receipt}
-   * @return Q.promise 
+   * @return {Q.promise} promise object
    */
   function deleteReceipt( receipt ) {
 
@@ -65,7 +65,7 @@ define(function(require) {
       });
     } else {
       deferred.reeject({
-        error: "Could not delete receipt"
+        error: 'Could not delete receipt'
       });
     }
 
@@ -76,15 +76,15 @@ define(function(require) {
    * Fetch receipts from the server. If collection is empty receipt are loaded
    * from server else receipts are returned from browsers memory.
    * @param options.fetch {Boolean} forces to fetch collection from server
-   * @return Q.promise object
+   * @return {Q.promise} object
    */
   function fetchReceiptCollection( options ) {
 
-    var options = options || {};
+    var ops = options || {};
 
     var deferred = Q.defer();
     
-    if( _collection.size() === 0 || options.fetch ) {
+    if( _collection.size() === 0 || ops.fetch ) {
       _collection.fetch({
         success: function() {
           deferred.resolve(_collection);
@@ -100,6 +100,11 @@ define(function(require) {
     return deferred.promise;
   } 
 
+  /**
+   * Saves receipt to server
+   * @param {Backbone.Receipt} receipt
+   * @return {Q.promise} promise object
+   */
   function saveReceipt( receipt ) {
     var id = receipt.get('id');
 
@@ -122,11 +127,47 @@ define(function(require) {
     return deferred.promise;
   }
 
+  /**
+   * Search receipts from browser memory, from the _collection object. 
+   * @param {String} search string
+   * @param {ReceiptCollection} found receipts
+   */
+  function searchReceipts( search ) {
+    var data = _collection.toJSON();
+    
+    var keys = ['description','name', 'tags',
+                'pictures','purchaseDate',
+                'registered','store'];
+
+    var fuse = new Fuse(data, {
+      caseSensitive: false,
+      includeScore: false,
+      shouldSort: true,
+      threshold: 0.6,
+      location: 0,
+      distance: 100,
+      maxPatternLength: 32,
+      keys: keys
+    });
+
+    return new ReceiptCollection( fuse.search( search ) );
+  }
+
+  /**
+   * Return internal collection
+   * @return {ReceiptCollection} receipt collection
+   */
+  function getReceiptCollection() {
+    return _collection;
+  }
+
   return {
+    getReceiptCollection: getReceiptCollection,
     fetchReceiptCollection:fetchReceiptCollection,
     fetchReceipt:fetchReceipt,
     saveReceipt:saveReceipt,
-    deleteReceipt: deleteReceipt
+    deleteReceipt: deleteReceipt,
+    searchReceipts: searchReceipts
   };
   
 });
