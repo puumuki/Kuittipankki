@@ -1,6 +1,6 @@
 define(function(require) {
 
-  var moment = require('momentjs');
+  var moment = require('moment');
 
   /**
    * Return sorter function user as BackboneCollection.sort function.

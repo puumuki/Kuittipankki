@@ -8,6 +8,7 @@ define(function(require) {
       userService = require('user-service');
 
   require('jqueryui');
+  require('moment-duration-format');
 
   var App = new Backbone.Marionette.Application();
 

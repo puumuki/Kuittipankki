@@ -43,14 +43,7 @@ module.exports = function (grunt) {
                 options: {
                     livereload: true
                 }
-            }
-            /* not used at the moment
-            handlebars: {
-                files: [
-                    '<%= yeoman.app %>/templates/*.hbs'
-                ],
-                tasks: ['handlebars']
-            }*/
+            }s
         },
 
         // testing server
@@ -99,19 +92,27 @@ module.exports = function (grunt) {
             ]
         },
 
-        
+        /* not used at the moment
+        handlebars: {
+            files: [
+                '<%= yeoman.app %>/templates/*.hbs'
+            ],
+            tasks: ['handlebars']
+        }*/
 
         // require
         requirejs: {
             dist: {
                 // Options: https://github.com/jrburke/r.js/blob/master/build/example.build.js
                 options: {
+                    name:"main",
                     // `name` and `out` is set by grunt-usemin
-                    baseUrl: 'app/scripts',
-                    optimize: 'none',
+                    baseUrl: 'scripts',
+                    optimize: 'uglify',
                     paths: {
                         'templates': '../../.tmp/scripts/templates'
                     },
+                    mainConfigFile: 'scripts/init.js',
                     // TODO: Figure out how to make sourcemaps work with grunt-usemin
                     // https://github.com/yeoman/grunt-usemin/issues/30
                     //generateSourceMaps: true,
@@ -129,7 +130,9 @@ module.exports = function (grunt) {
                         excludeHbs: true,
                         // removes i18n precompiler, handlebars and json2
                         excludeAfterBuild: true
-                    }
+                    },
+                    wrapShim: false,
+                    out:'build/kuittipankki.js'
                 }
             }
         },
@@ -229,6 +232,8 @@ module.exports = function (grunt) {
             }
         }
     });
+
+    //grunt.loadNpmTasks('grunt-contrib-requirejs');
 
     grunt.registerTask('createDefaultTemplate', function () {
         grunt.file.write('.tmp/scripts/templates.js', 'this.JST = this.JST || {};');

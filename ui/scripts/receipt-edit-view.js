@@ -2,7 +2,7 @@
 
   var Backbone = require('backbone');
   var template = require('hbs!tmpl/receipt-edit');
-  var moment = require('momentjs');
+  var moment = require('moment');
   var receiptService = require('receipt-service');
   var Communicator = require('communicator');
   var userService = require('user-service');
@@ -72,8 +72,6 @@
     },
 
     _fileUploaded: function(response, response2) {
-      console.log('Response', response);
-      console.log('Response2', response2);
       if( this.model.get('id') ) {
         this.model.fetch(null, {});  
       } else {

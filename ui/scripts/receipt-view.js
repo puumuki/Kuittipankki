@@ -8,10 +8,8 @@ define(function(require) {
   var communicator = require('communicator');
   var ConfirmationDialogView = require('confirmation-dialog-view');
   var effectService = require('effect-service');
-  var moment = require('momentjs');
+  var moment = require('moment');
   var ImageDialogView = require('image-dialog-view');
-
-  require('moment-duration-format');
 
   var ReceiptView = Backbone.Marionette.ItemView.extend({
 
@@ -60,7 +58,7 @@ define(function(require) {
       var format = 'YYYY-MM-DD hh:mm:ss';
       var purchaseDate = moment(date , format);
       var diff =moment(moment()).diff(purchaseDate);
-      return moment.duration(diff,'ms').format('y [vuotta] d [päivää] h [tuntia]');
+      return moment.duration(diff,'ms').format('y [vuotta] d [päivää]');
     },
 
     serializeData: function() {      

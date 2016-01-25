@@ -2,7 +2,6 @@ require.config({
 
   waitSeconds: 0,
  
-
   /* starting point for application */
   deps: [
     'backbone.marionette', 
@@ -12,7 +11,6 @@ require.config({
     'moment',
     'main'
   ],
-
 
   shim: {
     bootstraptagsinput: {
@@ -30,21 +28,16 @@ require.config({
       deps: ['jquery', 'jqueryui'],
       exports: 'jquery'
     }
-  },
-
- 
-  map: {
-    '*' : {
-      'moment' : 'momentjs'
-    }
-  },
+  },  
 
   paths: {
     q:'../bower_components/q/q',
 
     dropzone: '../bower_components/dropzone/dist/dropzone',
 
-    momentjs: '../bower_components/momentjs/min/moment.min',
+   'moment-duration-format' : 'vendor/moment-duration-format',
+
+    moment: '../bower_components/momentjs/min/moment.min',
 
     jquery: '../bower_components/jquery/dist/jquery.min',      
 
@@ -75,9 +68,7 @@ require.config({
     json2: '../bower_components/require-handlebars-plugin/hbs/json2',
     hbs: '../bower_components/require-handlebars-plugin/hbs',
 
-    'moment-duration-format' : '../bower_components/moment-duration-format/lib/moment-duration-format',
-
-    fuse: '../bower_components/fuse.js/src/fuse.min'   
+    fuse: '../bower_components/fuse.js/src/fuse.min'
   },
 
   hbs: {

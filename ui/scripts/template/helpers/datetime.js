@@ -1,6 +1,6 @@
 define(function(require) {
 
-  var moment = require('momentjs');
+  var moment = require('moment');
   var Handlebars = require('handlebars');
 
   function dateTimeHelper(value) {

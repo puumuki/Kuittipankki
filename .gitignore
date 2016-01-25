@@ -6,7 +6,7 @@ server/.editorconfig
 server/settings.js
 todo.txt
 server/data/receipts.json
-
+ui/build/*
 server/data/users.json
 *.log
 server/sessions/*
