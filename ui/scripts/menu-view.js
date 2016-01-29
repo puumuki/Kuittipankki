@@ -69,7 +69,6 @@ define(function(require) {
     },
 
     _onSearch: function(event) {
-      console.log(event);
       if( event.keyCode === 27 ) {
         return this._endSearch();
       }

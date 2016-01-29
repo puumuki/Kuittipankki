@@ -61,7 +61,7 @@ app.use(expressValidator() );
 
 app.use(cookieParser());
 
-app.use(express.static(path.join(__dirname,'..', 'ui')));
+app.use(express.static( settings.ui_path ));
 
 app.use('/pictures', express.static(path.join(__dirname,'pictures')));
 

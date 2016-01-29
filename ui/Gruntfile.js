@@ -21,8 +21,8 @@ module.exports = function (grunt) {
 
     // configurable paths
     var yeomanConfig = {
-        app: '',
-        dist: 'dist'
+        app: '.',
+        dist: 'build'
     };
 
     grunt.initConfig({
@@ -36,14 +36,13 @@ module.exports = function (grunt) {
                     
                     'scripts/{,**/}*.js',
                     'templates/{,**/}*.hbs',
-                    
                     'test/spec/{,**/}*.js'
                 ],
                 tasks: ['exec'],
                 options: {
                     livereload: true
                 }
-            }s
+            }
         },
 
         // testing server
@@ -92,14 +91,6 @@ module.exports = function (grunt) {
             ]
         },
 
-        /* not used at the moment
-        handlebars: {
-            files: [
-                '<%= yeoman.app %>/templates/*.hbs'
-            ],
-            tasks: ['handlebars']
-        }*/
-
         // require
         requirejs: {
             dist: {
@@ -132,21 +123,21 @@ module.exports = function (grunt) {
                         excludeAfterBuild: true
                     },
                     wrapShim: false,
-                    out:'build/kuittipankki.js'
+                    out:'build/scripts/kuittipankki.js'
                 }
             }
         },
 
         useminPrepare: {
-            html: '<%= yeoman.app %>/index.html',
+            html: '<%= yeoman.app %>/prod/index.html',
             options: {
                 dest: '<%= yeoman.dist %>'
             }
         },
 
         usemin: {
-            html: ['<%= yeoman.dist %>/{,*/}*.html'],
-            css: ['<%= yeoman.dist %>/styles/{,*/}*.css'],
+            html: ['<%= yeoman.dist %/prod/*.html'],
+            css: ['<%= yeoman.dist %>/css/{,*/}*.css'],
             options: {
                 dirs: ['<%= yeoman.dist %>']
             }
@@ -164,11 +155,15 @@ module.exports = function (grunt) {
         },
 
         cssmin: {
-            dist: {
+            target: {
                 files: {
-                    '<%= yeoman.dist %>/styles/main.css': [
-                        '.tmp/styles/{,*/}*.css',
-                        '<%= yeoman.app %>/styles/{,*/}*.css'
+                    '<%= yeoman.dist %>/css/style.css': [
+                        'bower_components/bootstrap/dist/css/bootstrap-theme.min.css',
+                        'bower_components/dropzone/dist/dropzone.css',
+                        'bower_components/jquery-ui/themes/base/jquery-ui.css',
+                        'bower_components/bootstrap-tagsinput/dist/bootstrap-tagsinput.css',
+                        'css/bootstrap-sandstone.css',
+                        'css/style.css'
                     ]
                 }
             }
@@ -177,21 +172,19 @@ module.exports = function (grunt) {
         htmlmin: {
             dist: {
                 options: {
-                    /*removeCommentsFromCDATA: true,
+                    removeCommentsFromCDATA: true,
                     // https://github.com/yeoman/grunt-usemin/issues/44
-                    //collapseWhitespace: true,
+                    collapseWhitespace: true,
                     collapseBooleanAttributes: true,
-                    removeAttributeQuotes: true,
+                    removeAttributeQuotes: false,
                     removeRedundantAttributes: true,
-                    useShortDoctype: true,
+                    useShortDoctype: false,
                     removeEmptyAttributes: true,
-                    removeOptionalTags: true*/
+                    removeOptionalTags: false,
+                    preserveLineBreaks: true
                 },
                 files: [{
-                    expand: true,
-                    cwd: '<%= yeoman.app %>',
-                    src: '*.html',
-                    dest: '<%= yeoman.dist %>'
+                    'build/index.html':'prod/index.html'
                 }]
             }
         },
@@ -207,7 +200,7 @@ module.exports = function (grunt) {
                         '*.{ico,txt}',
                         '.htaccess',
                         'images/{,*/}*.{webp,gif}',
-                        'bower_components/requirejs/require.js'
+                        'scripts/vendor/require.min.js'
                     ]
                 }]
             }
@@ -251,9 +244,7 @@ module.exports = function (grunt) {
 
         grunt.task.run([
             'clean:server',
-            
             'connect:testserver',
-            
             'exec',
             'open',
             'watch'
@@ -273,14 +264,11 @@ module.exports = function (grunt) {
     grunt.registerTask('build', [
         'createDefaultTemplate',
         'handlebars',
-        'compass:dist',
         'useminPrepare',
         'requirejs',
         'imagemin',
         'htmlmin',
-        'concat',
         'cssmin',
-        'uglify',
         'copy',
         'usemin'
     ]);

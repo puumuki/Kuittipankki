@@ -10,3 +10,5 @@ ui/build/*
 server/data/users.json
 *.log
 server/sessions/*
+ui/build/*
+ui/.tmp/*
