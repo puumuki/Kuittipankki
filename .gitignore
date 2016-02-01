@@ -13,3 +13,6 @@ server/sessions/*
 ui/build/*
 ui/.tmp/*
 rsync-build-to-server.sh
+data/receipts.json
+
+data/users.json
