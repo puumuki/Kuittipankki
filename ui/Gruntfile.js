@@ -202,6 +202,13 @@ module.exports = function (grunt) {
                         'images/{,*/}*.{webp,gif}',
                         'scripts/vendor/require.min.js'
                     ]
+                }, {
+                    dot: true,
+                    expand:true, 
+                    flatten:true,
+                    cwd: '<%= yeoman.app %>',
+                    src:'bower_components/bootstrap/fonts/*.*', 
+                    dest: '<%= yeoman.dist %>/fonts/',
                 }]
             }
         },
