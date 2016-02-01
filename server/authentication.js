@@ -1,3 +1,6 @@
+/**
+ * Authentication module contains are things needed to authenticate users.
+ */
 var Store = require("jfs");
 var _ = require('underscore');
 var LocalStrategy = require('passport-local').Strategy;
@@ -5,12 +8,21 @@ var crypto = require('crypto');
 var logging = require('./logging');
 var storage = new Store('data/users.json', {saveId:true});
 
+/**
+ * Simple password hash check.
+ * @param {object} user object
+ * @param {string} password as plain text
+ * @return {boolean} true is user is authenticated
+ */
 function matchpasswords( user, password ) {
   var shasum = crypto.createHash('sha1');
   shasum.update(password+user.salt);
   return user.password === shasum.digest('hex');
 }
 
+/**
+ * Authentication strategy what is used with Passport middleware
+ */
 var authenticationStrategy = new LocalStrategy(
   function(username, password, done) {
 
@@ -69,6 +81,9 @@ function loginRouteResponse(req, res) {
   });
 }
 
+/**
+ * Middleware that test is authenticated
+ */
 function isAuthorized(req, res, next) {
   if( !req.user ) {
     return res.status(403).send({message:'UnisAuthorized'});  
