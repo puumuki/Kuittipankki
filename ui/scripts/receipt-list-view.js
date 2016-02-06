@@ -117,7 +117,7 @@ define(function(require) {
         nextPage: this._nextPage(),
         size: this.collection.size(),
         pages: this._pages(this.page),
-        showPaging: this._countOfPages() > 1,
+        showPagination: this._countOfPages() > 1,
         sort: this.sort,
         receipts: _.map( slice, function(item) {
           return item.toJSON();
