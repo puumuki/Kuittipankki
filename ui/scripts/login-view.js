@@ -4,6 +4,19 @@ define(function(require) {
   var userService = require('user-service');
   var _ = require('underscore');
   
+  /**
+   * This is a LoginView that users are using to authenticate to the server.
+   * The view is a special, it don't use a template like all other view, 
+   * but uses a jQuery selector $('#login') as a point to attach to DOM. 
+   * It's done this way to allow browser password managers to find the login
+   * form from the DOM.
+   * 
+   * There are problems to password managers to regonize the login form
+   * if the form is generated dynamically. By including the login form
+   * index.html the form is part of the statically loaded resources, this way
+   * the password managers has better change to regonize the login form
+   * as a login form.
+   */
   var LoginView = Backbone.Marionette.ItemView.extend({
 
     el: $('#login'),
@@ -42,7 +55,6 @@ define(function(require) {
     },
 
     render: function() {
-
       this.bindUIElements();
       this.delegateEvents();
 
