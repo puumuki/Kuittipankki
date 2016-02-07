@@ -1,21 +1,22 @@
 define(function(require) {
 
   var Backbone = require('backbone');
-  var template = require('hbs!tmpl/login');
   var userService = require('user-service');
   var _ = require('underscore');
   
   var LoginView = Backbone.Marionette.ItemView.extend({
 
-    template: template,
+    el: $('#login'),
 
     ui: {
+      'content' : '.row',
+      'error'   : '.alert-warning',
       'username':'input[name="username"]',
       'password':'input[name="password"]'
     },
 
     events: {
-      'click .login-btn':'_login'
+      'click .login-btn':'_login',
     },
 
     serializeData: function() {
@@ -26,15 +27,27 @@ define(function(require) {
       });
     },
 
-    _login: function() {
-      var promise = userService.authenticate(this.ui.username.val(), this.ui.password.val());
+    _login: function(event) {
+      event.preventDefault();
+      var promise = userService.authenticate(this.ui.username.val(), 
+                                             this.ui.password.val());
 
-      promise.then(function(data) {
+      promise.then(_.bind(function(data) {
+        this._loginFailed = false;
         App.router.receiptList();
-      }).fail(_.bind(function(error) {
+      }, this)).fail(_.bind(function(error) {
         this._loginFailed = true;
         this.render();
       }, this));
+    },
+
+    render: function() {
+
+      this.bindUIElements();
+      this.delegateEvents();
+
+      this.ui.content.removeClass('hidden');
+      this.ui.error.toggleClass('hidden', !this._loginFailed);      
     }
   });
 

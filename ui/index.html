@@ -42,16 +42,40 @@
     </head>
 
     <body>
-        <div id="menu"></div>
 
-        <div id="content"></div>
+      <div id="menu"></div>
+      <div id="content"></div>
+      <div id="dialog"></div>
 
-        <div id="dialog"></div>
+      <div id="login"> 
+        
+        <div class="row hidden">
+          <div class="col-md-4 col-md-offset-4 col-sm-4 col-sm-offset-4">
 
-        <!-- build:js scripts/main.js -->
-        <script data-main="scripts/init" src="bower_components/requirejs/require.js"></script>
-        <!-- endbuild -->
-        <!--<script data-main="build/kuittipankki.js" src="bower_components/requirejs/require.js"></script>-->
+            <div class="panel panel-default">
+              <!-- Default panel contents -->
+              <div class="panel-heading">Kirjaudu sisään</div>
+              
+              <div class="panel-body">
+                <form class="form-signin" role="form" method="post">
+                  <div class="hidden alert alert-warning" role="alert">Kirjautuminen epäonnistui, tarkistahan käyttäjätunnus ja salasana, kiitos.</div>
+                  
 
+                  <input type="text" class="form-control" placeholder="Käyttäjätunnus" name="username" required autofocus>
+                  <input type="password" class="form-control" placeholder="Salasana" name="password" required>
+                  <br />
+                  <button class="btn btn-lg btn-primary btn-block login-btn" type="submit">Kirjaudu</button>
+                </form>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- build:js scripts/main.js -->
+      <script data-main="scripts/init" src="bower_components/requirejs/require.js"></script>
+      <!-- endbuild -->
     </body>
 </html>
