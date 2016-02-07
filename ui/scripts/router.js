@@ -30,7 +30,9 @@ define(function(require) {
     }
   };
 
-  contentRegion.show(new LoginView());
+  var loginView = new LoginView();
+
+  contentRegion.show(loginView);
   menuRegion.show(new MenuView());
 
   var ApplicationRouter = Backbone.Router.extend({
@@ -130,7 +132,7 @@ define(function(require) {
     },
 
     login: function() {
-      contentRegion.show(new LoginView());
+      contentRegion.show(loginView);
     },
 
     logout: function() {
