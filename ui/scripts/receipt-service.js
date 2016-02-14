@@ -126,7 +126,7 @@ define(function(require) {
 
     return deferred.promise;
   }
-
+  
   /**
    * Search receipts from browser memory, from the _collection object. 
    * @param {String} search string

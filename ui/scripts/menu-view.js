@@ -12,15 +12,11 @@ define(function(require) {
 
     ui: {
       'searchNav': '#search-nav',
-      'navbarToggle': '.navbar-toggle',
-      'searchInput': '.search-input'
+      'navbarToggle': '.navbar-toggle'
     },
 
     events: {
-      'click #menu-bar a' : '_onNavbarToggleClicked',
-      'click .search': '_onSearchClicked',
-      'keydown .search-input': '_onSearch',
-      'click .large-close': '_endSearch'
+      'click #menu-bar a' : '_onNavbarToggleClicked'
     },
 
     initialize: function(){
@@ -35,16 +31,6 @@ define(function(require) {
       return _.extend( data, {
         user: this._userobject
       });
-    },
-
-    _onSearchClicked: function(event) {
-      event.preventDefault();
-        if ( this.ui.searchNav.is( ':hidden' ) ) {
-          this.ui.searchNav.fadeIn('slow');
-        } else {
-          this.ui.searchNav.fadeOut('slow');
-          this._endSearch();
-        }
     },
 
     _endSearch: function() {
@@ -66,13 +52,6 @@ define(function(require) {
       if( !!$(event.currentTarget).data('refresh') ) {
         this.render();
       }
-    },
-
-    _onSearch: function(event) {
-      if( event.keyCode === 27 ) {
-        return this._endSearch();
-      }
-      Communicator.mediator.trigger('app:receipt:search', this.ui.searchInput.val());
     },
 
     render: function() {

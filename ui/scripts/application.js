@@ -1,5 +1,4 @@
 define(function(require) {
-    'use strict';
 
   var Backbone = require('backbone'), 
       Communicator = require('communicator'), 

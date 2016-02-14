@@ -15,9 +15,6 @@
         <li class="active"><a href="#">Kuitit</a></li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        <li class="">
-          <a data-refresh="false"><span class="search glyphicon glyphicon-search" aria-hidden="true"></span></a>
-        </li>
         {{#if user}}
         <li class=""><a href="#logout">{{user.username}} uloskirjaudu</a></li>
         {{else}}
@@ -27,21 +24,3 @@
     </div><!--/.nav-collapse -->
   </div><!--/.container-fluid -->
 </nav>
-
-<nav id="search-nav" class="navbar navbar-default navbar-static-top">
-  <div class="container-fluid">
-
-    <div id="navbar" class="navbar-collapse collapse">
-      <ul class="nav navbar-nav navbar-right">
-        <li>
-          <a>
-            <input text="text" placeholder="Haku" class="search-input" />
-            <span aria-hidden="true" class="large-close">&times;</span>
-          </a>
-        </li>
-      </ul>
-    </div><!--/.nav-collapse -->
-  </div><!--/.container-fluid -->
-</nav>
-
-

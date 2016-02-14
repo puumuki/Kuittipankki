@@ -2,12 +2,21 @@ define(function(require) {
 
   var _ = require('underscore');
   var Backbone = require('backbone');
-  var ReceiptView = require('receipt-view');
-  var ReceiptListView = require('receipt-list-view');
-  var ReceiptEditView = require('receipt-edit-view');
+
+  var LoadingView = require('loading-view/loading-view');
+
+  var ReceiptListLayout =   require('receipt-list/receipt-list-layout-view');  
+  var ReceiptListMenuView = require('receipt-list/receipt-list-menu-view');
+  var ReceiptListView =     require('receipt-list/receipt-list-view');
+
+  var ReceiptView = require('receipt-view/receipt-view');
+
+  var ReceiptEditView = require('receipt-edit-view/receipt-edit-view');
+
   var LoginView = require('login-view');
   var PictureView = require('picture-view');
   var MenuView = require('menu-view');
+
   var Receipt = require('receipt');
   var PageNotFoundView = require('page-not-found-view');
 
@@ -73,19 +82,29 @@ define(function(require) {
 
     receiptList: function(page) {
 
+      var receiptListLayout = new ReceiptListLayout();
+      contentRegion.show(receiptListLayout);
+      
+      receiptListLayout.receiptListView.show( new LoadingView() );
+
       var promise = receiptService.fetchReceiptCollection();
  
       promise.then(function(receiptCollection) {
-        contentRegion.show(new ReceiptListView({
+        
+        receiptListLayout.menuView.show(new ReceiptListMenuView());
+      
+        receiptListLayout.receiptListView.show(new ReceiptListView({
           collection: receiptCollection,
           page: page
         }));
+
       }).fail(function(data) {
-        console.error('Could not fetch receipts', data.error);
+        console.error('Could not fetch receipts', data);
         if( data.res.status === 403 ) {
           App.router.navigate('#login', {trigger:true});
         }       
       });
+
     },
 
     editReceipt: function(id) {
@@ -108,7 +127,6 @@ define(function(require) {
           model: receipt
         }));
       }).fail(function(error) {
-        console.log(';D;D;',error);
         //TODO: Teepäs tähän virheenkäsittely
         console.error(error);
       });

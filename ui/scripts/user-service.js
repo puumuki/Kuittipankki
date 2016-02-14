@@ -94,13 +94,13 @@ define(function(require) {
    */
   function isSessionAlive() {
 
-    console.log("Starting session listening");
+    console.log('Starting session listening');
 
     function testIsSession() {
       fetchAuthenticatedUser().then(function(user) {
-        console.log("Still authenticated");
+        console.log('Still authenticated');
       }).fail(function(error) {
-        console.log("Not authenticated", error);
+        console.log('Not authenticated', error);
         Communicator.mediator.trigger('app:user:sessionended');
       });
     } 

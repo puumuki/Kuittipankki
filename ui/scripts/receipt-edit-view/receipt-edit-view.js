@@ -1,7 +1,8 @@
   define(function(require) {
 
+  var template = require('hbs!receipt-edit-view/receipt-edit');
+
   var Backbone = require('backbone');
-  var template = require('hbs!tmpl/receipt-edit');
   var moment = require('moment');
   var receiptService = require('receipt-service');
   var Communicator = require('communicator');

@@ -1,14 +1,17 @@
 define(function(require) {
 
   var Backbone = require('backbone');
-  var template = require('hbs!tmpl/receipt');
+  var template = require('hbs!receipt-view/receipt');
   var receiptService = require('receipt-service');
   var userService = require('user-service');
+
   var _ = require('underscore');
+
   var communicator = require('communicator');
-  var ConfirmationDialogView = require('confirmation-dialog-view');
   var effectService = require('effect-service');
   var moment = require('moment');
+
+  var ConfirmationDialogView = require('confirmation-dialog-view');
   var ImageDialogView = require('image-dialog-view');
 
   var ReceiptView = Backbone.Marionette.ItemView.extend({
@@ -19,7 +22,8 @@ define(function(require) {
 
     events: {
       'click button[name="delete"]' : '_deleteReceiptClick',
-      'click a.thumbnail': '_onImageClicked'
+      'click a.thumbnail': '_onImageClicked',
+      'click button[name="copy"]' : '_copyReceipt'
     },
 
     initialize: function() {
@@ -59,6 +63,10 @@ define(function(require) {
       var purchaseDate = moment(date , format);
       var diff =moment(moment()).diff(purchaseDate);
       return moment.duration(diff,'ms').format('y [vuotta] d [päivää]');
+    },
+
+    _copyReceipt: function() {
+       this.model.toJSON();
     },
 
     serializeData: function() {      

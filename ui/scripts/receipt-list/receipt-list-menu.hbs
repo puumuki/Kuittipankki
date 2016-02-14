@@ -1,0 +1,27 @@
+<div class="row receipt-menu">
+  
+  <div class="col-md-4 col-sm-4 col-xs-12 receipt-menu-item">
+    <div class="btn-group" role="group" aria-label="...">
+      <button data-sort="name" data-order="{{sort.order}}" type="button" class="btn btn-default sort">Nimi</button>
+      <button data-sort="purchaseDate" data-order="{{sort.order}}" type="button" class="btn btn-default sort">Päivämäärä</button>
+    </div>
+  </div>
+
+  <div class="col-md-7 col-sm-7 col-xs-12 receipt-menu-item">
+    <div class="input-group pull-right">
+      <input type="text" class="form-control search-input" 
+                         placeholder="Search" name="search">
+      <div class="input-group-btn">
+          <button class="btn btn-default" type="button"><i class="glyphicon glyphicon-search"></i></button>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-1 col-sm-1 col-xs-12 receipt-menu-item">
+    <div class="btn-group pull-right" role="group" aria-label="...">
+      <a href="#/receipt/new">
+        <button data-sort="name" type="button" class="btn btn-default">Uusi</button>
+      </a>
+    </div>
+  </div>
+</div>

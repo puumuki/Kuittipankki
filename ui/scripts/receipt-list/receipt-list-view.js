@@ -1,7 +1,7 @@
 define(function(require) {
 
   var Backbone = require('backbone');
-  var template = require('hbs!tmpl/receipt-list');
+  var template = require('hbs!receipt-list/receipt-list');
   var ReceiptCollection = require('receipt-collection');
   var userService = require('user-service');
   var Communicator = require('communicator');
@@ -13,10 +13,6 @@ define(function(require) {
   var ReceiptListView = Backbone.Marionette.ItemView.extend({
 
     template: template,
-
-    events: {
-      'click button.sort' : '_sortBy'
-    },
 
     initialize: function( options ) {
       this.sort = {
@@ -35,6 +31,7 @@ define(function(require) {
       Communicator.mediator.on('app:user:logout', _.bind(this._logout,this));
       Communicator.mediator.on('app:receipt:search', _.bind(this._onReceiptSearch, this));
       Communicator.mediator.on('app:receipt:searchend',_.bind(this._onReceiptSearchEnds, this));
+      Communicator.mediator.on('app:receipt:sort', _.bind(this._sortBy,this));
     },
 
     _onReceiptSearchEnds: function() {
@@ -51,13 +48,8 @@ define(function(require) {
       this.render();
     },
 
-    _sortBy: function(event) {
-
-      this.sort = {
-        attribute: $(event.currentTarget).data('sort'),
-        order: $(event.currentTarget).data('order') === 'asc' ? 'desc' : 'asc',
-      };
-
+    _sortBy: function(sort) {
+      this.sort = sort;
       this.render();
     },
 

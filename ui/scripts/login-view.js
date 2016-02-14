@@ -5,7 +5,7 @@ define(function(require) {
   var _ = require('underscore');
   
   /**
-   * This is a LoginView that users are using to authenticate to the server.
+   * This is a LoginView that registered users are using to authenticate.
    * The view is a special, it don't use a template like all other view, 
    * but uses a jQuery selector $('#login') as a point to attach to DOM. 
    * It's done this way to allow browser password managers to find the login
@@ -49,6 +49,7 @@ define(function(require) {
         this._loginFailed = false;
         App.router.receiptList();
       }, this)).fail(_.bind(function(error) {
+        this.$el.effect('shake', 1000);
         this._loginFailed = true;
         this.render();
       }, this));
