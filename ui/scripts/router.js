@@ -13,16 +13,17 @@ define(function(require) {
 
   var ReceiptEditView = require('receipt-edit-view/receipt-edit-view');
 
-  var LoginView = require('login-view');
+  var LoginView = require('login-view/login-view');
   var PictureView = require('picture-view');
-  var MenuView = require('menu-view');
+  
+  var MenuView = require('menu-view/menu-view');
 
   var Receipt = require('receipt');
   var PageNotFoundView = require('page-not-found-view');
 
   var regionManager = require('region-manager');
-  var receiptService = require('receipt-service');
-  var userService = require('user-service');
+  var receiptService = require('services/receipt-service');
+  var userService = require('services/user-service');
   
   /* Regions */
   var menuRegion = regionManager.addRegion('menu','#menu'); 

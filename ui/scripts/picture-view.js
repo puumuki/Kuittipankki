@@ -2,8 +2,8 @@ define(function(require) {
 
   var Backbone = require('backbone');
   var template = require('hbs!tmpl/picture');
-  var ConfirmationDialogView = require('confirmation-dialog-view');
-  var pictureService = require('picture-service');  
+  var ConfirmationDialogView = require('confirmation-dialog-view/confirmation-dialog-view');
+  var pictureService = require('services/picture-service');  
   var _ = require('underscore');
 
   var PictureView = Backbone.Marionette.ItemView.extend({

@@ -5,6 +5,7 @@ define(function(require) {
   var communicator = require('communicator');
   var Fuse = require('fuse');
   var _collection = new ReceiptCollection();
+  var Receipt = require('receipt');
 
   communicator.mediator.on('app:user:logout', function() {
     _collection.reset(null);//Clear receipt in memory after logout
@@ -128,6 +129,17 @@ define(function(require) {
   }
   
   /**
+   * Clones receipt to server
+   * @param {Backbone.Receipt} receipt
+   * @return {Q.promise} promise object
+   */
+  function cloneReceipt( receipt ) {
+    var receiptData = receipt.toJSON();
+    delete receiptData.id;
+    return saveReceipt(new Receipt( receiptData ));
+  }
+
+  /**
    * Search receipts from browser memory, from the _collection object. 
    * @param {String} search string
    * @param {ReceiptCollection} found receipts
@@ -167,7 +179,8 @@ define(function(require) {
     fetchReceipt:fetchReceipt,
     saveReceipt:saveReceipt,
     deleteReceipt: deleteReceipt,
-    searchReceipts: searchReceipts
+    searchReceipts: searchReceipts,
+    cloneReceipt: cloneReceipt
   };
   
 });

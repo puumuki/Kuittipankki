@@ -4,7 +4,7 @@ define(function(require) {
       Communicator = require('communicator'), 
       Router = require('router'), 
       $ = require('jquery'),
-      userService = require('user-service');
+      userService = require('services/user-service');
 
   require('jqueryui');
   require('moment-duration-format');

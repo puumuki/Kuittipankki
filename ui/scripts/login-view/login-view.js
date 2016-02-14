@@ -1,7 +1,7 @@
 define(function(require) {
 
   var Backbone = require('backbone');
-  var userService = require('user-service');
+  var userService = require('services/user-service');
   var _ = require('underscore');
   
   /**

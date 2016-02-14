@@ -2,17 +2,16 @@ define(function(require) {
 
   var Backbone = require('backbone');
   var template = require('hbs!receipt-view/receipt');
-  var receiptService = require('receipt-service');
-  var userService = require('user-service');
+  var receiptService = require('services/receipt-service');
+  var userService = require('services/user-service');
 
   var _ = require('underscore');
 
   var communicator = require('communicator');
-  var effectService = require('effect-service');
+  var effectService = require('services/effect-service');
   var moment = require('moment');
 
-  var ConfirmationDialogView = require('confirmation-dialog-view');
-  var ImageDialogView = require('image-dialog-view');
+  var ImageDialogView = require('image-dialog-view/image-dialog-view');
 
   var ReceiptView = Backbone.Marionette.ItemView.extend({
 
@@ -21,9 +20,7 @@ define(function(require) {
     template: template,
 
     events: {
-      'click button[name="delete"]' : '_deleteReceiptClick',
       'click a.thumbnail': '_onImageClicked',
-      'click button[name="copy"]' : '_copyReceipt'
     },
 
     initialize: function() {
@@ -39,34 +36,11 @@ define(function(require) {
       });
     },
 
-    _deleteReceiptClick: function() {
-      new ConfirmationDialogView({
-        title: 'Kuitin poisto',
-        text: 'Haluato varmasti poistaa kuitin?',
-        onOk: _.bind( this._deleteReceipt, this )
-      });
-    },
-
-    _deleteReceipt: function() {
-      var promise = receiptService.deleteReceipt(this.model);
-
-      promise.then(function(data) {
-        App.router.navigate('#', {trigger:true});
-      }).fail(function(error) {
-        console.error(error);
-        //TODO: Make error handling
-      });
-    },
-
     _durationFromDate: function(date) {
       var format = 'YYYY-MM-DD hh:mm:ss';
       var purchaseDate = moment(date , format);
       var diff =moment(moment()).diff(purchaseDate);
       return moment.duration(diff,'ms').format('y [vuotta] d [päivää]');
-    },
-
-    _copyReceipt: function() {
-       this.model.toJSON();
     },
 
     serializeData: function() {      

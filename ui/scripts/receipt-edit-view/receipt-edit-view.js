@@ -4,12 +4,17 @@
 
   var Backbone = require('backbone');
   var moment = require('moment');
-  var receiptService = require('receipt-service');
   var Communicator = require('communicator');
-  var userService = require('user-service');
-  var ImageDialogView = require('image-dialog-view');
+
+  var ConfirmationDialogView = require('confirmation-dialog-view/confirmation-dialog-view');
+  
+  var receiptService = require('services/receipt-service');
+  var userService = require('services/user-service');
+  var effectService = require('services/effect-service');
+
+  var ImageDialogView = require('image-dialog-view/image-dialog-view');
   var _ = require('underscore');
-  var effectService = require('effect-service');
+  
   require('bootstraptagsinput');
 
   function formatDate(dateString) {
@@ -38,15 +43,56 @@
     },
 
     events: {
+      'click button[name="delete"]' : '_deleteReceiptClick',
       'keyup input[name="name"]':'_updateName',
       'click button[name="save"]':'_save',
+      'click button[name="clone"]':'_cloneReceiptClick',
       'click .dz-image-preview': '_openImage'
     },
 
     initialize: function() {
       Communicator.mediator.on('app:user:logout',_.bind(this._onLogout, this));
     },
+
+    _cloneReceiptClick: function() {
+      new ConfirmationDialogView({
+        title: 'Kuitin monistus',
+        text: 'Haluato varmasti monistaa, eli kloonata, eli kopioda kuitin?',
+        onOk: _.bind( this._cloneReceipt, this )
+      });
+    },
     
+    _deleteReceiptClick: function() {
+      new ConfirmationDialogView({
+        title: 'Kuitin poisto',
+        text: 'Haluato varmasti poistaa kuitin?',
+        onOk: _.bind( this._deleteReceipt, this )
+      });
+    },
+
+    _cloneReceipt: function() {
+      var promise = receiptService.cloneReceipt(this.model);
+
+      promise.then(function(receipt) {
+        console.log( receipt.toJSON() );
+        App.router.navigate('#receipt/'+receipt.get('id'), {trigger:true});
+      }).fail(function(error) {
+        console.error(error);
+        //TODO: Make error handling
+      });
+    },
+
+    _deleteReceipt: function() {
+      var promise = receiptService.deleteReceipt(this.model);
+
+      promise.then(function(data) {
+        App.router.navigate('#', {trigger:true});
+      }).fail(function(error) {
+        console.error(error);
+        //TODO: Make error handling
+      });
+    },    
+
     _onLogout: function() {
       this.render();
     },
@@ -164,6 +210,8 @@
     _setDateField: function(fieldName, value) {
       if( value ) {
         this.ui[fieldName].datepicker('setDate', new Date(value));
+      } else {
+        this.ui[fieldName].val('');
       }
     },
 

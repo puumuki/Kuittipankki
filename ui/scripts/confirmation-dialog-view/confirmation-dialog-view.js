@@ -2,12 +2,12 @@
 define(function(require) {
 
   var Backbone = require('backbone');
-  var template = require('hbs!tmpl/image-dialog');
+  var template = require('hbs!confirmation-dialog-view/confirmation-dialog');
   var _ = require('underscore');
 
   var regionManager = require('region-manager');
 
-  var ImageDialogView = Backbone.Marionette.ItemView.extend({
+  var ConfirmationDialogView = Backbone.Marionette.ItemView.extend({
 
     template: template,
 
@@ -16,7 +16,7 @@ define(function(require) {
     },
 
     events : {
-      'click button[name="ok"]': '_onOkButtonClick',
+      'click button[name="ok"]': '_onOkButtonClick'
     },
 
     _onOkButtonClick : function() {
@@ -28,15 +28,16 @@ define(function(require) {
     serializeData: function() {
       return {
         title: this.options.title,
-        image: this.options.image
+        text: this.options.text
       };
     },
 
     render: function() {
-      ImageDialogView.__super__.render.call(this);
+      ConfirmationDialogView.__super__.render.call(this);
       this.$el.find('.modal').modal();
     }
+
   });
 
-  return ImageDialogView;
+  return ConfirmationDialogView;
 });

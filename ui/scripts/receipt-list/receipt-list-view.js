@@ -3,9 +3,9 @@ define(function(require) {
   var Backbone = require('backbone');
   var template = require('hbs!receipt-list/receipt-list');
   var ReceiptCollection = require('receipt-collection');
-  var userService = require('user-service');
+  var userService = require('services/user-service');
   var Communicator = require('communicator');
-  var receiptService = require('receipt-service');
+  var receiptService = require('services/receipt-service');
   var _ = require('underscore');
 
   var items = 10;

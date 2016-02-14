@@ -3,7 +3,7 @@ define(function(require) {
   var _ = require('underscore');
 
   var Backbone = require('backbone');
-  var template = require('hbs!tmpl/menu');
+  var template = require('hbs!menu-view/menu');
   var Communicator = require('communicator');
 
   var RecipeListView = Backbone.Marionette.ItemView.extend({
