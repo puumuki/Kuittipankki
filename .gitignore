@@ -16,3 +16,4 @@ rsync-build-to-server.sh
 data/receipts.json
 data/users.json
 *.pyc
+scripts/backupper/settins.py
