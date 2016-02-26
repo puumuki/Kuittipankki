@@ -12,13 +12,20 @@ import shutil
 
 logger = logger.get_logger()
 
-#Message decorator
 def message(message, arguments=True, line=False):
+  """
+  Decorator function, print message before function is executed.
+  @param {string} message
+  @param {boolean} arguments, print arguments in output
+  @param {boolean} line prints seperation line after message
+  """
   def _wrapper(func):
     def _func_wrapper(*args):
       msg = message
+      
       if arguments:
         msg = message % args
+
       logger.info(msg)
 
       if line:
