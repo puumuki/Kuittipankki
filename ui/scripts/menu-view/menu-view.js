@@ -5,6 +5,8 @@ define(function(require) {
   var Backbone = require('backbone');
   var template = require('hbs!menu-view/menu');
   var Communicator = require('communicator');
+  var userService = require('services/user-service');
+  var UserEditDialogView = require('user-edit-dialog-view/user-edit-dialog-view');
 
   var RecipeListView = Backbone.Marionette.ItemView.extend({
 
@@ -16,7 +18,8 @@ define(function(require) {
     },
 
     events: {
-      'click #menu-bar a' : '_onNavbarToggleClicked'
+      'click #menu-bar a' : '_onNavbarToggleClicked',
+      'click #user-edit a' : '_userEditDialog'
     },
 
     initialize: function(){
@@ -52,6 +55,16 @@ define(function(require) {
       if( !!$(event.currentTarget).data('refresh') ) {
         this.render();
       }
+    },
+
+    _userEditDialog: function(event) {
+      event.preventDefault();
+
+      userService.fetchAuthenticatedUser().then(function(user) {
+        var userEditDialog = new UserEditDialogView({ model: user });
+      }).fail(function(error) {
+        console.error("Failed fetch user information", error);
+      });
     },
 
     render: function() {
