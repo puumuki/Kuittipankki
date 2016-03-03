@@ -1,5 +1,8 @@
-var logging = require('./logging');
-var app = require('./app');
+/**
+ * Kuittipankki application starting point
+ */
+var logging  = require('./logging');
+var app      = require('./app');
 var settings = require('./settings');
 
 var server = app.listen(settings.port, function () {

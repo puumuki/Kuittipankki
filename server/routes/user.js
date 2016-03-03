@@ -4,10 +4,7 @@ var Store = require("jfs");
 var crypto = require('crypto');
 var _ = require('underscore');
 var logging = require('../logging');
-
-//TODO validointi, autentikointi
-//https://github.com/flosse/json-file-store
-
+var dateutils = require('../dateutils');
 var storage = new Store('data/users.json', {saveId:true});
 
 /* POST - User */
@@ -22,7 +19,9 @@ router.post('/user', function(req, res) {
   var user = {
     username: req.body.username,
     password: password,
-    salt: salt
+    salt: salt,
+    created: dateutils.currentDateTime(),
+    updated: dateutils.currentDateTime()
   };
 
   var id = storage.saveSync(user);
@@ -39,6 +38,7 @@ router.put('/user/:id', function(req, res) {
   var user = storage.get(req.params['id'], function(err, user) {   
     if( user ) {
       user.username = req.body.username;
+      user.updated = dateutils.currentDateTime();
       storage.saveSync(req.params['id'],user);
       res.send({ id: user.id, username: user.username });
     } else {
@@ -83,7 +83,9 @@ router.get('/userauthenticated', function(req, res) {
   if( req.user ) {
     res.send({
       id: req.user.id,
-      username: req.user.username
+      username: req.user.username,
+      created: req.user.created,
+      updated: req.user.updated
     });
   } else {
     res.status(403);

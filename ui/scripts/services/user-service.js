@@ -1,6 +1,7 @@
 define(function(require) {
   var Q = require('q');
   var Communicator = require('communicator');
+  var User = require('user');
 
   /**
    * Currently authenticated user
@@ -27,9 +28,9 @@ define(function(require) {
       type: 'post',
       data: { username: username, password: password },
       success: function(user) {
-        _authenticatedUser = user;
-        Communicator.mediator.trigger('app:user:authenticated', user);
-        deferred.resolve(user);
+        _authenticatedUser = new User( user );
+        Communicator.mediator.trigger('app:user:authenticated', _authenticatedUser);
+        deferred.resolve(_authenticatedUser);
       },
       error: function(error) {
         deferred.reject(error);
@@ -51,8 +52,8 @@ define(function(require) {
       url: '/userauthenticated',
       type: 'get',
       success: function(user) {
-        _authenticatedUser = user;
-        deferred.resolve(user);
+        _authenticatedUser = new User(user);
+        deferred.resolve(_authenticatedUser);
       },
       error: function(error) {
         deferred.reject(error);

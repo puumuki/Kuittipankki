@@ -21,8 +21,6 @@ define(function(require) {
   var Receipt = require('receipt');
   var PageNotFoundView = require('page-not-found-view');
 
-  var UserEditDialogView = require('user-edit-dialog-view/user-edit-dialog-view');
-
   var regionManager = require('region-manager');
   var receiptService = require('services/receipt-service');
   var userService = require('services/user-service');

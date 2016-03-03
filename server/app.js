@@ -1,21 +1,24 @@
-var express = require('express');
-var path = require('path');
-var favicon = require('serve-favicon');
-var logger = require('morgan');
-var cookieParser = require('cookie-parser');
-var bodyParser = require('body-parser');
-var exphbs  = require('express-handlebars');
+/**
+ * Kuittipankki Express Server
+ */
+var express          = require('express');
+var path             = require('path');
+var favicon          = require('serve-favicon');
+var logger           = require('morgan');
+var cookieParser     = require('cookie-parser');
+var bodyParser       = require('body-parser');
+var exphbs           = require('express-handlebars');
 var expressValidator = require('express-validator');
-var passport = require('passport');
-var expressSession = require('express-session')
-var picture = require('./routes/picture');
-var routes = require('./routes/index');
-var users = require('./routes/user');
-var receipts = require('./routes/receipts');
-var settings = require('./settings');
-var authentication = require('./authentication');
-var _ = require('underscore');
-var logging = require('./logging');
+var passport         = require('passport');
+var expressSession   = require('express-session')
+var picture          = require('./routes/picture');
+var routes           = require('./routes/index');
+var users            = require('./routes/user');
+var receipts         = require('./routes/receipts');
+var settings         = require('./settings');
+var authentication   = require('./authentication');
+var _                = require('underscore');
+var logging          = require('./logging');
 
 //Session are stored by default to .session file
 var FileStore = require('session-file-store')(expressSession);
@@ -56,11 +59,8 @@ app.use(expressSession({ store: new FileStore(), secret: 'ads32432afdsf' }));
 
 app.use(passport.initialize());
 app.use(passport.session());
-
 app.use(expressValidator() );
-
 app.use(cookieParser());
-
 app.use(express.static( settings.ui_path ));
 
 app.use('/pictures', express.static(path.join(__dirname,'pictures')));

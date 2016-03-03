@@ -32,7 +32,7 @@ define(function(require) {
       var data =RecipeListView.__super__.serializeData.call(this);
 
       return _.extend( data, {
-        user: this._userobject
+        user:  this._userobject ? this._userobject.toJSON() : {}
       });
     },
 
@@ -46,8 +46,8 @@ define(function(require) {
       this.render();
     },
 
-    _onAuthenticated: function(data) {
-      this._userobject = data;
+    _onAuthenticated: function(user) {
+      this._userobject = user;
       this.render();
     },
 
