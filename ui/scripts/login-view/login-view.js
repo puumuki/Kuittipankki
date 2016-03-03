@@ -47,7 +47,7 @@ define(function(require) {
 
       promise.then(_.bind(function(data) {
         this._loginFailed = false;
-        App.router.receiptList();
+        App.router.navigate('',{trigger:true} );
       }, this)).fail(_.bind(function(error) {
         this.$el.effect('shake', 1000);
         this._loginFailed = true;
