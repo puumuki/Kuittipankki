@@ -68,7 +68,7 @@ require.config({
     json2: '../bower_components/require-handlebars-plugin/hbs/json2',
     hbs: '../bower_components/require-handlebars-plugin/hbs',
 
-    fuse: '../bower_components/fuse.js/src/fuse.min'
+    fuse: '../bower_components/fuse.js/src/fuse'
   },
 
   hbs: {

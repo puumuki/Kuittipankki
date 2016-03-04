@@ -147,17 +147,16 @@ define(function(require) {
   function searchReceipts( search ) {
     var data = _collection.toJSON();
     
-    var keys = ['description','name', 'tags',
-                'pictures','purchaseDate',
-                'registered','store'];
+    var keys = ['name','tags', 'descripton'];
 
     var fuse = new Fuse(data, {
       caseSensitive: false,
       includeScore: false,
       shouldSort: true,
-      threshold: 0.6,
+      threshold: 0.2,
       location: 0,
-      distance: 100,
+      distance: 20,
+      verbose: false,
       maxPatternLength: 32,
       keys: keys
     });
