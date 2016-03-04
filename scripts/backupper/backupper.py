@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 import os
 import glob
-from shutil import copy
 from zipdir import zipdir
 from datetime import datetime
 import logger
@@ -36,9 +35,16 @@ def message(message, arguments=True, line=False):
   return _wrapper
 
 def date():
+  """
+  Return current time as formatted date string
+  @return {string} date time
+  """
   return datetime.utcnow().strftime("%Y-%m-%d %H:%M")
 
 class ValidationError(Exception):
+  """
+  Simple validation error wrapper
+  """
   pass
 
 @message('Validating settings', arguments=False)
