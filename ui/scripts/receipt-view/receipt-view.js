@@ -25,6 +25,7 @@ define(function(require) {
 
     initialize: function() {
       communicator.mediator.on('app:user:logout', _.bind(this.render, this));
+      this.model.on('change', this.render);
     },
 
     _onImageClicked: function(event) {
@@ -32,6 +33,7 @@ define(function(require) {
       var image = $(event.currentTarget).data('image');
       new ImageDialogView({
         title: 'Kuva',
+        receipt: this.model,
         image: image
       });
     },
