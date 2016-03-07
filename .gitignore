@@ -17,6 +17,7 @@ data/users.json
 todo.txt
 *.log
 rest-test/node_modules/*
+*.pyc
 
 rsync-build-to-server.sh
 scripts/backupper/settings.py
