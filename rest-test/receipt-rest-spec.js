@@ -1,62 +1,6 @@
 //Running:
 //jasmine-node .
-
 var frisby = require('frisby');
-
-/* Testataan käyttäjän tallentamista  */
-frisby.create('Tallenna käyttäjä')
-
-.post('http://localhost:8080/user',{
-  "username": "Teemuki",
-  "password": "salakala",
-})
-.expectStatus(200)
-.expectHeaderContains('content-type', 'application/json')
-.after(function(err, res, body) {
-
-  var responseJSON = JSON.parse( res.toJSON().body );
-
-  frisby.create('Hae tallennettu käyttäjä ID:llä')
-
-  .get('http://localhost:8080/user/' + responseJSON.id )
-  .expectStatus(200)
-  .expectHeaderContains('content-type', 'application/json')
-  .expectJSON({
-    "username": "Teemuki",
-    "id": responseJSON.id
-  })
-  
-  .after(function(err, res, body) {
-
-    frisby.create('Pävitä käyttäjän tietoja')
-
-    .put('http://localhost:8080/user/' + responseJSON.id, {
-      "username": "TeemuPeemu",
-      "password": "halikala",
-    })
-    .expectStatus(200)
-    .expectHeaderContains('content-type', 'application/json')
-    .expectJSON({
-      "username": "TeemuPeemu",
-      "id":  responseJSON.id
-    }).toss();//End of käyttäjän päivitys
-    
-  }).toss();//End of käyttäjän haku
-  
-}).toss();//End of käyttäjän tallennus
-
-frisby.create('Hae tallentamatonta käyttäjää')
-  .get('http://localhost:8080/user/ajlhsa')
-  .expectStatus(404)
-  .expectHeaderContains('content-type', 'application/json')
-  .expectJSON({})
-.toss();
-
-frisby.create('Hae kaikki käyttäjät')
-  .get('http://localhost:8080/users')
-  .expectStatus(200)
-  .expectHeaderContains('content-type', 'application/json')
-.toss();
 
 /* Testataan kuitin tallentamista */
 
