@@ -17,21 +17,25 @@
             </label>
             <div class="col-sm-9">
               <input type="text" 
-                     class="form-control" 
-                     id="user-name" placeholder="Username" 
+                     class="form-control"
+                     id="username" 
+                     name="username"
+                     placeholder="Käyttäjän nimi" 
                      value="{{username}}" />
             </div>
           </div>
 
           <div class="form-group">
-            <label for="created" 
+            <label for="created"
                    class="col-sm-3 control-label">
                    Liittynyt
             </label>
             <div class="col-sm-9">
               <input type="text" 
                      class="form-control" 
-                     id="user-name" placeholder="Liittynyt" 
+                     name="created"
+                     id="created" 
+                     placeholder="Liittynyt" 
                      value="{{created}}" />
             </div>
           </div>
@@ -40,7 +44,10 @@
       </div>
       
       <div class="modal-footer">
-        <button type="button" name="ok" class="btn btn-danger" data-dismiss="modal">Tallenna</button>
+        <button type="button" 
+                name="save" 
+                class="btn btn-danger" 
+                data-dismiss="modal">Tallenna</button>
         <button type="button" 
                 class="btn btn-default" 
                 class="close" 

@@ -8,7 +8,7 @@ define(function(require) {
   var userService = require('services/user-service');
   var UserEditDialogView = require('user-edit-dialog-view/user-edit-dialog-view');
 
-  var RecipeListView = Backbone.Marionette.ItemView.extend({
+  var MenuView = Backbone.Marionette.ItemView.extend({
 
     template: template,
 
@@ -29,7 +29,7 @@ define(function(require) {
     },
 
     serializeData: function() {
-      var data =RecipeListView.__super__.serializeData.call(this);
+      var data =MenuView.__super__.serializeData.call(this);
 
       return _.extend( data, {
         user:  this._userobject ? this._userobject.toJSON() : {}
@@ -48,6 +48,7 @@ define(function(require) {
 
     _onAuthenticated: function(user) {
       this._userobject = user;
+      this._userobject.on('change', this.render);
       this.render();
     },
 
@@ -68,11 +69,11 @@ define(function(require) {
     },
 
     render: function() {
-      RecipeListView.__super__.render.call(this);
+      MenuView.__super__.render.call(this);
       this.ui.searchNav.hide();
     }
 
   });
 
-  return RecipeListView;
+  return MenuView;
 });

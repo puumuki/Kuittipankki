@@ -52,7 +52,11 @@ define(function(require) {
       url: '/userauthenticated',
       type: 'get',
       success: function(user) {
-        _authenticatedUser = new User(user);
+        if( _authenticatedUser ) {
+          _authenticatedUser.set( user );
+        } else {
+          _authenticatedUser = new User(user);  
+        }        
         deferred.resolve(_authenticatedUser);
       },
       error: function(error) {
@@ -110,9 +114,28 @@ define(function(require) {
     setInterval(testIsSession, 5 * 60 * 1000);
   }
 
+  /**
+   * Update user informamtion
+   */
+  function saveUser( user ) {
+    var deferred = Q.defer();
+
+    user.save({
+      success: function( result ) {
+        deferred.resolve( user );
+      },
+      error: function( error ) {
+        deferred.reject( error );
+      }
+    });
+
+    return deferred.promise;
+  }
+
   return {
     logout:logout,
     authenticate:authenticate,
+    saveUser: saveUser,
     fetchAuthenticatedUser:fetchAuthenticatedUser,
     getAuthenticatedUser:getAuthenticatedUser
   };
