@@ -33,14 +33,34 @@ router.post('/user', function(req, res) {
 /* PUT - User */
 router.put('/user/:id', function(req, res) {
 
+  if( !req.user ) {
+    return res.status(403).send({message:'Unauthorized'});
+  }
+
+  //User only modify his own information
+  if( req.user.id !== req.params['id'] ) {
+    return res.status(403).send({message:'Unauthorized'});
+  }
+
   res.setHeader('Content-Type','application/json');
 
-  var user = storage.get(req.params['id'], function(err, user) {   
+  storage.get(req.params['id'], function(err, user) { 
+
     if( user ) {
+
       user.username = req.body.username;
       user.updated = dateutils.currentDateTime();
+
       storage.saveSync(req.params['id'],user);
-      res.send({ id: user.id, username: user.username });
+ 
+      req.user.username = req.body.username;
+      req.user.updated = req.body.updated;
+      
+      res.send({ id: user.id, 
+                 username: user.username, 
+                 created: user.created, 
+                 updated:user.updated });
+
     } else {
       res.status(404);
       res.send({});
@@ -50,7 +70,12 @@ router.put('/user/:id', function(req, res) {
 });
 
 /* GET - All users. */
-router.get('/users', function(req, res) {
+/*router.get('/users', function(req, res) {
+
+  if( !req.user ) {
+    return res.status(403).send({message:'Unauthorized'});
+  }
+
   storage.all(function(err, users) {
     res.setHeader('Content-Type', 'application/json');
 
@@ -60,10 +85,14 @@ router.get('/users', function(req, res) {
 
     res.send(JSON.stringify(usersArray));
   });
-});
+});*/
 
 /* GET - Single user */
 router.get('/user/:id', function(req, res) {
+
+  if( !req.user ) {
+    return res.status(403).send({message:'Unauthorized'});
+  }
 
   storage.get(req.params['id'], function(err, data) {
     
@@ -80,12 +109,28 @@ router.get('/user/:id', function(req, res) {
 
 /* GET - Authenticated user */
 router.get('/userauthenticated', function(req, res) {
+
+  if( !req.user ) {
+    return res.status(403).send({message:'Unauthorized'});
+  }
+
+  res.setHeader('Content-Type', 'application/json');
+
   if( req.user ) {
-    res.send({
-      id: req.user.id,
-      username: req.user.username,
-      created: req.user.created,
-      updated: req.user.updated
+    storage.get(req.user.id, function(err, user) {
+
+      if( err ) {
+        res.status(404)
+        res.send({"message":"Not found"});
+        logging.error("Error on fetching authenticated user",err);        
+      } else {
+        res.send({
+          id: user.id,
+          username: user.username,
+          created: user.created,
+          updated: user.updated
+        });        
+      }
     });
   } else {
     res.status(403);
