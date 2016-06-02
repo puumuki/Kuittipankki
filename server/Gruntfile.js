@@ -12,11 +12,26 @@ module.exports = function (grunt) {
 
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
+    
+    // linting
+    jshint: {
+        options: {
+            jshintrc: '.jshintrc',
+            reporter: require('jshint-stylish')
+        },
+        all: [
+            '!Gruntfile.js',
+            'routes/*.js',
+            '*.js',
+        ]
+    },
+
     develop: {
       server: {
         file: 'bin/www'
       }
     },
+
     watch: {
       options: {
         nospawn: true,
@@ -30,6 +45,7 @@ module.exports = function (grunt) {
         ],
         tasks: ['develop', 'delayed-livereload']
       },
+
       js: {
         files: ['public/js/*.js'],
         options: {
