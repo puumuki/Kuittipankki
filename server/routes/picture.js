@@ -24,6 +24,7 @@ const mimeType = {
 }
 
 function createThumbnail( image ) {
+  
   var deferred = Q.defer();
 
   easyimg.thumbnail({
@@ -147,6 +148,5 @@ router.delete('/picture/:picture', function(req, res) {
     }
   });
 });
-
 
 module.exports = router;
