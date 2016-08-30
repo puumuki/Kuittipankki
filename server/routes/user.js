@@ -1,14 +1,16 @@
-var express = require('express');
-var router = express.Router();
-var Store = require("jfs");
-var crypto = require('crypto');
-var _ = require('underscore');
-var logging = require('../logging');
+var express        = require('express');
+var router         = express.Router();
+
+var crypto         = require('crypto');
+var _              = require('underscore');
+var logging        = require('../logging');
+var path           = require('path');
+var settings       = require('../settings');
+var storage        = require('../storage-service').userStorage;
 
 //TODO validointi, autentikointi
 //https://github.com/flosse/json-file-store
 
-var storage = new Store('data/users.json', {saveId:true});
 
 /* POST - User */
 router.post('/user', function(req, res) {

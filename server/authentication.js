@@ -6,7 +6,7 @@ var _ = require('underscore');
 var LocalStrategy = require('passport-local').Strategy;
 var crypto = require('crypto');
 var logging = require('./logging');
-var storage = new Store('data/users.json', {saveId:true});
+var storage = require('./storage-service').userStorage;
 
 /**
  * Simple password hash check.

@@ -2,7 +2,7 @@
   
 
   <!-- Buttons for sm and xs -->
-  <div class="hidden-lg hidden-md col-sm-4 col-xs-12 receipt-menu-item">
+  <div class="hidden-lg hidden-md hidden-sm col-sm-4 col-xs-12 receipt-menu-item">
     <div class="btn-group" role="group" aria-label="...">
       <button data-sort="name" data-order="{{sort.order}}" type="button" class="btn btn-default sort">Nimi</button>
       <button data-sort="purchaseDate" data-order="{{sort.order}}" type="button" class="btn btn-default sort">Päivämäärä</button>
@@ -28,14 +28,14 @@
   <!-- End of Buttons for sm and xs -->
 
   <!-- Buttons for md, lg -->
-  <div class="hidden-xs hidden-sm col-md-4 col-sm-4 col-xs-12 receipt-menu-item">
+  <div class="hidden-xs col-md-4 col-sm-4 receipt-menu-item">
     <div class="btn-group" role="group" aria-label="...">
       <button data-sort="name" data-order="{{sort.order}}" type="button" class="btn btn-default sort">Nimi</button>
       <button data-sort="purchaseDate" data-order="{{sort.order}}" type="button" class="btn btn-default sort">Päivämäärä</button>
     </div>
   </div>
 
-  <div class="hidden-xs hidden-sm col-md-7 col-sm-7 col-xs-12 receipt-menu-item">
+  <div class="hidden-xs col-md-7 col-sm-7 col-sm-12 receipt-menu-item">
     <div class="input-group pull-right">
       <input type="text" class="form-control search-input" 
                          placeholder="Search" name="search">
@@ -45,7 +45,7 @@
     </div>
   </div>
 
-  <div class="hidden-xs hidden-sm col-md-1 col-sm-1 col-xs-12 receipt-menu-item">
+  <div class="hidden-xs  col-md-1 col-sm-1 col-xs-12 receipt-menu-item">
     <div class="btn-group pull-right" role="group" aria-label="...">
       <a href="#/receipt/new">
         <button data-sort="name" type="button" class="btn btn-default">Uusi</button>

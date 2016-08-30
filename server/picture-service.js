@@ -22,7 +22,7 @@ function loadPictures() {
     var parts = file.split('.');
     var fileType = _.last(parts);
     return _.indexOf( fileTypes, fileType ) >= 0;
-  })
+  });
 
   return _.map( files, function(filename) {
     return {

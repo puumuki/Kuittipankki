@@ -12,7 +12,8 @@ var authentication = require('./../authentication');
 var Store = require("jfs");
 var logging = require('../logging');
 var pictureService = require('../picture-service');
-var storage = new Store('data/receipts.json', {saveId:true});
+
+var storage = require('../storage-service').receiptStorage;
 
 const uploadDirectory = path.join(__dirname,'..','pictures')
 

@@ -16,13 +16,25 @@ define(function(require) {
     },
 
     events : {
-      'click button[name="ok"]': '_onOkButtonClick'
+      'click button[name="ok"]': '_onOkButtonClick',
+      'click button[name="cancel"]': '_onCancelButtonClick'
     },
 
     _onOkButtonClick : function() {
       if( _.isFunction( this.options.onOk ) ) {
         this.options.onOk();
       }
+    },
+
+    _onCancelButtonClick: function() {
+      //Close modal
+      this.$el.find('.modal').modal('hide');
+      
+      //Bootstrap won't support multiple open modals, 
+      //at this point we had open this and ConfirmationDialogView,
+      //so it counts as multiple dialogs. This is how we just clean up
+      //the modal backdrop.
+      $('.modal-backdrop').remove();
     },
 
     serializeData: function() {

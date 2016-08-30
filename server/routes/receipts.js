@@ -1,13 +1,16 @@
-var express = require('express');
+var express        = require('express');
+var Store          = require("jfs");
+var _              = require('underscore');
+var validator      = require('validator');
+var fs             = require('fs');
+var path           = require('path');
 
-var Store = require("jfs");
-var _ = require('underscore');
-var validator = require('validator');
-var fs = require('fs');
-var path = require('path');
 var authentication = require('./../authentication');
-var logging = require('../logging');
-var storage = new Store('data/receipts.json', {saveId:true});
+var logging        = require('../logging');
+var settings       = require('../settings');
+
+var storage        = require('../storage-service').receiptStorage;
+
 var router = express.Router();
 var pictureService = require('../picture-service');
 
@@ -91,7 +94,8 @@ router.put('/receipt/:id', authentication.isAuthorized, function(req, res) {
       res.status(404);
       res.send({});
     } else {
-      logging.error("Updating old receipt", req.body.name);
+
+      logging.info("Updating old receipt", req.body.name);
 
       receipt.user_id = req.user.id;
       receipt.name = req.body.name;

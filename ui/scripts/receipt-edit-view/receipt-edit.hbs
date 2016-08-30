@@ -97,12 +97,12 @@
               </div>
             </div>
 
-            <div class="row top-margin">
-              <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+            <div class="row top-margin hidden-sm hidden-xs">
+              <div class="col-lg-6 col-md-6">
                 <button type="button" name="delete" class="btn btn-danger">Poista</button>
                 <button type="button" name="clone" class="btn btn-default">Monista</button>
               </div>
-              <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 text-right">
+              <div class="col-lg-6 col-md-6 text-right">
                 {{#unless readonly}}
                 <button type="button" name="save" class="btn btn-default">Tallenna</button>
                 {{/unless}}
@@ -117,6 +117,27 @@
                 {{/if}}
               </div>
             </div>
+
+            <div class="row top-margin hidden-lg hidden-md">
+              <div class="col-sm-12 col-xs-12">
+                <button type="button" name="delete" class="btn btn-danger">Poista</button>
+                <button type="button" name="clone" class="btn btn-default">Monista</button>
+                {{#unless readonly}}
+                <button type="button" name="save" class="btn btn-default">Tallenna</button>
+                {{/unless}}
+                {{#if id}}
+                <a href="#receipt/view/{{id}}">
+                  <button type="button" name="cancel" class="btn btn-default">Peruuta</button>
+                </a>
+                {{else}}
+                <a href="#">
+                  <button type="button" name="cancel" class="btn btn-default">Peruuta</button>
+                </a>
+                {{/if}}
+              </div>
+            </div>
+
+
           </div>
         </div>
       </div>
