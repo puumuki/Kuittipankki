@@ -84,7 +84,6 @@ router.put('/receipt/:id', authentication.isAuthorized, function(req, res) {
 
       receipt.user_id = req.user.id;
       receipt.name = req.body.name;
-      receipt.picture = req.body.picture;
       receipt.store = req.body.store;
       receipt.warrantlyEndDate = req.body.warrantlyEndDate;
       receipt.registered = req.body.registered;
@@ -96,6 +95,9 @@ router.put('/receipt/:id', authentication.isAuthorized, function(req, res) {
       receipt.price = req.body.price;
 
       storage.saveSync(req.params.id,receipt);
+
+      var files = pictureService.loadPictures();
+      receipt.pictures = pictureService.filterPicturesByReceiptID(receipt.id, files);
 
       res.send(JSON.stringify(receipt));
     }
