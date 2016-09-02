@@ -3,14 +3,13 @@
  */
 var express           = require('express');
 var path              = require('path');
-var favicon           = require('serve-favicon');
+
 var logger            = require('morgan');
 var cookieParser      = require('cookie-parser');
 var bodyParser        = require('body-parser');
 var expressValidator  = require('express-validator');
 var passport          = require('passport');
-var expressSession    = require('express-session')
-var _                 = require('underscore');
+var expressSession    = require('express-session');
 
 var pictureRouter     = require('./routes/picture');
 var indexRouter       = require('./routes/index');
@@ -31,9 +30,9 @@ var app = express();
 var env = process.env.NODE_ENV || 'development';
 
 app.locals.ENV = env;
-app.locals.ENV_DEVELOPMENT = env == 'development';
+app.locals.ENV_DEVELOPMENT = env === 'development';
 
-logging.info("Starting app in " + env + " mode." );
+logging.info('Starting app in ' + env + ' mode.' );
 
 passport.use(authentication.authenticationStrategy);
 passport.serializeUser(authentication.serializeUser);
@@ -83,7 +82,7 @@ app.post('/login',
 app.use(function(req, res, next) {
     var err = {
       status : 404,
-      message: "Not found"
+      message: 'Not found'
     };
     next(err);
 });

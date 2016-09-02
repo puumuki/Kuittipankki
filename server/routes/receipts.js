@@ -1,18 +1,12 @@
 var express        = require('express');
-var Store          = require("jfs");
 var _              = require('underscore');
-var validator      = require('validator');
-var fs             = require('fs');
-var path           = require('path');
 
 var authentication = require('./../authentication');
 var logging        = require('../logging');
-var settings       = require('../settings');
-
 var storage        = require('../storage-service').receiptStorage;
+var pictureService = require('../picture-service');
 
 var router = express.Router();
-var pictureService = require('../picture-service');
 
 function sanitize(req){
   req.sanitize('picture').escape();
@@ -25,18 +19,9 @@ function sanitize(req){
   req.sanitize('description').escape();
   req.sanitize('price').escape();
 }
-
-function validate(req) {
-  req.checkBody('picture').isURL();
-  req.checkBody('warrantlyEndDate').isDate();
-  req.checkBody('registered').isDate();
-  req.checkBody('created').isDate();
-  req.checkBody('updated').isDate();
-  req.checkBody('purchaseDate').isDate();
-}
   
 function errorHandler(req, res, error) {
-  logging.error("Error",error);
+  logging.error('Error',error);
   res.status(500);
   res.send({});
 }
@@ -45,7 +30,7 @@ function errorHandler(req, res, error) {
 router.post('/receipt', authentication.isAuthorized, function(req, res) {
 
   if( !req.user ) {
-    logging.error("Unauthorized access, trying to create a new receipt");
+    logging.error('Unauthorized access, trying to create a new receipt');
     return res.status(403).send({message:'Unauthorized'});
   }
   
@@ -53,13 +38,13 @@ router.post('/receipt', authentication.isAuthorized, function(req, res) {
 
   sanitize(req);
 
-  var errors = req.validationErrors()
+  var errors = req.validationErrors();
 
   if( errors ) {
     res.status(400);
     res.send(JSON.stringify(errors));
   } else {
-    logging.error("Saving a new receipt", req.body.name);
+    logging.error('Saving a new receipt', req.body.name);
     var receipt = req.body;
     receipt.user_id = req.user.id;
     var id = storage.saveSync(receipt);
@@ -81,7 +66,7 @@ router.put('/receipt/:id', authentication.isAuthorized, function(req, res) {
   
   req.checkParams('id','Receipt ID is missing');
 
-  storage.get(req.params['id'], function(err, receipt) {
+  storage.get(req.params.id, function(err, receipt) {
 
     var validationErrors = req.validationErrors();
 
@@ -95,7 +80,7 @@ router.put('/receipt/:id', authentication.isAuthorized, function(req, res) {
       res.send({});
     } else {
 
-      logging.info("Updating old receipt", req.body.name);
+      logging.info('Updating old receipt', req.body.name);
 
       receipt.user_id = req.user.id;
       receipt.name = req.body.name;
@@ -110,7 +95,7 @@ router.put('/receipt/:id', authentication.isAuthorized, function(req, res) {
       receipt.description = req.body.description;
       receipt.price = req.body.price;
 
-      storage.saveSync(req.params['id'],receipt);
+      storage.saveSync(req.params.id,receipt);
 
       res.send(JSON.stringify(receipt));
     }
@@ -122,7 +107,7 @@ router.delete('/receipt/:id', authentication.isAuthorized, function(req, res) {
 
   res.setHeader('Content-Type', 'application/json');
 
-  storage.get(req.params['id'], function(err, receipt) {
+  storage.get(req.params.id, function(err, receipt) {
     receipt.deleted = true;
     storage.saveSync(receipt.id, receipt);
     res.send(receipt);
@@ -140,14 +125,14 @@ router.get('/receipts', authentication.isAuthorized, function(req, res) {
     } else {
       var files = pictureService.loadPictures();
 
-      var receipts = _.chain(receipts).map(function(receipt, id) {
+      let _receipts = _.chain(receipts).map(function(receipt, id) {
         receipt.pictures = pictureService.filterPicturesByReceiptID(receipt.id, files);
         return receipt;
       }).filter(function(receipt) {
         return (receipt.deleted === undefined || receipt.deleted === false) && receipt.user_id === req.user.id;
       }).value();
 
-      res.send(receipts);
+      res.send(_receipts);
     }
   });
 });
@@ -158,7 +143,7 @@ router.get('/receipt/:id', authentication.isAuthorized, function(req, res) {
 
   req.checkParams('id','Receipt ID is missing');
 
-  storage.get(req.params['id'], function(err, receipt) {
+  storage.get(req.params.id, function(err, receipt) {
 
     res.setHeader('Content-Type', 'application/json');
     

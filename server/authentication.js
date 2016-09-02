@@ -1,7 +1,6 @@
 /**
  * Authentication module contains are things needed to authenticate users.
  */
-var Store = require("jfs");
 var _ = require('underscore');
 var LocalStrategy = require('passport-local').Strategy;
 var crypto = require('crypto');
@@ -37,18 +36,18 @@ var authenticationStrategy = new LocalStrategy(
       });
 
       if(!user) {
-        logging.info("User not found ")
-        return done(null, false, {message:"User not found"});  
+        logging.info('User not found ');
+        return done(null, false, {message:'User not found'});  
       } 
       else if(matchpasswords(user, password)) {
-        logging.info("User ", user.username, " authenticated");
+        logging.info('User ', user.username, ' authenticated');
         return done(null, {
           id: user.id,
           username: user.username
         });
       } else {
-        logging.info("User ", user.username, " authentication failed");
-        return done(null, false, {message:"User not found"});  
+        logging.info('User ', user.username, ' authentication failed');
+        return done(null, false, {message:'User not found'});  
       }     
     });
   }
@@ -69,7 +68,7 @@ function loginRouteResponse(req, res) {
   storage.get(req.session.passport.user, function(err, user) {
 
     if( err ) {
-      logging.error("User not found", err);
+      logging.error('User not found', err);
       res.status(500);
       res.send({});
     } else {

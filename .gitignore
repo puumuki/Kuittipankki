@@ -17,3 +17,5 @@ data/receipts.json
 data/users.json
 *.pyc
 rest-test/node_modules/*
+ui/templates/.DS_Store
+.DS_store

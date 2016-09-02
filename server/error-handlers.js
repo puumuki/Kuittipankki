@@ -21,7 +21,7 @@ function developmentErrorHandler(err, req, res, next) {
       title: 'error',
       stacktrace: err.stack
   });
-};
+}
 
 /**
  * Production error handler. Will print stacktrace.
@@ -33,7 +33,7 @@ function productionErrorHandler(err, req, res, next) {
     error: {},
     title: 'error'
   });
-};
+}
 
 module.exports = {
   logErrors: logErrors,

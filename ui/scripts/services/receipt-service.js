@@ -7,6 +7,11 @@ define(function(require) {
   var _collection = new ReceiptCollection();
   var Receipt = require('receipt');
 
+  /**
+   * Easier time to debug collections internal s
+   */
+  window.__data = { receipts: _collection };
+
   communicator.mediator.on('app:user:logout', function() {
     _collection.reset(null);//Clear receipt in memory after logout
   });

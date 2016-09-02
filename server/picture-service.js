@@ -68,11 +68,11 @@ function filterPicturesByFilename(filename, pictures) {
  */
 function deletePicture(picture) {
   var picturePath = path.join(__dirname,'pictures', picture.filename);
-  logging.log("Deleting picture", picturePath);
+  logging.log('Deleting picture', picturePath);
   fs.unlinkSync(picturePath);
   
   var thumbnailPath = path.join(__dirname,'pictures', picture.thumbnail);
-  logging.log("Deleting thumbnail", thumbnailPath);
+  logging.log('Deleting thumbnail', thumbnailPath);
   fs.unlinkSync(thumbnailPath);
 }
 

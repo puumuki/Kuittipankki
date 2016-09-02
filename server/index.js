@@ -1,3 +1,7 @@
+/**
+ * Start Kuittipankki server application
+ * Start by running command in terminal node index.js
+ */
 var logging = require('./logging');
 var app = require('./app');
 var settings = require('./settings');

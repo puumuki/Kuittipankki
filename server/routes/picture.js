@@ -9,20 +9,18 @@ var easyimg = require('easyimage');
 var multipart = require('connect-multiparty');
 var Q = require('q');
 var authentication = require('./../authentication');
-var Store = require("jfs");
 var logging = require('../logging');
 var pictureService = require('../picture-service');
-
 var storage = require('../storage-service').receiptStorage;
 
-const uploadDirectory = path.join(__dirname,'..','pictures')
+const uploadDirectory = path.join(__dirname,'..','pictures');
 
 const mimeType = {
   'image/gif':'gif',
   'image/png':'png',
   'image/jpeg':'jpg',
   'image/bmp':'bmp'
-}
+};
 
 function createThumbnail( image ) {
   
@@ -30,14 +28,14 @@ function createThumbnail( image ) {
 
   easyimg.thumbnail({
     src: path.join(uploadDirectory, image),
-    dst: path.join(uploadDirectory, "thumbnail." + image),
+    dst: path.join(uploadDirectory, 'thumbnail.' + image),
     width: 200,
     heigth: 200
   }).then(
     function(file) {
-      defer.resolve(file);
+      deferred.resolve(file);
     }, function (err) {
-      defer.reject(err);
+      deferred.reject(err);
     }
   );
 
@@ -49,7 +47,7 @@ function validateReceiptInfo( req, receiptId ) {
 
   storage.get(receiptId, function(err, receipt) {
     if(err || !receipt) {
-      logging.log("Could not found receipt", receiptId);
+      logging.log('Could not found receipt', receiptId);
       deferred.reject(err);
     }
 
@@ -66,7 +64,7 @@ function validateReceiptInfo( req, receiptId ) {
 router.post('/upload', authentication.isAuthorized, multipart(), function(req, res) {
 
   if( !req.user ) {
-    logging.error("Unauthorized access, trying upload picture");
+    logging.error('Unauthorized access, trying upload picture');
     return res.status(403).send({message:'Unauthorized'});
   }
 
@@ -78,35 +76,35 @@ router.post('/upload', authentication.isAuthorized, multipart(), function(req, r
 
     promise.then(function() {
 
-      var contentType = req.files.file.headers["content-type"];
+      var contentType = req.files.file.headers['content-type'];
       var fileEnding = mimeType[contentType];
 
       if( fileEnding && receiptID ) {
         var generatedName = shortid.generate();
-        var filename = receiptID +'.'+ generatedName +"."+fileEnding;
+        var filename = receiptID +'.'+ generatedName +'.'+fileEnding;
         var filePath = path.join( uploadDirectory, filename );
 
         fs.writeFile(filePath, data, function (err) {
 
           createThumbnail( filename ).then(function(image) {
-            logging.info("SUCCESS", image );
+            logging.info('SUCCESS', image );
           })
           .fail(function(error) {
-            logging.info("Error on creating thumbnail:",error);
+            logging.info('Error on creating thumbnail:',error);
           });
 
           if( err ) {
-            logging.info("Error saving file", err);  
+            logging.info('Error saving file', err);  
           }
           
         });      
       } else {
-        logging.info("Skipping file");
+        logging.info('Skipping file');
       }
       
-      logging.info("Saving files", req.files.file.path );
+      logging.info('Saving files', req.files.file.path );
     }).fail(function(error) {
-      logging.error("Error on uploading picture to server, receipt is not currently logged user receipt.", error);
+      logging.error('Error on uploading picture to server, receipt is not currently logged user receipt.', error);
     });
   });
 
@@ -119,11 +117,11 @@ router.post('/upload', authentication.isAuthorized, multipart(), function(req, r
 router.delete('/picture/:picture', function(req, res) {
 
   if( !req.user ) {
-    logging.error("Unauthorized access, trying to delete picture");
+    logging.error('Unauthorized access, trying to delete picture');
     return res.status(403).send({message:'Unauthorized'});
   }
 
-  var pictureName = req.params['picture'];
+  var pictureName = req.params.picture;
   var pictures = pictureService.loadPictures();
   var picture = pictureService.filterPicturesByFilename(pictureName, pictures);
   var receiptId = _.first( pictureName.split('.') );
@@ -131,7 +129,7 @@ router.delete('/picture/:picture', function(req, res) {
   storage.get(receiptId, function(err, receipt) {
 
     if( err ) {
-      logger.error("Error on loading receipe", err );  
+      logging.error('Error on loading receipe', err );  
     }  
 
     if( receipt.user_id !== req.user.id ) {
@@ -139,7 +137,7 @@ router.delete('/picture/:picture', function(req, res) {
       res.send({message:'Unauthorized access'});
     } else {
       if( picture ) {
-        logging.log("Deleting picture", picture);
+        logging.log('Deleting picture', picture);
         pictureService.deletePicture(picture);
         res.send({message:'Picture deleted'});
       } else {

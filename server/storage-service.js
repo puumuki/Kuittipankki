@@ -1,4 +1,4 @@
-var Store          = require("jfs");
+var Store          = require('jfs');
 var path           = require('path');
 var settings       = require('./settings');
 

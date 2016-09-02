@@ -5,18 +5,18 @@ var router = express.Router();
 
 router.get('/createerror', function(req, res) {
 
-  logging.error("Create server internall error");
+  logging.error('Create server internall error');
   res.status(500);
-  res.send({message:"Internall server error"});
+  res.send({message:'Internall server error'});
  
 });
 
 router.get('/throwerror', function(req, res) {
 
-  throw new Error("Test Error");
+  throw new Error('Test Error');
 
-  res.status(500);
-  res.send({message:"Internall server error"});
+  //res.status(500);
+  //res.send({message:'Internall server error'});
  
 });
 
