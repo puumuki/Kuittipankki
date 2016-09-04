@@ -2,9 +2,7 @@ define(function(require) {
 
   var Backbone = require('backbone');
   var template = require('hbs!receipt-view/receipt');
-  var receiptService = require('services/receipt-service');
   var userService = require('services/user-service');
-
   var _ = require('underscore');
 
   var communicator = require('communicator');

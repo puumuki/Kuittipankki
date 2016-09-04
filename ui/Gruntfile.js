@@ -33,7 +33,6 @@ module.exports = function (grunt) {
             
             livereload: {
                 files: [
-                    
                     'scripts/{,**/}*.js',
                     'templates/{,**/}*.hbs',
                     'test/spec/{,**/}*.js'
@@ -85,7 +84,7 @@ module.exports = function (grunt) {
             },
             all: [
                 '!Gruntfile.js',
-                'scripts/*.js',
+                'scripts/**/*.js',
                 '!<%= yeoman.app %>/scripts/vendor/*',
                 'test/spec/{,*/}*.js'
             ]
@@ -269,6 +268,7 @@ module.exports = function (grunt) {
     ]);
 
     grunt.registerTask('build', [
+        'jshint',
         'createDefaultTemplate',
         'handlebars',
         'useminPrepare',

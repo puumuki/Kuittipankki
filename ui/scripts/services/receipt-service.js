@@ -2,6 +2,7 @@ define(function(require) {
   
   var ReceiptCollection = require('receipt-collection');
   var Q = require('q');
+  var _ = require('underscore');
   var communicator = require('communicator');
   var Fuse = require('fuse');
   var _collection = new ReceiptCollection();

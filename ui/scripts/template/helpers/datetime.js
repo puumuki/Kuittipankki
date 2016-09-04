@@ -5,9 +5,9 @@ define(function(require) {
 
   function dateTimeHelper(value) {
     if( moment(value).isValid() ) {
-      return new Handlebars.SafeString(moment(value).format("DD.MM.YYYY"));
+      return new Handlebars.SafeString(moment(value).format('DD.MM.YYYY'));
     } else {
-      return "";
+      return '';
     }
   }
 
