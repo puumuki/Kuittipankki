@@ -6,7 +6,7 @@
          <a href="#receipt/view/{{id}}" class="list-group-item">
           <b>{{name}}</b> {{datetime purchaseDate}}
           {{#each tags}}
-            <span class="badge badge-info hidden-xs">{{this}}</span>
+            <span data-tag="{{this}}" class="tag-link badge badge-info hidden-xs">{{this}}</span>
           {{/each}}
         </a>
       {{else}}

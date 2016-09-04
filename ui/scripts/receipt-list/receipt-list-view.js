@@ -14,7 +14,18 @@ define(function(require) {
 
     template: template,
 
+    events: {
+      'click .tag-link': '_onTagClicked'
+    },
+
+    /**
+     * @constructor
+     * @param {ReceiptCollection} options.collection receipt collectionsearchReceipts
+     * @param {Integer} options.items items shown in a single page
+     * @param {Integer} options.page page number, note index start from 1
+     */
     initialize: function( options ) {
+
       this.sort = {
         attribute: 'name',
         order: 'asc'
@@ -29,8 +40,14 @@ define(function(require) {
       this.items = opts.items;
 
       Communicator.mediator.on('app:user:logout', _.bind(this._logout,this));
+      
+      //Triggered by ReceiptListMenuView when a key is pressed down
       Communicator.mediator.on('app:receipt:search', _.bind(this._onReceiptSearch, this));
+      
+      //Triggered by ReceiptListMenuView when a search text box is empty
       Communicator.mediator.on('app:receipt:searchend',_.bind(this._onReceiptSearchEnds, this));
+      
+      //Triggered when a receipts are sorted by date or name
       Communicator.mediator.on('app:receipt:sort', _.bind(this._sortBy,this));
     },
 
@@ -90,9 +107,14 @@ define(function(require) {
       return page;
     },
 
+    _onTagClicked: function(event) {
+      event.preventDefault();
+      var tag = $(event.currentTarget).data('tag');
+      App.router.navigate('#search/tag/' + tag, {trigger:true} );
+    },
+
     serializeData: function() {
 
-      //TODO: Impelement sort by date
       this.collection.comparator = _.bind(
         ReceiptCollection.sorters[this.sort.attribute], 
         {reverse: this.sort.order === 'desc'}

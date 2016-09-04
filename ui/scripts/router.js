@@ -1,29 +1,29 @@
 define(function(require) {
 
-  var _ = require('underscore');
-  var Backbone = require('backbone');
+  var _                   = require('underscore');
+  var Backbone            = require('backbone');
 
-  var LoadingView = require('loading-view/loading-view');
+  var LoadingView         = require('loading-view/loading-view');
 
-  var ReceiptListLayout =   require('receipt-list/receipt-list-layout-view');  
+  var ReceiptListLayout   = require('receipt-list/receipt-list-layout-view');  
   var ReceiptListMenuView = require('receipt-list/receipt-list-menu-view');
-  var ReceiptListView =     require('receipt-list/receipt-list-view');
+  var ReceiptListView     = require('receipt-list/receipt-list-view');
 
-  var ReceiptView = require('receipt-view/receipt-view');
+  var ReceiptView         = require('receipt-view/receipt-view');
 
-  var ReceiptEditView = require('receipt-edit-view/receipt-edit-view');
+  var ReceiptEditView     = require('receipt-edit-view/receipt-edit-view');
 
-  var LoginView = require('login-view/login-view');
-  var PictureView = require('picture-view');
+  var LoginView           = require('login-view/login-view');
+  var PictureView         = require('picture-view');
   
-  var MenuView = require('menu-view/menu-view');
+  var MenuView            = require('menu-view/menu-view');
 
-  var Receipt = require('receipt');
-  var PageNotFoundView = require('page-not-found-view');
+  var Receipt             = require('receipt');
+  var PageNotFoundView    = require('page-not-found-view');
 
-  var regionManager = require('region-manager');
-  var receiptService = require('services/receipt-service');
-  var userService = require('services/user-service');
+  var regionManager       = require('region-manager');
+  var receiptService      = require('services/receipt-service');
+  var userService         = require('services/user-service');
   
   /* Regions */
   var menuRegion = regionManager.addRegion('menu','#menu'); 
@@ -61,6 +61,7 @@ define(function(require) {
       'receipt/edit': 'editReceipt',
       'receipt/new': 'newReceipt',
       'picture/:image': 'picture',
+      'search/tag/:searchKey': 'searchTags',
       'login': 'login',
       'logout': 'logout'
     },
@@ -161,10 +162,42 @@ define(function(require) {
       }).fail(function(error) {
         console.error('Error happened during logout', error);
       });
+    },
+
+    /**
+     * Search receipt with a tag name
+     * 
+     */
+    searchTags: function( searchKey ) {
+      
+      var receiptListLayout = new ReceiptListLayout();
+      contentRegion.show(receiptListLayout);
+      
+      receiptListLayout.receiptListView.show( new LoadingView() );
+
+      var promise = receiptService.fetchReceiptCollection();
+      promise.then(function(receiptCollection) {
+        
+        var searchCollection = receiptService.searchReceipts( searchKey, {
+          keys: ['tags']
+        });
+
+        receiptListLayout.menuView.show(new ReceiptListMenuView());
+      
+        receiptListLayout.receiptListView.show(new ReceiptListView({
+          collection: searchCollection,
+          page: 1
+        }));
+
+      }).fail(function(data) {
+        console.error('Could not fetch receipts', data);
+        if( data.res.status === 403 ) {
+          App.router.navigate('#login', {trigger:true});
+        }       
+      });
     }
 
   });
 
   return ApplicationRouter;
-
 });
