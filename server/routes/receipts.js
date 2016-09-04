@@ -127,7 +127,7 @@ router.get('/receipts', authentication.isAuthorized, function(req, res) {
     } else {
       var files = pictureService.loadPictures();
 
-      let _receipts = _.chain(receipts).map(function(receipt, id) {
+      var _receipts = _.chain(receipts).map(function(receipt, id) {
         receipt.pictures = pictureService.filterPicturesByReceiptID(receipt.id, files);
         return receipt;
       }).filter(function(receipt) {
