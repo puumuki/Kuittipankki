@@ -11,7 +11,7 @@ var expressValidator  = require('express-validator');
 var passport          = require('passport');
 var expressSession    = require('express-session');
 
-var pictureRouter     = require('./routes/picture');
+var fileRouter        = require('./routes/file');
 var indexRouter       = require('./routes/index');
 var usersRouter       = require('./routes/user');
 var receiptsRouter    = require('./routes/receipts');
@@ -58,9 +58,9 @@ app.use(cookieParser());
 
 app.use(express.static( settings.ui_path ));
 
-app.use('/pictures', express.static(path.join(__dirname,'pictures')));
+app.use('/files', express.static( settings.upload_directory ));
 app.use('/', indexRouter);
-app.use('/', pictureRouter);
+app.use('/', fileRouter);
 app.use('/', indexRouter);
 app.use('/', usersRouter);
 app.use('/', receiptsRouter);

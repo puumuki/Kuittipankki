@@ -45,7 +45,7 @@ define(function(require) {
       Communicator.mediator.on('app:receipt:search', _.bind(this._onReceiptSearch, this));
       
       //Triggered by ReceiptListMenuView when a search text box is empty
-      Communicator.mediator.on('app:receipt:searchend',_.bind(this._onReceiptSearchEnds, this));
+      Communicator.mediator.on('app:receipt:searchend', _.bind(this._onReceiptSearchEnds, this));
       
       //Triggered when a receipts are sorted by date or name
       Communicator.mediator.on('app:receipt:sort', _.bind(this._sortBy,this));

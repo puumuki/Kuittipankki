@@ -166,7 +166,7 @@
 
       this.dropzone = new window.Dropzone(this.$('.dropzone').get(0), {
         url: '/upload', 
-        acceptedFiles: 'image/*', 
+        acceptedFiles: 'image/*, application/pdf, text/plain', 
         addRemoveLinks: false,
         dictDefaultMessage: 'Raahaa kuvat ja pudota kuvat tähän, latausta varten.',
         headers: {
@@ -179,10 +179,10 @@
 
       this.dropzone.on('success', _.bind(this._fileUploaded, this) );
 
-      _.each(this.model.get('pictures'), _.bind(function(picture) {
+      _.each(this.model.get('files'), _.bind(function(picture) {
         var mockFile = { name: picture.filename, size: picture.size }; // here we get the file name and size as response 
 
-        var url = 'pictures/'+mockFile.name;
+        var url = 'files/'+mockFile.name;
 
         this.dropzone.emit('addedfile', mockFile);      
         this.dropzone.emit('thumbnail', mockFile, url );

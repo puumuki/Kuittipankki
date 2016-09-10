@@ -126,3 +126,7 @@ input[type="text"], .bootstrap-tagsinput, .shadow {
 .receipt-menu-item {
   margin-top: 5px;
 }
+
+.thumbnail>img {
+  height: 147px;
+}

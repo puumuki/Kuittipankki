@@ -9,22 +9,37 @@ define(function(require) {
     template: template,
 
     ui: {
-      'searchInput': '.search-input'
+      'searchInputReqular': '.search-input-reqular',
+      'searchInputSmall': '.search-input-small',
     },
 
     events: {
       'click button.sort' : '_sortBy',
-      'keydown .search-input': '_onSearch'
+      'keydown .search-input-reqular': '_onSearchReqular',
+      'keydown .search-input-small': '_onSearchSmall',
+      'click .search-btn': '_onSearchButtonClick'
     },
 
-    _onSearch: function(event) {
-      var search = this.ui.searchInput.val();
-
+    _search: function( search ) {
       if( search === '' ) {
         Communicator.mediator.trigger('app:receipt:searchend');
       } else {
         Communicator.mediator.trigger('app:receipt:search', search);
       }
+    },
+
+    _onSearchButtonClick: function(event) {
+      var searchInputSelector = $(event.currentTarget).data('searchinput');
+      var searchText = this.$(searchInputSelector).val();
+      this._search( searchText );
+    },   
+
+    _onSearchSmall: function(event) {
+      this._search( this.ui.searchInputSmall.val() );
+    },
+
+    _onSearchReqular: function(event) {
+      this._search( this.ui.searchInputReqular.val() );
     },
 
     serializeData: function() {

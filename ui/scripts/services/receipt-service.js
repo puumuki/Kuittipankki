@@ -151,10 +151,11 @@ define(function(require) {
    * @param {ReceiptCollection} found receipts
    */
   function searchReceipts( search, options ) {
-    var data = _collection.toJSON();
     
+    var opts = options || {};
+    var data = _collection.toJSON();
     var keys = _.defaults(['name','tags', 'descripton'], 
-                          options.keys);
+                          opts.keys);
 
     var fuse = new Fuse(data, {
       caseSensitive: false,

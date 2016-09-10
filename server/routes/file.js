@@ -10,25 +10,19 @@ var multipart = require('connect-multiparty');
 var Q = require('q');
 var authentication = require('./../authentication');
 var logging = require('../logging');
-var pictureService = require('../picture-service');
+var fileService = require('../file-service');
 var storage = require('../storage-service').receiptStorage;
+var settings = require('../settings');
 
-const uploadDirectory = path.join(__dirname,'..','pictures');
-
-const mimeType = {
-  'image/gif':'gif',
-  'image/png':'png',
-  'image/jpeg':'jpg',
-  'image/bmp':'bmp'
-};
+const UPLOAD_DIRECTORY = settings.upload_directory;
 
 function createThumbnail( image ) {
   
   var deferred = Q.defer();
 
   easyimg.thumbnail({
-    src: path.join(uploadDirectory, image),
-    dst: path.join(uploadDirectory, 'thumbnail.' + image),
+    src: path.join(UPLOAD_DIRECTORY, image),
+    dst: path.join(UPLOAD_DIRECTORY, 'thumbnail.' + image),
     width: 200,
     heigth: 200
   }).then(
@@ -60,12 +54,62 @@ function validateReceiptInfo( req, receiptId ) {
   return deferred.promise;
 }
 
-/* POST - upload */
+/*
+ * Upload images and files to Kuittipankki server 
+ * @method POST
+ * @route upload 
+ */
 router.post('/upload', authentication.isAuthorized, multipart(), function(req, res) {
 
   if( !req.user ) {
     logging.error('Unauthorized access, trying upload picture');
     return res.status(403).send({message:'Unauthorized'});
+  }
+
+  function generateFilePath(receiptID, fileEnding) {
+    
+    var generatedName = shortid.generate();
+    var filename = receiptID +'.'+ generatedName +'.'+fileEnding;
+    
+    return {
+      filePath: path.join( UPLOAD_DIRECTORY, filename ),
+      fileName: filename
+    }; 
+  }
+
+  function uploadImageFile(data, receiptID, contentType) {
+
+    var fileInformation = generateFilePath( receiptID, fileService.SUPPORTED_IMAGE_TYPES[contentType] );
+
+    //Accually save file from temponary upload directory to the disk
+    fs.writeFile(fileInformation.filePath, data, function (err) {
+
+      //After file is copied, we creata a smaller version from the uploaded image 
+      //that is called a thumbnail
+      createThumbnail( fileInformation.fileName ).then(function(image) {
+        logging.info('Created a thumbnail for a ', image );
+      })
+      .fail(function(error) {
+        logging.info('Error on creating thumbnail:',error);
+      });
+
+      if( err ) {
+        logging.info('Error copying image from themponary location to permanent storage', err);  
+      }     
+    });
+  }
+
+  function uploadFile( data, receiptID, contentType ) {
+
+    var fileInformation = generateFilePath( receiptID, fileService.SUPPORTED_OTHER_FILE_TYPES[contentType] );
+
+    //Accually save file from temponary upload directory to the disk
+    fs.writeFile(fileInformation.filePath, data, function (err) {
+      if( err ) {
+        logging.info('Error copying image from themponary location to permanent storage', err);  
+      }     
+    }); 
+
   }
 
   var receiptID = req.headers['receipt-id'];
@@ -77,29 +121,14 @@ router.post('/upload', authentication.isAuthorized, multipart(), function(req, r
     promise.then(function() {
 
       var contentType = req.files.file.headers['content-type'];
-      var fileEnding = mimeType[contentType];
 
-      if( fileEnding && receiptID ) {
-        var generatedName = shortid.generate();
-        var filename = receiptID +'.'+ generatedName +'.'+fileEnding;
-        var filePath = path.join( uploadDirectory, filename );
-
-        fs.writeFile(filePath, data, function (err) {
-
-          createThumbnail( filename ).then(function(image) {
-            logging.info('SUCCESS', image );
-          })
-          .fail(function(error) {
-            logging.info('Error on creating thumbnail:',error);
-          });
-
-          if( err ) {
-            logging.info('Error saving file', err);  
-          }
-          
-        });      
-      } else {
-        logging.info('Skipping file');
+      if( contentType in fileService.SUPPORTED_IMAGE_TYPES && receiptID ) {
+        uploadImageFile(data, receiptID, contentType);
+      } else if( contentType in fileService.SUPPORTED_OTHER_FILE_TYPES ) {
+        uploadFile(data, receiptID, contentType );
+      }
+      else {
+        logging.info('File type is not supported skipping the file');
       }
       
       logging.info('Saving files', req.files.file.path );
@@ -113,7 +142,7 @@ router.post('/upload', authentication.isAuthorized, multipart(), function(req, r
 
 /* GET - Return all pictures */
 
-/* DELETE - Delete picture */
+/* DELETE - Delete picture  */
 router.delete('/picture/:picture', function(req, res) {
 
   if( !req.user ) {
@@ -122,8 +151,8 @@ router.delete('/picture/:picture', function(req, res) {
   }
 
   var pictureName = req.params.picture;
-  var pictures = pictureService.loadPictures();
-  var picture = pictureService.filterPicturesByFilename(pictureName, pictures);
+  var pictures = fileService.loadFiles();
+  var picture = fileService.filterPicturesByFilename(pictureName, pictures);
   var receiptId = _.first( pictureName.split('.') );
 
   storage.get(receiptId, function(err, receipt) {
@@ -138,7 +167,7 @@ router.delete('/picture/:picture', function(req, res) {
     } else {
       if( picture ) {
         logging.log('Deleting picture', picture);
-        pictureService.deletePicture(picture);
+        fileService.deletePicture(picture);
         res.send({message:'Picture deleted'});
       } else {
         res.status(404);

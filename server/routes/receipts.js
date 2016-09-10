@@ -4,7 +4,7 @@ var _              = require('underscore');
 var authentication = require('./../authentication');
 var logging        = require('../logging');
 var storage        = require('../storage-service').receiptStorage;
-var pictureService = require('../picture-service');
+var fileService = require('../file-service');
 
 var router = express.Router();
 
@@ -96,8 +96,8 @@ router.put('/receipt/:id', authentication.isAuthorized, function(req, res) {
 
       storage.saveSync(req.params.id,receipt);
 
-      var files = pictureService.loadPictures();
-      receipt.pictures = pictureService.filterPicturesByReceiptID(receipt.id, files);
+      var files = fileService.loadFiles();
+      receipt.pictures = fileService.filterFilesByReceiptID(receipt.id, files);
 
       res.send(JSON.stringify(receipt));
     }
@@ -125,10 +125,10 @@ router.get('/receipts', authentication.isAuthorized, function(req, res) {
     if( err ) {
       errorHandler(req, res, err);
     } else {
-      var files = pictureService.loadPictures();
+      var files = fileService.loadFiles();
 
       var _receipts = _.chain(receipts).map(function(receipt, id) {
-        receipt.pictures = pictureService.filterPicturesByReceiptID(receipt.id, files);
+        receipt.files = fileService.filterFilesByReceiptID(receipt.id, files);
         return receipt;
       }).filter(function(receipt) {
         return (receipt.deleted === undefined || receipt.deleted === false) && receipt.user_id === req.user.id;
@@ -149,8 +149,8 @@ router.get('/receipt/:id', authentication.isAuthorized, function(req, res) {
 
     res.setHeader('Content-Type', 'application/json');
     
-    var pictures = pictureService.loadPictures();
-    receipt.pictures = pictureService.filterPicturesByReceiptID(receipt.id, pictures);
+    var files = fileService.loadFiles();
+    receipt.files = fileService.filterFilesByReceiptID(receipt.id, files);
     
     if( err ) {
       errorHandler(req, res, err);

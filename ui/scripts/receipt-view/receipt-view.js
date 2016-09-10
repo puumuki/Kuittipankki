@@ -18,7 +18,7 @@ define(function(require) {
     template: template,
 
     events: {
-      'click a.thumbnail': '_onImageClicked',
+      'click a.thumbnail': '_onThumbnailClicked',
     },
 
     initialize: function() {
@@ -26,14 +26,22 @@ define(function(require) {
       this.model.on('change', this.render);
     },
 
-    _onImageClicked: function(event) {
+    _onThumbnailClicked: function(event) {
+        
       event.preventDefault();
-      var image = $(event.currentTarget).data('image');
-      new ImageDialogView({
-        title: 'Kuva',
-        receipt: this.model,
-        image: image
-      });
+
+      var mimeType = $(event.currentTarget).data('mimetype');
+      var url = $(event.currentTarget).data('url');
+
+      if( mimeType.startsWith('image') ) {
+        new ImageDialogView({
+          title: 'Kuva',
+          receipt: this.model,
+          image: url
+        });        
+      } else {
+        window.open( 'files/' + url );
+      }
     },
 
     _durationFromDate: function(date) {
