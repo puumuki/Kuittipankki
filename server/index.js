@@ -2,11 +2,14 @@
  * Start Kuittipankki server application
  * Start by running command in terminal node index.js
  */
-var logging  = require('./logging');
-var app      = require('./app');
-var settings = require('./settings');
-var path     = require('path');
-var pidfile  = require('easy-pid-file')( path.join( __dirname, 'kuittipankki.pid'));
+var logging      = require('./logging');
+var app          = require('./app');
+var settings     = require('./settings');
+var path         = require('path');
+var easypidfile  = require('easy-pid-file');
+
+//Create a file stat srores process id
+easypidfile( path.join( __dirname, 'kuittipankki.pid'));
 
 var server = app.listen(settings.port, function () {
   var host = server.address().address;
@@ -17,7 +20,7 @@ var server = app.listen(settings.port, function () {
 server.on('error', function(error) {
   if( error.code in errorHandler ) {
     errorHandler[error.code]( error );
-  } 
+  }
 });
 
 /**
@@ -29,16 +32,16 @@ function shutdownServer(msg) {
 
   return function(error) {
     logging.info(msg);
-    
+
     //Fixes problem with a server.close callback, that is not never called
     //if there is hanging connections.
     server._connections=0;
 
     server.close(function () {
-      console.log("Shutdown")
+      console.log('Shutdown');
       process.exit(0);
-    });    
-  }
+    });
+  };
 
 }
 
@@ -49,6 +52,6 @@ var errorHandler = {
   EADDRINUSE: function( error ) {
     logging.error('-- Server shutting down -- Server port is in use ' + error.port );
     process.exit(0);
-  }, 
+  },
 
-}
+};

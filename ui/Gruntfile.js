@@ -19,6 +19,8 @@ module.exports = function (grunt) {
     // show elapsed time at the end
     require('time-grunt')(grunt);
 
+    grunt.loadNpmTasks('grunt-contrib-csslint');
+
     // configurable paths
     var yeomanConfig = {
         app: '.',
@@ -30,7 +32,7 @@ module.exports = function (grunt) {
 
         // watch list
         watch: {
-            
+
             livereload: {
                 files: [
                     'scripts/{,**/}*.js',
@@ -62,7 +64,15 @@ module.exports = function (grunt) {
             }
         },
 
-        
+        csslint: {
+          lax: {
+            options: {
+              import: 2,
+              "rules-count":true
+            },
+            src: ['css/style.css']
+          }
+        },
 
         // open app and test page
         open: {
@@ -203,10 +213,10 @@ module.exports = function (grunt) {
                     ]
                 }, {
                     dot: true,
-                    expand:true, 
+                    expand:true,
                     flatten:true,
                     cwd: '<%= yeoman.app %>',
-                    src:'bower_components/bootstrap/fonts/*.*', 
+                    src:'bower_components/bootstrap/fonts/*.*',
                     dest: '<%= yeoman.dist %>/fonts/',
                 }]
             }

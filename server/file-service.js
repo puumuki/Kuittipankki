@@ -9,7 +9,10 @@ var logging = require('./logging');
 var settings = require('./settings');
 var mime = require('mime-types');
 var util = require('util');
-
+var Q = require('q');
+var easyimg = require('easyimage');
+var fileMetaDataStorage = require('./storage-service').fileMetaDataStorage;
+var timeService = require('./time-service');
 const UPLOAD_DIRECTORY = settings.upload_directory;
 
 /**
@@ -31,12 +34,41 @@ const SUPPORTED_IMAGE_TYPES = {
 };
 
 const SUPPORTED_OTHER_FILE_TYPES = {
-  'application/pdf':'pdf', 
+  'application/pdf':'pdf',
   'application/txt':'txt',
   'text/plain':'txt'
 };
 
 const SUPPORTED_FILE_TYPES = ['bmp','png','jpg','gif','pdf','txt'];
+
+/**
+ * Create a thumbnail from a image
+ * @param {string} image, image path
+ * @return {Promise} resolved with a thumbnail image file, rejected with a error object
+ */
+function createThumbnail( image ) {
+
+  var deferred = Q.defer();
+
+  easyimg.thumbnail({
+    src: path.join(UPLOAD_DIRECTORY, image),
+    dst: path.join(UPLOAD_DIRECTORY, 'thumbnail.' + image),
+    width: 200,
+    heigth: 200
+  }).then(
+    function(file) {
+      deferred.resolve(file);
+    }, function (err) {
+      deferred.reject(err);
+    }
+  );
+
+  return deferred.promise;
+}
+
+function readFileInformation( image ) {
+  return easyimg.info(path.join(UPLOAD_DIRECTORY, image));
+}
 
 /**
  * Return right thumbnail based on file mimetype
@@ -56,7 +88,6 @@ function getFileTypeThumbnail( mimetype, filename ) {
   var parts = mimetype.split('/');
 
   var toplevel = parts[0];
-  var subtype = parts[1];
 
   //First search specific configuration
   if( THUMBNAIL_BY_TYPE[mimetype] ) {
@@ -64,11 +95,45 @@ function getFileTypeThumbnail( mimetype, filename ) {
 
   //Secondery option is to use top level thumbnail
   } else if( THUMBNAIL_BY_TYPE[toplevel+'/*'] ) {
-    thumbnail = THUMBNAIL_BY_TYPE[toplevel+'/*'];  
+    thumbnail = THUMBNAIL_BY_TYPE[toplevel+'/*'];
   }
 
   return util.format( thumbnail, filename ).split(' ')[0];
 }
+
+/**
+ * Store file information to file meta data storage
+ * @param {object} fileInformation
+ * @return {string} fileMetaDataId
+ */
+function storeFileInformation( fileInformation ) {
+
+  var fileInformationData = {
+    originalFilename: fileInformation.originalFilename,
+    size: fileInformation.size,
+    filename: fileInformation.fileName,
+    mime: fileInformation.type,
+    receiptId: fileInformation.receiptId,
+    width: fileInformation.width,
+    height: fileInformation.height,
+    depth:  fileInformation.depth,
+    density: fileInformation.density,
+    created: timeService.currentDateTime()
+  };
+
+  return fileMetaDataStorage.saveSync(fileInformation.fileName, fileInformationData);
+}
+
+/**
+ * Return file information data if the data is available.
+ * @param {string} fileName
+ * @return {*} file information object or null if information is not available
+ */
+function getFileInformation( fileName ) {
+  var data = fileMetaDataStorage.getSync( fileName );
+  return data.message !== 'could not load data' ? data : null;
+}
+
 
 /**
  * Load pictures all pictures
@@ -84,24 +149,35 @@ function loadFiles() {
     return _.indexOf( SUPPORTED_FILE_TYPES, fileType ) >= 0;
   });
 
-  return _.map( files, function(filename) {
+  var fileMetaInformation = fileMetaDataStorage.allSync();
+
+  var images = _.map( files, function(filename) {
 
     var mimetype = mime.lookup(filename);
+    var informationData = fileMetaInformation[filename] || {};
+    var stats = fs.statSync(path.join(UPLOAD_DIRECTORY, filename));
 
-    return {
+    return _.extend( informationData, {
       filename: filename,
       thumbnail: getFileTypeThumbnail(mimetype, filename),
       mimetype: mimetype,
-      size: fs.statSync(path.join(UPLOAD_DIRECTORY, filename)).size
-    };
+      created: stats.ctime,
+      size: stats.size
+    });
   });
+
+  images.sort(function(a, b) {
+    return timeService.compareDateTimes(a.created, b.created);
+  });
+
+  return images;
 }
 
 /**
  * Picture's filename has a receipt ID included, by that
  * information receipts are filtered from file array
  * @param {string} receiptID
- * @param {array of objects} pictures 
+ * @param {array of objects} pictures
  * @return {array of objects} return pictures that has receiptID in filename
  */
 function filterFilesByReceiptID(id, pictures) {
@@ -125,40 +201,48 @@ function filterPicturesByFilename(filename, pictures) {
   return _.first(results);
 }
 
+
+
 /**
  * Deletes picture from the disk, deletion is a syncronous operation.
  * @param {object} picture object
  */
 function deletePicture(picture) {
 
-  logging.info("Deleting thumbnail and picture", picture);
+  logging.info('Deleting thumbnail and picture', picture);
 
   var picturePath = path.join( UPLOAD_DIRECTORY, picture.filename);
   var thumbnailPath = path.join( UPLOAD_DIRECTORY, picture.thumbnail);
-     
+
   try {
     fs.accessSync(picturePath, fs.F_OK);
     logging.info('Deleting picture', picturePath);
-    fs.unlinkSync(picturePath);  
+    fs.unlinkSync(picturePath);
   } catch( error ) {
     logging.info('Could\'t delete picture', picturePath, error);
   }
- 
-  try {
-    fs.accessSync(thumbnailPath, fs.F_OK)
-    logging.info('Deleting thumbnail', thumbnailPath);
-    fs.unlinkSync(thumbnailPath);  
-  } catch( error ) {
-    logging.info('Could\'t delete thumbnail', thumbnailPath);
+
+  if( picture.mimetype in SUPPORTED_IMAGE_TYPES ) {
+    try {
+      fs.accessSync(thumbnailPath, fs.F_OK);
+      logging.info('Deleting thumbnail', thumbnailPath);
+      fs.unlinkSync(thumbnailPath);
+    } catch( error ) {
+      logging.info('Could\'t delete thumbnail', thumbnailPath);
+    }
   }
 }
 
 module.exports = {
+  createThumbnail:createThumbnail,
   loadFiles: loadFiles,
-  filterFilesByReceiptID: filterFilesByReceiptID, 
+  filterFilesByReceiptID: filterFilesByReceiptID,
   deletePicture: deletePicture,
   filterPicturesByFilename:filterPicturesByFilename,
   getFileTypeThumbnail:getFileTypeThumbnail,
+  storeFileInformation:storeFileInformation,
+  getFileInformation:getFileInformation,
+  readFileInformation:readFileInformation,
   THUMBNAIL_BY_TYPE:THUMBNAIL_BY_TYPE,
   SUPPORTED_IMAGE_TYPES:SUPPORTED_IMAGE_TYPES,
   SUPPORTED_FILE_TYPES:SUPPORTED_FILE_TYPES,

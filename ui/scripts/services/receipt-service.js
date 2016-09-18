@@ -1,5 +1,5 @@
 define(function(require) {
-  
+
   var ReceiptCollection = require('receipt-collection');
   var Q = require('q');
   var _ = require('underscore');
@@ -7,6 +7,7 @@ define(function(require) {
   var Fuse = require('fuse');
   var _collection = new ReceiptCollection();
   var Receipt = require('receipt');
+  var moment = require('moment');
 
   /**
    * Easier time to debug collections internal s
@@ -21,7 +22,7 @@ define(function(require) {
    * Fetch a receipt from the server or a memory if receipt is allready fetced.
    * Server fetch can be forced by passing options.fetch as a parameter.
    *
-   * @param {Boolean} options.fetch 
+   * @param {Boolean} options.fetch
    * @return {Q.promise} promise object
    */
   function fetchReceipt( options ) {
@@ -34,7 +35,7 @@ define(function(require) {
       promise.then(function(collection) {
         var receipt = collection.get(options.id);
         if( receipt ) {
-          deferred.resolve(receipt);  
+          deferred.resolve(receipt);
         } else {
           deferred.reject({ message: 'Receipt not found' });
         }
@@ -77,7 +78,7 @@ define(function(require) {
     }
 
     return deferred.promise;
-  }  
+  }
 
   /**
    * Fetch receipts from the server. If collection is empty receipt are loaded
@@ -90,7 +91,7 @@ define(function(require) {
     var ops = options || {};
 
     var deferred = Q.defer();
-    
+
     if( _collection.size() === 0 || ops.fetch ) {
       _collection.fetch({
         success: function() {
@@ -105,7 +106,7 @@ define(function(require) {
     }
 
     return deferred.promise;
-  } 
+  }
 
   /**
    * Saves receipt to server
@@ -133,7 +134,7 @@ define(function(require) {
 
     return deferred.promise;
   }
-  
+
   /**
    * Clones receipt to server
    * @param {Backbone.Receipt} receipt
@@ -141,20 +142,26 @@ define(function(require) {
    */
   function cloneReceipt( receipt ) {
     var receiptData = receipt.toJSON();
+
     delete receiptData.id;
+    receiptData.files = [];
+
+    var time = moment().format('DD.MM.YYYY HH:mm');
+    receiptData.name = receiptData.name + ' kopio (' + time + ')';
+
     return saveReceipt(new Receipt( receiptData ));
   }
 
   /**
-   * Search receipts from browser memory, from the _collection object. 
+   * Search receipts from browser memory, from the _collection object.
    * @param {String} search string
    * @param {ReceiptCollection} found receipts
    */
   function searchReceipts( search, options ) {
-    
+
     var opts = options || {};
     var data = _collection.toJSON();
-    var keys = _.defaults(['name','tags', 'descripton'], 
+    var keys = _.defaults(['name','tags', 'descripton'],
                           opts.keys);
 
     var fuse = new Fuse(data, {
@@ -189,5 +196,5 @@ define(function(require) {
     searchReceipts: searchReceipts,
     cloneReceipt: cloneReceipt
   };
-  
+
 });

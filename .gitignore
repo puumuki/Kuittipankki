@@ -21,3 +21,7 @@ data/users.json
 rest-test/node_modules/*
 ui/templates/.DS_Store
 .DS_store
+*.sublime-project
+*.sublime-workspace
+server/data/*
+**/*.pid

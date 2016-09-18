@@ -7,14 +7,14 @@
   var Communicator = require('communicator');
 
   var ConfirmationDialogView = require('confirmation-dialog-view/confirmation-dialog-view');
-  
+
   var receiptService = require('services/receipt-service');
   var userService = require('services/user-service');
   var effectService = require('services/effect-service');
 
   var ImageDialogView = require('image-dialog-view/image-dialog-view');
   var _ = require('underscore');
-  
+
   require('bootstraptagsinput');
 
   function formatDate(dateString) {
@@ -61,7 +61,7 @@
         onOk: _.bind( this._cloneReceipt, this )
       });
     },
-    
+
     _deleteReceiptClick: function() {
       new ConfirmationDialogView({
         title: 'Kuitin poisto',
@@ -74,7 +74,6 @@
       var promise = receiptService.cloneReceipt(this.model);
 
       promise.then(function(receipt) {
-        console.log( receipt.toJSON() );
         App.router.navigate('#receipt/'+receipt.get('id'), {trigger:true});
       }).fail(function(error) {
         console.error(error);
@@ -91,7 +90,7 @@
         console.error(error);
         //TODO: Make error handling
       });
-    },    
+    },
 
     _onLogout: function() {
       this.render();
@@ -111,7 +110,7 @@
     },
 
     _openImage: function(event) {
-      var filename = $(event.currentTarget).find('img').attr('alt');  
+      var filename = $(event.currentTarget).find('img').attr('alt');
       new ImageDialogView({
         title: 'Kuva',
         image: filename
@@ -120,7 +119,7 @@
 
     _fileUploaded: function(response, response2) {
       if( this.model.get('id') ) {
-        this.model.fetch(null, {});  
+        this.model.fetch(null, {});
       } else {
         receiptService.saveReceipt(this.model);
       }
@@ -133,7 +132,7 @@
       this.model.set('warrantlyEndDate', formatDate( this.ui.warrantlyEndDate.val() ));
       this.model.set('registered', formatDate( this.ui.registered.val() ));
       this.model.set('purchaseDate', formatDate( this.ui.purchaseDate.val() ));
-      this.model.set('tags', this.ui.tags.val().split(',') );      
+      this.model.set('tags', this.ui.tags.val().split(',') );
       this.model.set('description', this.ui.description.val());
       this.model.set('price', this.ui.price.val());
 
@@ -165,44 +164,55 @@
     _renderDropZone: function() {
 
       this.dropzone = new window.Dropzone(this.$('.dropzone').get(0), {
-        url: '/upload', 
-        acceptedFiles: 'image/*, application/pdf, text/plain', 
+        url: '/upload',
+        acceptedFiles: 'image/*, application/pdf, text/plain',
         addRemoveLinks: false,
         dictDefaultMessage: 'Raahaa kuvat ja pudota kuvat tähän, latausta varten.',
         headers: {
           'receipt-id':this.model.get('id')
         },
-        init: function() {
-          
-        }
+        init: function() {}
       });
 
       this.dropzone.on('success', _.bind(this._fileUploaded, this) );
 
+      //Cancel preview click on added file, file name is not
+      this.dropzone.on('addedfile', _.bind( function(file) {
+
+        var ext = file.name.split('.').pop();
+
+        if (ext === 'pdf') {
+            this.dropzone.createThumbnailFromUrl(file, 'files/thumbnail.pdf.png');
+        } else if (ext.indexOf('txt') !== -1) {
+            this.dropzone.createThumbnailFromUrl(file, 'files/thumbnail.txt.png');
+        }
+
+        file.previewElement.addEventListener('click', function(event) {
+          event.preventDefault();
+          event.stopPropagation();
+        });
+      }, this ));
+
       _.each(this.model.get('files'), _.bind(function(picture) {
-        var mockFile = { name: picture.filename, size: picture.size }; // here we get the file name and size as response 
+
+        var mockFile = {
+          name: picture.filename,
+          size: picture.size
+        }; // here we get the file name and size as response
 
         var url = 'files/'+mockFile.name;
 
-        this.dropzone.emit('addedfile', mockFile);      
+        this.dropzone.emit('addedfile', mockFile);
         this.dropzone.emit('thumbnail', mockFile, url );
 
         this.dropzone.createThumbnailFromUrl(mockFile, url);
 
         this.dropzone.emit('complete', mockFile);
-      }, this));
+      }, this ));
 
       if( !userService.getAuthenticatedUser() ) {
-        this.dropzone.disable();  
-      }     
-
-      //Cancel preview click on added file, file name is not 
-      this.dropzone.on('addedfile', function(file) {
-        file.previewElement.addEventListener('click', function(event) {
-          event.preventDefault();
-          event.stopPropagation();
-        });
-      });
+        this.dropzone.disable();
+      }
 
       return this;
     },
@@ -216,16 +226,17 @@
     },
 
     render: function() {
+
       ReceiptEditView.__super__.render.apply(this, arguments);
-      
+
       this.$('.datepicker').datepicker();
 
       this._setDateField('purchaseDate', this.model.get('purchaseDate'));
       this._setDateField('warrantlyEndDate', this.model.get('warrantlyEndDate'));
       this._setDateField('registered', this.model.get('registered'));
-      
+
       if(userService.getAuthenticatedUser()) {
-        this.$('.tags').tagsinput();  
+        this.$('.tags').tagsinput();
       }
 
       this._renderDropZone();

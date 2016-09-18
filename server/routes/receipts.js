@@ -16,10 +16,10 @@ function sanitize(req){
   req.sanitize('created').escape();
   req.sanitize('updated').escape();
   req.sanitize('purchaseDate').escape();
-  req.sanitize('description').escape();
+  req.sanitize('description');//Markdown content, has to support links and other content.
   req.sanitize('price').escape();
 }
-  
+
 function errorHandler(req, res, error) {
   logging.error('Error',error);
   res.status(500);
@@ -33,7 +33,7 @@ router.post('/receipt', authentication.isAuthorized, function(req, res) {
     logging.error('Unauthorized access, trying to create a new receipt');
     return res.status(403).send({message:'Unauthorized'});
   }
-  
+
   res.setHeader('Content-Type', 'application/json');
 
   sanitize(req);
@@ -50,7 +50,7 @@ router.post('/receipt', authentication.isAuthorized, function(req, res) {
     var id = storage.saveSync(receipt);
     receipt.id = id;
     res.send(JSON.stringify( receipt ));
-  }  
+  }
 });
 
 /* PUT - Update receipt. */
@@ -61,9 +61,9 @@ router.put('/receipt/:id', authentication.isAuthorized, function(req, res) {
   }
 
   res.setHeader('Content-Type', 'application/json');
-  
+
   sanitize(req);
-  
+
   req.checkParams('id','Receipt ID is missing');
 
   storage.get(req.params.id, function(err, receipt) {
@@ -97,7 +97,7 @@ router.put('/receipt/:id', authentication.isAuthorized, function(req, res) {
       storage.saveSync(req.params.id,receipt);
 
       var files = fileService.loadFiles();
-      receipt.pictures = fileService.filterFilesByReceiptID(receipt.id, files);
+      receipt.files = fileService.filterFilesByReceiptID(receipt.id, files);
 
       res.send(JSON.stringify(receipt));
     }
@@ -118,7 +118,7 @@ router.delete('/receipt/:id', authentication.isAuthorized, function(req, res) {
 
 /* GET - All receipts. */
 router.get('/receipts', authentication.isAuthorized, function(req, res) {
-  
+
   res.setHeader('Content-Type', 'application/json');
 
   storage.all(function(err, receipts) {
@@ -148,14 +148,14 @@ router.get('/receipt/:id', authentication.isAuthorized, function(req, res) {
   storage.get(req.params.id, function(err, receipt) {
 
     res.setHeader('Content-Type', 'application/json');
-    
+
     var files = fileService.loadFiles();
     receipt.files = fileService.filterFilesByReceiptID(receipt.id, files);
-    
+
     if( err ) {
       errorHandler(req, res, err);
     } else if( !receipt ) {
-      res.status(404); 
+      res.status(404);
       res.send(JSON.stringify(err));
     } else if( receipt.user_id !== req.user.id ) {
       res.status(403);
@@ -171,13 +171,13 @@ router.get('/receipt', authentication.isAuthorized, function(req, res) {
   res.setHeader('Content-Type', 'application/json');
 
   storage.all(function(err, data) {
-    
+
     res.setHeader('Content-Type', 'application/json');
 
     if( err ) {
       errorHandler(req, res, err);
     } else if( !data ) {
-      res.status(404); 
+      res.status(404);
       res.send(JSON.stringify(err));
     } else {
       res.send(JSON.stringify(data));

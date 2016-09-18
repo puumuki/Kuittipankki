@@ -2,13 +2,13 @@
 define(function(require) {
 
   var Backbone = require('backbone');
-  var template = require('hbs!image-dialog-view/image-dialog');
+  var template = require('hbs!file-dialog-view/file-dialog');
   var _ = require('underscore');
   var regionManager = require('region-manager');
   var fileService = require('services/file-service');
   var ConfirmationDialogView = require('confirmation-dialog-view/confirmation-dialog-view');
 
-  var ImageDialogView = Backbone.Marionette.ItemView.extend({
+  var FileDialogView = Backbone.Marionette.ItemView.extend({
 
     template: template,
 
@@ -17,30 +17,39 @@ define(function(require) {
     },
 
     events : {
-      'click button[name="ok"]': '_onOkButtonClick',
-      'click button[name="delete"]' : '_onDeletePictureClick'
+      'click button[name="open"]' : '_onOpenFileClick',
+      'click button[name="delete"]' : '_onDeleteFileClick'
     },
 
     _onDeletingFail: function(error) {
-      console.error('Error on deleting picture', error);
+      console.error('Error on deleting file', error);
+
+      //Close modal
+      this.$el.find('.modal').modal('hide');
+      $('.modal-backdrop').remove();
     },
 
-    _onDeletePictureClick: function(event) {
+    _onOpenFileClick: function() {
+        window.open( 'files/' + this.options.file.filename );
+        this._closeDialog();
+    },
+
+    _onDeleteFileClick: function(event) {
       event.preventDefault();
       new ConfirmationDialogView({
         title: 'Kuvan poisto',
-        text: 'Haluato varmasti poistaa kuvan?',
-        onOk: _.bind( this._deletePicture, this )
+        text: 'Haluato varmasti poistaa tiedoston?',
+        onOk: _.bind( this._deleteFile, this )
       });
     },
 
-    _deletePicture: function(event) {
+    _deleteFile: function(event) {
       fileService.deletePicture(this.options.file.filename)
-      .then(_.bind(this._onDeletedPicture, this))
+      .then(_.bind(this._onDeletedFile, this))
       .fail(_.bind(this._onDeletingFail, this));
     },
 
-    _onDeletedPicture: function(response) {
+    _onDeletedFile: function(response) {
       //Remove picture from Receipt object
       this.options.receipt.removePicture( this.options.file );
       this._closeDialog();
@@ -64,16 +73,16 @@ define(function(require) {
     },
 
     serializeData: function() {
-      return _.extend( this.options.file, {
-        title: this.options.title
+      return _.extend(this.options.file,{
+        title: this.options.title + ' ' + this.options.file.filename
       });
     },
 
     render: function() {
-      ImageDialogView.__super__.render.call(this);
+      FileDialogView.__super__.render.call(this);
       this.$el.find('.modal').modal();
     }
   });
 
-  return ImageDialogView;
+  return FileDialogView;
 });

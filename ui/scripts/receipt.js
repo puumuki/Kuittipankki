@@ -8,12 +8,18 @@ define(function(require){
       return this.get('id') ? '/receipt/' + this.get('id') : '/receipt';
     },
 
-    removePicture: function(pictureModel) {
-      var pictures = _.filter( this.get('pictures'), function(pic) {
-        return pic.filename !== pictureModel;
+    removePicture: function(fileModel) {
+      var files = _.filter( this.get('files'), function(pic) {
+        return pic.filename !== fileModel.filename;
       });
 
-      this.set('pictures', pictures);
+      this.set('files', files);
+    },
+
+    findFile: function(fileName) {
+      return _.find( this.get('files'), function( file ) {
+        return file.filename === fileName;
+      });
     }
   });
 

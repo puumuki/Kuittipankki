@@ -47,7 +47,13 @@ app.use(bodyParser.urlencoded({
   extended: true
 }));
 
-app.use(expressSession({ store: new FileStore(), secret: 'ads32432afdsf' }));
+//There was little bug when a server was started from like "node ./server/index.js"
+//session directory was created to root level directory, now it always stays at the server dir
+var fileStorage = new FileStore({
+  path: path.join(__dirname, 'sessions')
+});
+
+app.use(expressSession({ store: fileStorage, secret: 'ads32432afdsf' }));
 
 app.use(passport.initialize());
 app.use(passport.session());
@@ -58,6 +64,7 @@ app.use(cookieParser());
 
 app.use(express.static( settings.ui_path ));
 
+app.use('/fonts', express.static( path.join(__dirname, 'fonts') ));
 app.use('/files', express.static( settings.upload_directory ));
 app.use('/', indexRouter);
 app.use('/', fileRouter);
@@ -72,7 +79,7 @@ app.get('/logout', function(req, res){
 });
 
 app.post('/login',
-  passport.authenticate('local', {failureFlash: false}),  
+  passport.authenticate('local', {failureFlash: false}),
   // If this function gets called, authentication was successful.
   // `req.user` contains the authenticated user.
   authentication.loginRouteResponse

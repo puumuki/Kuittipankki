@@ -10,6 +10,7 @@ define(function(require) {
   var moment = require('moment');
 
   var ImageDialogView = require('image-dialog-view/image-dialog-view');
+  var FileDialogView = require('file-dialog-view/file-dialog-view');
 
   var ReceiptView = Backbone.Marionette.ItemView.extend({
 
@@ -27,20 +28,28 @@ define(function(require) {
     },
 
     _onThumbnailClicked: function(event) {
-        
+
       event.preventDefault();
 
       var mimeType = $(event.currentTarget).data('mimetype');
       var url = $(event.currentTarget).data('url');
 
+      var file = _.find( this.model.get('files'), function( file ) {
+        return file.filename === url;
+      });
+
       if( mimeType.startsWith('image') ) {
         new ImageDialogView({
           title: 'Kuva',
           receipt: this.model,
-          image: url
-        });        
+          file: file
+        });
       } else {
-        window.open( 'files/' + url );
+        new FileDialogView({
+          title: 'Tiedosto',
+          receipt: this.model,
+          file: file
+        });
       }
     },
 
@@ -51,7 +60,7 @@ define(function(require) {
       return moment.duration(diff,'ms').format('y [vuotta] d [päivää]');
     },
 
-    serializeData: function() {      
+    serializeData: function() {
       return _.extend(ReceiptView.__super__.serializeData.call(this), {
         readonly: !userService.getAuthenticatedUser(),
         fromPurchase: this._durationFromDate(this.model.get('purchaseDate'))
@@ -60,6 +69,7 @@ define(function(require) {
 
     render: function() {
       ReceiptView.__super__.render.apply(this, arguments);
+      this.$('[data-toggle="tooltip"]').tooltip();
       window.scrollTo( 0, 0 );
       return this;
     }

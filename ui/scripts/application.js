@@ -36,6 +36,8 @@ define(function(require) {
       
   $.datepicker.setDefaults($.datepicker.regional.fi);
 
+
+
   /* Add initializers here */
   App.addInitializer( function () {
     

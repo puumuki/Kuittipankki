@@ -5,7 +5,7 @@ var router = express.Router();
 var _ = require('underscore');
 var fs = require('fs');
 var path = require('path');
-var easyimg = require('easyimage');
+
 var multipart = require('connect-multiparty');
 var Q = require('q');
 var authentication = require('./../authentication');
@@ -16,26 +16,13 @@ var settings = require('../settings');
 
 const UPLOAD_DIRECTORY = settings.upload_directory;
 
-function createThumbnail( image ) {
-  
-  var deferred = Q.defer();
-
-  easyimg.thumbnail({
-    src: path.join(UPLOAD_DIRECTORY, image),
-    dst: path.join(UPLOAD_DIRECTORY, 'thumbnail.' + image),
-    width: 200,
-    heigth: 200
-  }).then(
-    function(file) {
-      deferred.resolve(file);
-    }, function (err) {
-      deferred.reject(err);
-    }
-  );
-
-  return deferred.promise;
-}
-
+/**
+ * Validate that receipt with a given id exist and it's owned by user
+ * that is trying to modify it.
+ * @param {object} req, request object
+ * @param {string} receiptId, receipt identification string
+ * @return {Promise} rejected if error occurs, resolved and receipt object returned if all is ok
+ */
 function validateReceiptInfo( req, receiptId ) {
   var deferred = Q.defer();
 
@@ -47,7 +34,7 @@ function validateReceiptInfo( req, receiptId ) {
 
     //Check that receipt is user receipt
     if( receipt.user_id === req.user.id ) {
-      deferred.resolve(true);
+      deferred.resolve(receipt);
     }
   });
 
@@ -55,9 +42,9 @@ function validateReceiptInfo( req, receiptId ) {
 }
 
 /*
- * Upload images and files to Kuittipankki server 
+ * Upload images and files to Kuittipankki server
  * @method POST
- * @route upload 
+ * @route upload
  */
 router.post('/upload', authentication.isAuthorized, multipart(), function(req, res) {
 
@@ -66,50 +53,75 @@ router.post('/upload', authentication.isAuthorized, multipart(), function(req, r
     return res.status(403).send({message:'Unauthorized'});
   }
 
-  function generateFilePath(receiptID, fileEnding) {
-    
+  function generateFilePath(receiptId, fileEnding) {
+
     var generatedName = shortid.generate();
-    var filename = receiptID +'.'+ generatedName +'.'+fileEnding;
-    
+    var filename = receiptId +'.'+ generatedName +'.'+fileEnding;
+
     return {
       filePath: path.join( UPLOAD_DIRECTORY, filename ),
-      fileName: filename
-    }; 
+      fileName: filename,
+      receiptId: receiptId
+    };
   }
 
   function uploadImageFile(data, receiptID, contentType) {
+
+    var deferred = Q.defer();
 
     var fileInformation = generateFilePath( receiptID, fileService.SUPPORTED_IMAGE_TYPES[contentType] );
 
     //Accually save file from temponary upload directory to the disk
     fs.writeFile(fileInformation.filePath, data, function (err) {
 
-      //After file is copied, we creata a smaller version from the uploaded image 
+      //After file is copied, we creata a smaller version from the uploaded image
       //that is called a thumbnail
-      createThumbnail( fileInformation.fileName ).then(function(image) {
+      fileService.createThumbnail( fileInformation.fileName ).then(function(image) {
         logging.info('Created a thumbnail for a ', image );
       })
       .fail(function(error) {
         logging.info('Error on creating thumbnail:',error);
       });
 
+      fileService.readFileInformation( fileInformation.fileName ).then( function(fileInfo)  {
+
+        fileInformation.width = fileInfo.width;
+        fileInformation.height = fileInfo.height;
+        fileInformation.depth = fileInfo.depth;
+        fileInformation.density = fileInfo.density;
+
+        deferred.resolve(fileInformation);
+      }).fail(function( fileInformationReadError ) {
+        console.log('Error reading file information read error');
+        deferred.reject(fileInformationReadError);
+      });
+
       if( err ) {
-        logging.info('Error copying image from themponary location to permanent storage', err);  
-      }     
+        logging.info('Error copying image from themponary location to permanent storage', err);
+        deferred.reject(err);
+      }
     });
+
+    return deferred.promise;
   }
 
   function uploadFile( data, receiptID, contentType ) {
+
+    var deferred = Q.defer();
 
     var fileInformation = generateFilePath( receiptID, fileService.SUPPORTED_OTHER_FILE_TYPES[contentType] );
 
     //Accually save file from temponary upload directory to the disk
     fs.writeFile(fileInformation.filePath, data, function (err) {
       if( err ) {
-        logging.info('Error copying image from themponary location to permanent storage', err);  
-      }     
-    }); 
+        deferred.reject(err);
+        logging.info('Error copying image from themponary location to permanent storage', err);
+      } else {
+        deferred.resolve(fileInformation);
+      }
+    });
 
+    return deferred.promise;
   }
 
   var receiptID = req.headers['receipt-id'];
@@ -118,19 +130,26 @@ router.post('/upload', authentication.isAuthorized, multipart(), function(req, r
 
     var promise = validateReceiptInfo(req, receiptID);
 
-    promise.then(function() {
+    promise.then(function(receipt) {
 
       var contentType = req.files.file.headers['content-type'];
 
+      var deferred = Q.defer().promise;
+
       if( contentType in fileService.SUPPORTED_IMAGE_TYPES && receiptID ) {
-        uploadImageFile(data, receiptID, contentType);
+        deferred = uploadImageFile(data, receiptID, contentType);
       } else if( contentType in fileService.SUPPORTED_OTHER_FILE_TYPES ) {
-        uploadFile(data, receiptID, contentType );
+        deferred = uploadFile(data, receiptID, contentType );
       }
       else {
         logging.info('File type is not supported skipping the file');
       }
-      
+
+      //After file is uploaded succesfully this is called with all
+      deferred.then(function(fileInformation) {
+        fileService.storeFileInformation( _.extend(fileInformation, req.files.file ) );
+      });
+
       logging.info('Saving files', req.files.file.path );
     }).fail(function(error) {
       logging.error('Error on uploading picture to server, receipt is not currently logged user receipt.', error);
@@ -151,6 +170,12 @@ router.delete('/picture/:picture', function(req, res) {
   }
 
   var pictureName = req.params.picture;
+
+  //TODO: validate file name correctly
+  if( !pictureName || pictureName === 'undefined'  ) {
+    return res.status(400).send({message:'Parameter picture missing'});
+  }
+
   var pictures = fileService.loadFiles();
   var picture = fileService.filterPicturesByFilename(pictureName, pictures);
   var receiptId = _.first( pictureName.split('.') );
@@ -158,21 +183,21 @@ router.delete('/picture/:picture', function(req, res) {
   storage.get(receiptId, function(err, receipt) {
 
     if( err ) {
-      logging.error('Error on loading receipe', err );  
-    }  
+      logging.error('Error on loading receipe', err );
+    }
 
     if( receipt.user_id !== req.user.id ) {
       res.status(403);
       res.send({message:'Unauthorized access'});
     } else {
       if( picture ) {
-        logging.log('Deleting picture', picture);
+        logging.log('Deleting picture', picture.filename);
         fileService.deletePicture(picture);
-        res.send({message:'Picture deleted'});
+        res.send({message:'Picture deleted '+picture.filename});
       } else {
         res.status(404);
-        res.send({message:'Picture not found'});  
-      }        
+        res.send({message:'Picture not found'});
+      }
     }
   });
 });

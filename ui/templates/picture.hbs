@@ -7,7 +7,7 @@
         {{#if error}}
 
         <div class="row top-margin ">
-          <div class="col-md-12 text-center">           
+          <div class="col-md-12 text-center">
             {{error.message}}
           </div>
         </div>
@@ -22,7 +22,7 @@
 
         {{else}}
         <div class="row top-margin ">
-          <div class="col-md-12 text-right">           
+          <div class="col-md-12 text-right">
             <button type="button" name="delete" class="btn btn-danger">Poista</button>
 
             <a href="#receipt/view/{{id}}">
@@ -31,11 +31,25 @@
           </div>
         </div>
 
-        <div class="row top-margin "> 
+        <div class="row top-margin ">
           <div class="col-md-12 col-sm-12 col-xs-12">
             <img class="col-md-12" src="{{img}}" />
           </div>
         </div>
+
+        <div class="row top-margin ">
+          <div class="col-md-12 col-sm-12 col-xs-12">
+            <table class="table table-striped">
+              <tr><td>Tiedoston nimi</td><td>{{file.filename}}</td></tr>
+              <tr><td>Alkuperäinen tiedoston nimi</td><td>{{file.originalFilename}}</td></tr>
+              <tr><td>Koko</td><td>{{file.size}} b</td></tr>
+              <tr><td>Korkeus</td><td>{{file.height}} px</td></tr>
+              <tr><td>Leveys</td><td>{{file.width}} px</td></tr>
+              <tr><td>Luotu</td><td>{{datehourminutetime file.created}}</td></tr>
+            </table>
+          </div>
+        </div>
+
         {{/if}}
 
       </div>

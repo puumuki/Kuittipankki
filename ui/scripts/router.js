@@ -5,7 +5,7 @@ define(function(require) {
 
   var LoadingView         = require('loading-view/loading-view');
 
-  var ReceiptListLayout   = require('receipt-list/receipt-list-layout-view');  
+  var ReceiptListLayout   = require('receipt-list/receipt-list-layout-view');
   var ReceiptListMenuView = require('receipt-list/receipt-list-menu-view');
   var ReceiptListView     = require('receipt-list/receipt-list-view');
 
@@ -15,7 +15,7 @@ define(function(require) {
 
   var LoginView           = require('login-view/login-view');
   var PictureView         = require('picture-view');
-  
+
   var MenuView            = require('menu-view/menu-view');
 
   var Receipt             = require('receipt');
@@ -24,9 +24,9 @@ define(function(require) {
   var regionManager       = require('region-manager');
   var receiptService      = require('services/receipt-service');
   var userService         = require('services/user-service');
-  
+
   /* Regions */
-  var menuRegion = regionManager.addRegion('menu','#menu'); 
+  var menuRegion = regionManager.addRegion('menu','#menu');
   regionManager.addRegion('dialog', '#dialog');
   var contentRegion = regionManager.addRegion('content','#content');
 
@@ -60,14 +60,14 @@ define(function(require) {
       'receipt/edit/:id': 'editReceipt',
       'receipt/edit': 'editReceipt',
       'receipt/new': 'newReceipt',
-      'picture/:image': 'picture',
+      'files/:fileName': 'file',
       'search/tag/:searchKey': 'searchTags',
       'login': 'login',
       'logout': 'logout'
     },
 
     receipt: function(id) {
-      
+
       var promise = receiptService.fetchReceipt({
         id:id
       });
@@ -75,26 +75,26 @@ define(function(require) {
       promise.then(function(receipt) {
         contentRegion.show(new ReceiptView({
           model: receipt
-        }));        
+        }));
       }).fail(function(error) {
         contentRegion.show(new PageNotFoundView());
-        console.error('Could not fetch receipts', error);        
+        console.error('Could not fetch receipts', error);
       });
-    }, 
+    },
 
     receiptList: function(page) {
 
       var receiptListLayout = new ReceiptListLayout();
       contentRegion.show(receiptListLayout);
-      
+
       receiptListLayout.receiptListView.show( new LoadingView() );
 
       var promise = receiptService.fetchReceiptCollection();
- 
+
       promise.then(function(receiptCollection) {
-        
+
         receiptListLayout.menuView.show(new ReceiptListMenuView());
-      
+
         receiptListLayout.receiptListView.show(new ReceiptListView({
           collection: receiptCollection,
           page: page
@@ -104,7 +104,7 @@ define(function(require) {
         console.error('Could not fetch receipts', data);
         if( data.res.status === 403 ) {
           App.router.navigate('#login', {trigger:true});
-        }       
+        }
       });
 
     },
@@ -115,13 +115,13 @@ define(function(require) {
       promise.then(function(receipt) {
          contentRegion.show(new ReceiptEditView({
           model: receipt
-        }));    
+        }));
       }).fail(function(error) {
         contentRegion.show(new PageNotFoundView());
         //TODO: Teepäs tähän utiliteetti dialogi error hässäkkä
-        console.error('Could not fetch receipts', error);        
+        console.error('Could not fetch receipts', error);
       });
-    }, 
+    },
 
     newReceipt: function() {
       receiptService.saveReceipt(new Receipt()).then(function(receipt) {
@@ -132,22 +132,24 @@ define(function(require) {
         //TODO: Teepäs tähän virheenkäsittely
         console.error(error);
       });
-    }, 
+    },
 
-    picture: function(image) {
+    file: function(fileName) {
       var promise = receiptService.fetchReceipt({
-        id: _.first( image.split('.') )
+        id: _.first( fileName.split('.') )
       });
 
       promise.then(function(receipt) {
+        var _file = receipt.findFile( fileName );
+
         contentRegion.show(new PictureView({
           receipt: receipt,
-          image : image
-        }));      
+          file: _file
+        }));
       }).fail(function(error) {
         contentRegion.show(new PageNotFoundView());
         //TODO: Teepäs tähän utiliteetti dialogi error hässäkkä
-        console.error('Could not fetch receipts', error);        
+        console.error('Could not fetch receipts', error);
       });
     },
 
@@ -166,24 +168,24 @@ define(function(require) {
 
     /**
      * Search receipt with a tag name
-     * 
+     *
      */
     searchTags: function( searchKey ) {
-      
+
       var receiptListLayout = new ReceiptListLayout();
       contentRegion.show(receiptListLayout);
-      
+
       receiptListLayout.receiptListView.show( new LoadingView() );
 
       var promise = receiptService.fetchReceiptCollection();
       promise.then(function(receiptCollection) {
-        
+
         var searchCollection = receiptService.searchReceipts( searchKey, {
           keys: ['tags']
         });
 
         receiptListLayout.menuView.show(new ReceiptListMenuView());
-      
+
         receiptListLayout.receiptListView.show(new ReceiptListView({
           collection: searchCollection,
           page: 1
@@ -193,7 +195,7 @@ define(function(require) {
         console.error('Could not fetch receipts', data);
         if( data.res.status === 403 ) {
           App.router.navigate('#login', {trigger:true});
-        }       
+        }
       });
     }
 

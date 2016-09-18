@@ -3,7 +3,7 @@ define(function(require) {
   var Backbone = require('backbone');
   var template = require('hbs!tmpl/picture');
   var ConfirmationDialogView = require('confirmation-dialog-view/confirmation-dialog-view');
-  var pictureService = require('services/picture-service');  
+  var fileService = require('services/file-service');
   var _ = require('underscore');
 
   var PictureView = Backbone.Marionette.ItemView.extend({
@@ -22,9 +22,11 @@ define(function(require) {
     },
 
     serializeData: function() {
+      console.log( this.options.file );
       return _.extend(this.options.receipt.toJSON(), {
-        img: '/pictures/' + this.options.image,
-        error: this._error
+        img: '/files/' + this.options.file.filename,
+        error: this._error,
+        file: this.options.file
       });
     },
 
@@ -46,7 +48,7 @@ define(function(require) {
     },
 
     _deletePicture: function(event) {
-      pictureService.deletePicture(this.options.image)
+      fileService.deletePicture(this.options.image)
       .then(_.bind(this._onDeletedPicture, this))
       .fail(_.bind(this._onDeletingFail, this));
     },
