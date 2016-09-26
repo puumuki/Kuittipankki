@@ -15,6 +15,7 @@
     "express-handlebars": "^2.0.1",
     "express-session": "^1.12.1",
     "express-validate": "0.0.8",
+    "express-validator": "^2.20.10",
     "grunt-contrib-jshint": "~0.12.0",
     "jfs": "^0.2.6",
     "mime-types": "^2.1.11",
