@@ -27,7 +27,7 @@ var FileStore = require('session-file-store')(expressSession);
 
 var app = express();
 
-var env = process.env.NODE_ENV || 'development';
+var env = settings.env || 'development';
 
 app.locals.ENV = env;
 app.locals.ENV_DEVELOPMENT = env === 'development';
