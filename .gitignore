@@ -24,4 +24,4 @@ ui/templates/.DS_Store
 *.sublime-project
 *.sublime-workspace
 server/data/*
-**/*.pid
+*.pid
