@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>options</title>
+    <link rel="stylesheet" href="http://getbootstrap.com/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="http://getbootstrap.com/docs-assets/css/docs.css">
+    <link rel="stylesheet" href="../../assets/monokai.css">
+    <style>pre {background-color: #222; border: 1px solid #111; padding-bottom: 0;}</style>
+  </head>
+  <body>
+    <div class="container bs-docs-container">
+      <article id="options">
+  <h1 class="title">
+    this title is from the config (root context).
+  </h1>
+  <p class="description"> this description is from the config (root context). </p>
+</article>
+
+
+<hr>
+<h2>
+  <a name="example-html" class="anchor" href="#example-html">
+    <span class="heading-link"></span>
+  </a>Example HTML
+</h2><blockquote>
+<p>Below this line is HTML converted from Markdown</p>
+</blockquote>
+<h2>
+  <a name="images" class="anchor" href="#images">
+    <span class="heading-link"></span>
+  </a>Images
+</h2><p>Images have a similar syntax to links but include a preceding exclamation point.</p>
+<pre><code class="lang-markdown">![<span class="language-link_label">Minion</span>](<span class="language-link_url">http://octodex.github.com/images/minion.png</span>)
+</code></pre>
+<p><img src="http://octodex.github.com/images/minion.png" alt="Minion"></p>
+<p>or</p>
+<pre><code class="lang-markdown">![<span class="language-link_label">Alt text</span>](<span class="language-link_url">http://octodex.github.com/images/stormtroopocat.jpg "The Stormtroopocat"</span>)
+</code></pre>
+<p><img src="http://octodex.github.com/images/stormtroopocat.jpg" alt="Alt text" title="The Stormtroopocat"></p>
+<p>Like links, Images also have a footnote style syntax</p>
+<pre><code class="lang-markdown">![<span class="language-link_label">Alt text</span>][<span class="language-link_reference">id</span>]
+</code></pre>
+<p><img src="http://octodex.github.com/images/dojocat.jpg" alt="Alt text" title="The Dojocat"></p>
+<p>With a reference later in the document defining the URL location:</p>
+<pre><code>[id]: http://octodex.github.com/images/dojocat.jpg  &quot;The Dojocat&quot;
+</code></pre>
+    </div>
+    <script src="../../assets/highlight.pack.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+  </body>
+</html>

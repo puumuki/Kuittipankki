@@ -2,7 +2,6 @@ server/node_modules/*
 server/pictures/*
 server/uploaded-files/*
 node_modules/*
-ui/bower_components/*
 ui/node_modules/*
 server/.editorconfig
 server/settings.js

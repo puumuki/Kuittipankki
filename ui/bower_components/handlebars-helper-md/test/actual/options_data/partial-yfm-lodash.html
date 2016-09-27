@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>This title is from the PAGE YFM (partial-yfm.hbs)</title>
+    <link rel="stylesheet" href="http://getbootstrap.com/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="http://getbootstrap.com/docs-assets/css/docs.css">
+    <link rel="stylesheet" href="../../assets/monokai.css">
+    <style>pre {background-color: #222; border: 1px solid #111; padding-bottom: 0;}</style>
+  </head>
+  <body>
+    <div class="container bs-docs-container">
+      
+<article id="partial-yfm-lodash">
+  <h1 class="title">
+    Assemble =&gt; Assemble
+  </h1>
+  <p class="description"> Static site generator for Grunt.js and Yeoman. Assemble makes it dead simple to build modular sites, blogs, gh-pages, components and documentation from reusable templates and data.
+ </p>
+  <p class="description"> Static site generator for Grunt.js and Yeoman. Assemble makes it dead simple to build modular sites, blogs, gh-pages, components and documentation from reusable templates and data.
+ </p>
+</article>
+
+<p>Note that the YAML front matter is &quot;borrowing&quot; data from the <code>site</code> object, which is defined in the Grunt config.</p>
+<p>So in this example, <code>{{title}}</code> will yield the same result as <code>{{site.title}}</code>, and <code>{{description}}</code> will
+yield the same result as <code>{{site.description}}</code></p>
+<hr>
+<h2>
+  <a name="example-html" class="anchor" href="#example-html">
+    <span class="heading-link"></span>
+  </a>Example HTML
+</h2><blockquote>
+<p>Below this line is HTML converted from Markdown</p>
+</blockquote>
+<h2>
+  <a name="emphasis" class="anchor" href="#emphasis">
+    <span class="heading-link"></span>
+  </a>Emphasis
+</h2><h3>
+  <a name="bold" class="anchor" href="#bold">
+    <span class="heading-link"></span>
+  </a>Bold
+</h3><p>For emphasizing a snippet of text with a heavier font-weight.</p>
+<p>The following snippet of text is <strong>rendered as bold text</strong>.</p>
+<pre><code class="lang-markdown"><span class="language-strong">**rendered as bold text**</span>
+</code></pre>
+<p>and this HTML</p>
+<pre><code class="lang-html"><span class="language-tag">&lt;<span class="language-title">strong</span>&gt;</span>rendered as bold text<span class="language-tag">&lt;/<span class="language-title">strong</span>&gt;</span>
+</code></pre>
+<h3>
+  <a name="italics" class="anchor" href="#italics">
+    <span class="heading-link"></span>
+  </a>Italics
+</h3><p>For emphasizing a snippet of text with italics.</p>
+<p>The following snippet of text is <em>rendered as italicized text</em>.</p>
+<pre><code class="lang-markdown"><span class="language-emphasis">_rendered as italicized text_</span>
+</code></pre>
+<p>and this HTML:</p>
+<pre><code class="lang-html"><span class="language-tag">&lt;<span class="language-title">em</span>&gt;</span>rendered as italicized text<span class="language-tag">&lt;/<span class="language-title">em</span>&gt;</span>
+</code></pre>
+
+    </div>
+    <script src="../../assets/highlight.pack.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+  </body>
+</html>

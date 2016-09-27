@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>this title is from the options.</title>
+    <link rel="stylesheet" href="http://getbootstrap.com/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="http://getbootstrap.com/docs-assets/css/docs.css">
+    <link rel="stylesheet" href="../../assets/monokai.css">
+    <style>pre {background-color: #222; border: 1px solid #111; padding-bottom: 0;}</style>
+  </head>
+  <body>
+    <div class="container bs-docs-container">
+      <article id="root-context">
+  <h1 class="title">
+    this title is from the options.
+  </h1>
+  <p class="description"> this description is from the options. </p>
+</article>
+
+<hr>
+<h2>
+  <a name="example-html" class="anchor" href="#example-html">
+    <span class="heading-link"></span>
+  </a>Example HTML
+</h2><blockquote>
+<p>Below this line is HTML converted from Markdown</p>
+</blockquote>
+<h2>
+  <a name="lists" class="anchor" href="#lists">
+    <span class="heading-link"></span>
+  </a>Lists
+</h2><h3>
+  <a name="unordered" class="anchor" href="#unordered">
+    <span class="heading-link"></span>
+  </a>Unordered
+</h3><p>A list of items in which the order does not explicitly matter.</p>
+<pre><code class="lang-markdown"><span class="language-bullet">* </span>Lorem ipsum dolor sit amet
+<span class="language-bullet">* </span>Consectetur adipiscing elit
+<span class="language-bullet">* </span>Integer molestie lorem at massa
+<span class="language-bullet">* </span>Facilisis in pretium nisl aliquet
+<span class="language-bullet">* </span>Nulla volutpat aliquam velit
+  * Phasellus iaculis neque
+  * Purus sodales ultricies
+  * Vestibulum laoreet porttitor sem
+  * Ac tristique libero volutpat at
+<span class="language-bullet">* </span>Faucibus porta lacus fringilla vel
+<span class="language-bullet">* </span>Aenean sit amet erat nunc
+<span class="language-bullet">* </span>Eget porttitor lorem
+</code></pre>
+<p>Renders to:</p>
+<ul>
+<li>Lorem ipsum dolor sit amet</li>
+<li>Consectetur adipiscing elit</li>
+<li>Integer molestie lorem at massa</li>
+<li>Facilisis in pretium nisl aliquet</li>
+<li>Nulla volutpat aliquam velit<ul>
+<li>Phasellus iaculis neque</li>
+<li>Purus sodales ultricies</li>
+<li>Vestibulum laoreet porttitor sem</li>
+<li>Ac tristique libero volutpat at</li>
+</ul>
+</li>
+<li>Faucibus porta lacus fringilla vel</li>
+<li>Aenean sit amet erat nunc</li>
+<li>Eget porttitor lorem</li>
+</ul>
+<p>And this HTML</p>
+<pre><code class="lang-html"><span class="language-tag">&lt;<span class="language-title">ul</span>&gt;</span>
+  <span class="language-tag">&lt;<span class="language-title">li</span>&gt;</span>Lorem ipsum dolor sit amet<span class="language-tag">&lt;/<span class="language-title">li</span>&gt;</span>
+  <span class="language-tag">&lt;<span class="language-title">li</span>&gt;</span>Consectetur adipiscing elit<span class="language-tag">&lt;/<span class="language-title">li</span>&gt;</span>
+  <span class="language-tag">&lt;<span class="language-title">li</span>&gt;</span>Integer molestie lorem at massa<span class="language-tag">&lt;/<span class="language-title">li</span>&gt;</span>
+  <span class="language-tag">&lt;<span class="language-title">li</span>&gt;</span>Facilisis in pretium nisl aliquet<span class="language-tag">&lt;/<span class="language-title">li</span>&gt;</span>
+  <span class="language-tag">&lt;<span class="language-title">li</span>&gt;</span>Nulla volutpat aliquam velit
+    <span class="language-tag">&lt;<span class="language-title">ul</span>&gt;</span>
+      <span class="language-tag">&lt;<span class="language-title">li</span>&gt;</span>Phasellus iaculis neque<span class="language-tag">&lt;/<span class="language-title">li</span>&gt;</span>
+      <span class="language-tag">&lt;<span class="language-title">li</span>&gt;</span>Purus sodales ultricies<span class="language-tag">&lt;/<span class="language-title">li</span>&gt;</span>
+      <span class="language-tag">&lt;<span class="language-title">li</span>&gt;</span>Vestibulum laoreet porttitor sem<span class="language-tag">&lt;/<span class="language-title">li</span>&gt;</span>
+      <span class="language-tag">&lt;<span class="language-title">li</span>&gt;</span>Ac tristique libero volutpat at<span class="language-tag">&lt;/<span class="language-title">li</span>&gt;</span>
+    <span class="language-tag">&lt;/<span class="language-title">ul</span>&gt;</span>
+  <span class="language-tag">&lt;/<span class="language-title">li</span>&gt;</span>
+  <span class="language-tag">&lt;<span class="language-title">li</span>&gt;</span>Faucibus porta lacus fringilla vel<span class="language-tag">&lt;/<span class="language-title">li</span>&gt;</span>
+  <span class="language-tag">&lt;<span class="language-title">li</span>&gt;</span>Aenean sit amet erat nunc<span class="language-tag">&lt;/<span class="language-title">li</span>&gt;</span>
+  <span class="language-tag">&lt;<span class="language-title">li</span>&gt;</span>Eget porttitor lorem<span class="language-tag">&lt;/<span class="language-title">li</span>&gt;</span>
+<span class="language-tag">&lt;/<span class="language-title">ul</span>&gt;</span>
+</code></pre>
+<h3>
+  <a name="ordered" class="anchor" href="#ordered">
+    <span class="heading-link"></span>
+  </a>Ordered
+</h3><p>A list of items in which the order does explicitly matter.</p>
+<pre><code class="lang-markdown"><span class="language-bullet">1. </span>Lorem ipsum dolor sit amet
+<span class="language-bullet">2. </span>Consectetur adipiscing elit
+<span class="language-bullet">3. </span>Integer molestie lorem at massa
+<span class="language-bullet">4. </span>Facilisis in pretium nisl aliquet
+<span class="language-bullet">5. </span>Nulla volutpat aliquam velit
+<span class="language-bullet">6. </span>Faucibus porta lacus fringilla vel
+<span class="language-bullet">7. </span>Aenean sit amet erat nunc
+<span class="language-bullet">8. </span>Eget porttitor lorem
+</code></pre>
+<p>Renders to:</p>
+<ol>
+<li>Lorem ipsum dolor sit amet</li>
+<li>Consectetur adipiscing elit</li>
+<li>Integer molestie lorem at massa</li>
+<li>Facilisis in pretium nisl aliquet</li>
+<li>Nulla volutpat aliquam velit</li>
+<li>Faucibus porta lacus fringilla vel</li>
+<li>Aenean sit amet erat nunc</li>
+<li>Eget porttitor lorem</li>
+</ol>
+<p>And this HTML:</p>
+<pre><code class="lang-html"><span class="language-tag">&lt;<span class="language-title">ol</span>&gt;</span>
+  <span class="language-tag">&lt;<span class="language-title">li</span>&gt;</span>Lorem ipsum dolor sit amet<span class="language-tag">&lt;/<span class="language-title">li</span>&gt;</span>
+  <span class="language-tag">&lt;<span class="language-title">li</span>&gt;</span>Consectetur adipiscing elit<span class="language-tag">&lt;/<span class="language-title">li</span>&gt;</span>
+  <span class="language-tag">&lt;<span class="language-title">li</span>&gt;</span>Integer molestie lorem at massa<span class="language-tag">&lt;/<span class="language-title">li</span>&gt;</span>
+  <span class="language-tag">&lt;<span class="language-title">li</span>&gt;</span>Facilisis in pretium nisl aliquet<span class="language-tag">&lt;/<span class="language-title">li</span>&gt;</span>
+  <span class="language-tag">&lt;<span class="language-title">li</span>&gt;</span>Nulla volutpat aliquam velit<span class="language-tag">&lt;/<span class="language-title">li</span>&gt;</span>
+  <span class="language-tag">&lt;<span class="language-title">li</span>&gt;</span>Faucibus porta lacus fringilla vel<span class="language-tag">&lt;/<span class="language-title">li</span>&gt;</span>
+  <span class="language-tag">&lt;<span class="language-title">li</span>&gt;</span>Aenean sit amet erat nunc<span class="language-tag">&lt;/<span class="language-title">li</span>&gt;</span>
+  <span class="language-tag">&lt;<span class="language-title">li</span>&gt;</span>Eget porttitor lorem<span class="language-tag">&lt;/<span class="language-title">li</span>&gt;</span>
+<span class="language-tag">&lt;/<span class="language-title">ol</span>&gt;</span>
+</code></pre>
+
+    </div>
+    <script src="../../assets/highlight.pack.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+  </body>
+</html>

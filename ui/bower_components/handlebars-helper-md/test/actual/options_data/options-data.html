@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>this title is from the options.</title>
+    <link rel="stylesheet" href="http://getbootstrap.com/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="http://getbootstrap.com/docs-assets/css/docs.css">
+    <link rel="stylesheet" href="../../assets/monokai.css">
+    <style>pre {background-color: #222; border: 1px solid #111; padding-bottom: 0;}</style>
+  </head>
+  <body>
+    <div class="container bs-docs-container">
+      <article id="options-data">
+  <h1 class="title">
+    this title is from the options.
+    This title is from FOO.json
+  </h1>
+  <p class="description"> This description is from FOO.json </p>
+</article>
+
+<hr>
+<h2>
+  <a name="example-html" class="anchor" href="#example-html">
+    <span class="heading-link"></span>
+  </a>Example HTML
+</h2><blockquote>
+<p>Below this line is HTML converted from Markdown</p>
+</blockquote>
+<h2>
+  <a name="code" class="anchor" href="#code">
+    <span class="heading-link"></span>
+  </a>Code
+</h2><h3>
+  <a name="inline-code" class="anchor" href="#inline-code">
+    <span class="heading-link"></span>
+  </a>Inline code
+</h3><p>Wrap inline snippets of code with <code>` </code>.</p>
+<p>For example, <code>&lt;section&gt;&lt;/section&gt;</code> should be wrapped as &quot;inline&quot;.</p>
+<pre><code class="lang-html">For example, `<span class="language-tag">&lt;<span class="language-title">section</span>&gt;</span><span class="language-tag">&lt;/<span class="language-title">section</span>&gt;</span>` should be wrapped as "inline".
+</code></pre>
+<h3>
+  <a name="indented-code" class="anchor" href="#indented-code">
+    <span class="heading-link"></span>
+  </a>Indented code
+</h3><p>Or indent several lines of code by at least four spaces, as in:</p>
+<pre><code class="lang-js">    <span class="language-comment">// Some comments</span>
+    line <span class="language-number">1</span> of code
+    line <span class="language-number">2</span> of code
+    line <span class="language-number">3</span> of code
+</code></pre>
+<pre><code>// Some comments
+line 1 of code
+line 2 of code
+line 3 of code
+</code></pre><h3>
+  <a name="block-code-quotfencesquot" class="anchor" href="#block-code-quotfencesquot">
+    <span class="heading-link"></span>
+  </a>Block code &quot;fences&quot;
+</h3><p>Use &quot;fences&quot;  <code>``` </code> to block in multiple lines of code.</p>
+<pre>
+``` html
+Sample text here...
+```
+</pre>
+
+
+<pre><code>Sample text here...
+</code></pre><p>HTML:</p>
+<pre><code class="lang-html"><span class="language-tag">&lt;<span class="language-title">pre</span>&gt;</span>
+  <span class="language-tag">&lt;<span class="language-title">p</span>&gt;</span>Sample text here...<span class="language-tag">&lt;/<span class="language-title">p</span>&gt;</span>
+<span class="language-tag">&lt;/<span class="language-title">pre</span>&gt;</span>
+</code></pre>
+<h3>
+  <a name="syntax-highlighting" class="anchor" href="#syntax-highlighting">
+    <span class="heading-link"></span>
+  </a>Syntax highlighting
+</h3><p>GFM, or &quot;GitHub Flavored Markdown&quot; also supports syntax highlighting. To activate it, simply add the file extension of the language you want to use directly after the first code &quot;fence&quot;, <code>``` js</code>, and syntax highlighting will automatically be applied in the rendered HTML. For example, to apply syntax highlighting to JavaScript code:</p>
+<pre>
+``` javascript
+grunt.initConfig({
+  assemble: {
+    options: {
+      assets: 'docs/assets',
+      data: 'src/data/*.{json,yml}',
+      helpers: 'src/custom-helpers.js',
+      partials: ['src/partials/**/*.{hbs,md}']
+    },
+    pages: {
+      options: {
+        layout: 'default.hbs'
+      },
+      files: {
+        './': ['src/templates/pages/index.hbs']
+      }
+    }
+  }
+};
+```
+</pre>
+
+<p>Renders to:</p>
+<pre><code class="lang-javascript">grunt.initConfig({
+  assemble: {
+    options: {
+      assets: <span class="language-string">'docs/assets'</span>,
+      data: <span class="language-string">'src/data/*.{json,yml}'</span>,
+      helpers: <span class="language-string">'src/custom-helpers.js'</span>,
+      partials: [<span class="language-string">'src/partials/**/*.{hbs,md}'</span>]
+    },
+    pages: {
+      options: {
+        layout: <span class="language-string">'default.hbs'</span>
+      },
+      files: {
+        <span class="language-string">'./'</span>: [<span class="language-string">'src/templates/pages/index.hbs'</span>]
+      }
+    }
+  }
+};
+</code></pre>
+<p>And this complicated HTML:</p>
+<pre><code class="lang-xml"><span class="language-tag">&lt;<span class="language-title">div</span> <span class="language-attribute">class</span>=<span class="language-value">"highlight"</span>&gt;</span><span class="language-tag">&lt;<span class="language-title">pre</span>&gt;</span><span class="language-tag">&lt;<span class="language-title">span</span> <span class="language-attribute">class</span>=<span class="language-value">"nx"</span>&gt;</span>grunt<span class="language-tag">&lt;/<span class="language-title">span</span>&gt;</span><span class="language-tag">&lt;<span class="language-title">span</span> <span class="language-attribute">class</span>=<span class="language-value">"p"</span>&gt;</span>.<span class="language-tag">&lt;/<span class="language-title">span</span>&gt;</span><span class="language-tag">&lt;<span class="language-title">span</span> <span class="language-attribute">class</span>=<span class="language-value">"nx"</span>&gt;</span>initConfig<span class="language-tag">&lt;/<span class="language-title">span</span>&gt;</span><span class="language-tag">&lt;<span class="language-title">span</span> <span class="language-attribute">class</span>=<span class="language-value">"p"</span>&gt;</span>({<span class="language-tag">&lt;/<span class="language-title">span</span>&gt;</span>
+  <span class="language-tag">&lt;<span class="language-title">span</span> <span class="language-attribute">class</span>=<span class="language-value">"nx"</span>&gt;</span>assemble<span class="language-tag">&lt;/<span class="language-title">span</span>&gt;</span><span class="language-tag">&lt;<span class="language-title">span</span> <span class="language-attribute">class</span>=<span class="language-value">"o"</span>&gt;</span>:<span class="language-tag">&lt;/<span class="language-title">span</span>&gt;</span> <span class="language-tag">&lt;<span class="language-title">span</span> <span class="language-attribute">class</span>=<span class="language-value">"p"</span>&gt;</span>{<span class="language-tag">&lt;/<span class="language-title">span</span>&gt;</span>
+    <span class="language-tag">&lt;<span class="language-title">span</span> <span class="language-attribute">class</span>=<span class="language-value">"nx"</span>&gt;</span>options<span class="language-tag">&lt;/<span class="language-title">span</span>&gt;</span><span class="language-tag">&lt;<span class="language-title">span</span> <span class="language-attribute">class</span>=<span class="language-value">"o"</span>&gt;</span>:<span class="language-tag">&lt;/<span class="language-title">span</span>&gt;</span> <span class="language-tag">&lt;<span class="language-title">span</span> <span class="language-attribute">class</span>=<span class="language-value">"p"</span>&gt;</span>{<span class="language-tag">&lt;/<span class="language-title">span</span>&gt;</span>
+      <span class="language-tag">&lt;<span class="language-title">span</span> <span class="language-attribute">class</span>=<span class="language-value">"nx"</span>&gt;</span>assets<span class="language-tag">&lt;/<span class="language-title">span</span>&gt;</span><span class="language-tag">&lt;<span class="language-title">span</span> <span class="language-attribute">class</span>=<span class="language-value">"o"</span>&gt;</span>:<span class="language-tag">&lt;/<span class="language-title">span</span>&gt;</span> <span class="language-tag">&lt;<span class="language-title">span</span> <span class="language-attribute">class</span>=<span class="language-value">"s1"</span>&gt;</span>'docs/assets'<span class="language-tag">&lt;/<span class="language-title">span</span>&gt;</span><span class="language-tag">&lt;<span class="language-title">span</span> <span class="language-attribute">class</span>=<span class="language-value">"p"</span>&gt;</span>,<span class="language-tag">&lt;/<span class="language-title">span</span>&gt;</span>
+      <span class="language-tag">&lt;<span class="language-title">span</span> <span class="language-attribute">class</span>=<span class="language-value">"nx"</span>&gt;</span>data<span class="language-tag">&lt;/<span class="language-title">span</span>&gt;</span><span class="language-tag">&lt;<span class="language-title">span</span> <span class="language-attribute">class</span>=<span class="language-value">"o"</span>&gt;</span>:<span class="language-tag">&lt;/<span class="language-title">span</span>&gt;</span> <span class="language-tag">&lt;<span class="language-title">span</span> <span class="language-attribute">class</span>=<span class="language-value">"s1"</span>&gt;</span>'src/data/*.{json,yml}'<span class="language-tag">&lt;/<span class="language-title">span</span>&gt;</span><span class="language-tag">&lt;<span class="language-title">span</span> <span class="language-attribute">class</span>=<span class="language-value">"p"</span>&gt;</span>,<span class="language-tag">&lt;/<span class="language-title">span</span>&gt;</span>
+      <span class="language-tag">&lt;<span class="language-title">span</span> <span class="language-attribute">class</span>=<span class="language-value">"nx"</span>&gt;</span>helpers<span class="language-tag">&lt;/<span class="language-title">span</span>&gt;</span><span class="language-tag">&lt;<span class="language-title">span</span> <span class="language-attribute">class</span>=<span class="language-value">"o"</span>&gt;</span>:<span class="language-tag">&lt;/<span class="language-title">span</span>&gt;</span> <span class="language-tag">&lt;<span class="language-title">span</span> <span class="language-attribute">class</span>=<span class="language-value">"s1"</span>&gt;</span>'src/custom-helpers.js'<span class="language-tag">&lt;/<span class="language-title">span</span>&gt;</span><span class="language-tag">&lt;<span class="language-title">span</span> <span class="language-attribute">class</span>=<span class="language-value">"p"</span>&gt;</span>,<span class="language-tag">&lt;/<span class="language-title">span</span>&gt;</span>
+      <span class="language-tag">&lt;<span class="language-title">span</span> <span class="language-attribute">class</span>=<span class="language-value">"nx"</span>&gt;</span>partials<span class="language-tag">&lt;/<span class="language-title">span</span>&gt;</span><span class="language-tag">&lt;<span class="language-title">span</span> <span class="language-attribute">class</span>=<span class="language-value">"o"</span>&gt;</span>:<span class="language-tag">&lt;/<span class="language-title">span</span>&gt;</span> <span class="language-tag">&lt;<span class="language-title">span</span> <span class="language-attribute">class</span>=<span class="language-value">"p"</span>&gt;</span>[<span class="language-tag">&lt;/<span class="language-title">span</span>&gt;</span><span class="language-tag">&lt;<span class="language-title">span</span> <span class="language-attribute">class</span>=<span class="language-value">"s1"</span>&gt;</span>'src/partials/**/*.{hbs,md}'<span class="language-tag">&lt;/<span class="language-title">span</span>&gt;</span><span class="language-tag">&lt;<span class="language-title">span</span> <span class="language-attribute">class</span>=<span class="language-value">"p"</span>&gt;</span>]<span class="language-tag">&lt;/<span class="language-title">span</span>&gt;</span>
+    <span class="language-tag">&lt;<span class="language-title">span</span> <span class="language-attribute">class</span>=<span class="language-value">"p"</span>&gt;</span>},<span class="language-tag">&lt;/<span class="language-title">span</span>&gt;</span>
+    <span class="language-tag">&lt;<span class="language-title">span</span> <span class="language-attribute">class</span>=<span class="language-value">"nx"</span>&gt;</span>pages<span class="language-tag">&lt;/<span class="language-title">span</span>&gt;</span><span class="language-tag">&lt;<span class="language-title">span</span> <span class="language-attribute">class</span>=<span class="language-value">"o"</span>&gt;</span>:<span class="language-tag">&lt;/<span class="language-title">span</span>&gt;</span> <span class="language-tag">&lt;<span class="language-title">span</span> <span class="language-attribute">class</span>=<span class="language-value">"p"</span>&gt;</span>{<span class="language-tag">&lt;/<span class="language-title">span</span>&gt;</span>
+      <span class="language-tag">&lt;<span class="language-title">span</span> <span class="language-attribute">class</span>=<span class="language-value">"nx"</span>&gt;</span>options<span class="language-tag">&lt;/<span class="language-title">span</span>&gt;</span><span class="language-tag">&lt;<span class="language-title">span</span> <span class="language-attribute">class</span>=<span class="language-value">"o"</span>&gt;</span>:<span class="language-tag">&lt;/<span class="language-title">span</span>&gt;</span> <span class="language-tag">&lt;<span class="language-title">span</span> <span class="language-attribute">class</span>=<span class="language-value">"p"</span>&gt;</span>{<span class="language-tag">&lt;/<span class="language-title">span</span>&gt;</span>
+        <span class="language-tag">&lt;<span class="language-title">span</span> <span class="language-attribute">class</span>=<span class="language-value">"nx"</span>&gt;</span>layout<span class="language-tag">&lt;/<span class="language-title">span</span>&gt;</span><span class="language-tag">&lt;<span class="language-title">span</span> <span class="language-attribute">class</span>=<span class="language-value">"o"</span>&gt;</span>:<span class="language-tag">&lt;/<span class="language-title">span</span>&gt;</span> <span class="language-tag">&lt;<span class="language-title">span</span> <span class="language-attribute">class</span>=<span class="language-value">"s1"</span>&gt;</span>'default.hbs'<span class="language-tag">&lt;/<span class="language-title">span</span>&gt;</span>
+      <span class="language-tag">&lt;<span class="language-title">span</span> <span class="language-attribute">class</span>=<span class="language-value">"p"</span>&gt;</span>},<span class="language-tag">&lt;/<span class="language-title">span</span>&gt;</span>
+      <span class="language-tag">&lt;<span class="language-title">span</span> <span class="language-attribute">class</span>=<span class="language-value">"nx"</span>&gt;</span>files<span class="language-tag">&lt;/<span class="language-title">span</span>&gt;</span><span class="language-tag">&lt;<span class="language-title">span</span> <span class="language-attribute">class</span>=<span class="language-value">"o"</span>&gt;</span>:<span class="language-tag">&lt;/<span class="language-title">span</span>&gt;</span> <span class="language-tag">&lt;<span class="language-title">span</span> <span class="language-attribute">class</span>=<span class="language-value">"p"</span>&gt;</span>{<span class="language-tag">&lt;/<span class="language-title">span</span>&gt;</span>
+        <span class="language-tag">&lt;<span class="language-title">span</span> <span class="language-attribute">class</span>=<span class="language-value">"s1"</span>&gt;</span>'./'<span class="language-tag">&lt;/<span class="language-title">span</span>&gt;</span><span class="language-tag">&lt;<span class="language-title">span</span> <span class="language-attribute">class</span>=<span class="language-value">"o"</span>&gt;</span>:<span class="language-tag">&lt;/<span class="language-title">span</span>&gt;</span> <span class="language-tag">&lt;<span class="language-title">span</span> <span class="language-attribute">class</span>=<span class="language-value">"p"</span>&gt;</span>[<span class="language-tag">&lt;/<span class="language-title">span</span>&gt;</span><span class="language-tag">&lt;<span class="language-title">span</span> <span class="language-attribute">class</span>=<span class="language-value">"s1"</span>&gt;</span>'src/templates/pages/index.hbs'<span class="language-tag">&lt;/<span class="language-title">span</span>&gt;</span><span class="language-tag">&lt;<span class="language-title">span</span> <span class="language-attribute">class</span>=<span class="language-value">"p"</span>&gt;</span>]<span class="language-tag">&lt;/<span class="language-title">span</span>&gt;</span>
+      <span class="language-tag">&lt;<span class="language-title">span</span> <span class="language-attribute">class</span>=<span class="language-value">"p"</span>&gt;</span>}<span class="language-tag">&lt;/<span class="language-title">span</span>&gt;</span>
+    <span class="language-tag">&lt;<span class="language-title">span</span> <span class="language-attribute">class</span>=<span class="language-value">"p"</span>&gt;</span>}<span class="language-tag">&lt;/<span class="language-title">span</span>&gt;</span>
+  <span class="language-tag">&lt;<span class="language-title">span</span> <span class="language-attribute">class</span>=<span class="language-value">"p"</span>&gt;</span>}<span class="language-tag">&lt;/<span class="language-title">span</span>&gt;</span>
+<span class="language-tag">&lt;<span class="language-title">span</span> <span class="language-attribute">class</span>=<span class="language-value">"p"</span>&gt;</span>};<span class="language-tag">&lt;/<span class="language-title">span</span>&gt;</span>
+<span class="language-tag">&lt;/<span class="language-title">pre</span>&gt;</span><span class="language-tag">&lt;/<span class="language-title">div</span>&gt;</span>
+</code></pre>
+
+
+
+<article id="options-data">
+  <h1 class="title">
+    this title is from the options.
+    This title is from FOO.json
+  </h1>
+  <p class="description"> This description is from FOO.json </p>
+</article>
+
+<hr>
+<h2>
+  <a name="example-html" class="anchor" href="#example-html">
+    <span class="heading-link"></span>
+  </a>Example HTML
+</h2><blockquote>
+<p>Below this line is HTML converted from Markdown</p>
+</blockquote>
+<h2>
+  <a name="code" class="anchor" href="#code">
+    <span class="heading-link"></span>
+  </a>Code
+</h2><h3>
+  <a name="inline-code" class="anchor" href="#inline-code">
+    <span class="heading-link"></span>
+  </a>Inline code
+</h3><p>Wrap inline snippets of code with <code>` </code>.</p>
+<p>For example, <code>&lt;section&gt;&lt;/section&gt;</code> should be wrapped as &quot;inline&quot;.</p>
+<pre><code class="lang-html">For example, `<span class="language-tag">&lt;<span class="language-title">section</span>&gt;</span><span class="language-tag">&lt;/<span class="language-title">section</span>&gt;</span>` should be wrapped as "inline".
+</code></pre>
+<h3>
+  <a name="indented-code" class="anchor" href="#indented-code">
+    <span class="heading-link"></span>
+  </a>Indented code
+</h3><p>Or indent several lines of code by at least four spaces, as in:</p>
+<pre><code class="lang-js">    <span class="language-comment">// Some comments</span>
+    line <span class="language-number">1</span> of code
+    line <span class="language-number">2</span> of code
+    line <span class="language-number">3</span> of code
+</code></pre>
+<pre><code>// Some comments
+line 1 of code
+line 2 of code
+line 3 of code
+</code></pre><h3>
+  <a name="block-code-quotfencesquot" class="anchor" href="#block-code-quotfencesquot">
+    <span class="heading-link"></span>
+  </a>Block code &quot;fences&quot;
+</h3><p>Use &quot;fences&quot;  <code>``` </code> to block in multiple lines of code.</p>
+<pre>
+``` html
+Sample text here...
+```
+</pre>
+
+
+<pre><code>Sample text here...
+</code></pre><p>HTML:</p>
+<pre><code class="lang-html"><span class="language-tag">&lt;<span class="language-title">pre</span>&gt;</span>
+  <span class="language-tag">&lt;<span class="language-title">p</span>&gt;</span>Sample text here...<span class="language-tag">&lt;/<span class="language-title">p</span>&gt;</span>
+<span class="language-tag">&lt;/<span class="language-title">pre</span>&gt;</span>
+</code></pre>
+<h3>
+  <a name="syntax-highlighting" class="anchor" href="#syntax-highlighting">
+    <span class="heading-link"></span>
+  </a>Syntax highlighting
+</h3><p>GFM, or &quot;GitHub Flavored Markdown&quot; also supports syntax highlighting. To activate it, simply add the file extension of the language you want to use directly after the first code &quot;fence&quot;, <code>``` js</code>, and syntax highlighting will automatically be applied in the rendered HTML. For example, to apply syntax highlighting to JavaScript code:</p>
+<pre>
+``` javascript
+grunt.initConfig({
+  assemble: {
+    options: {
+      assets: 'docs/assets',
+      data: 'src/data/*.{json,yml}',
+      helpers: 'src/custom-helpers.js',
+      partials: ['src/partials/**/*.{hbs,md}']
+    },
+    pages: {
+      options: {
+        layout: 'default.hbs'
+      },
+      files: {
+        './': ['src/templates/pages/index.hbs']
+      }
+    }
+  }
+};
+```
+</pre>
+
+<p>Renders to:</p>
+<pre><code class="lang-javascript">grunt.initConfig({
+  assemble: {
+    options: {
+      assets: <span class="language-string">'docs/assets'</span>,
+      data: <span class="language-string">'src/data/*.{json,yml}'</span>,
+      helpers: <span class="language-string">'src/custom-helpers.js'</span>,
+      partials: [<span class="language-string">'src/partials/**/*.{hbs,md}'</span>]
+    },
+    pages: {
+      options: {
+        layout: <span class="language-string">'default.hbs'</span>
+      },
+      files: {
+        <span class="language-string">'./'</span>: [<span class="language-string">'src/templates/pages/index.hbs'</span>]
+      }
+    }
+  }
+};
+</code></pre>
+<p>And this complicated HTML:</p>
+<pre><code class="lang-xml"><span class="language-tag">&lt;<span class="language-title">div</span> <span class="language-attribute">class</span>=<span class="language-value">"highlight"</span>&gt;</span><span class="language-tag">&lt;<span class="language-title">pre</span>&gt;</span><span class="language-tag">&lt;<span class="language-title">span</span> <span class="language-attribute">class</span>=<span class="language-value">"nx"</span>&gt;</span>grunt<span class="language-tag">&lt;/<span class="language-title">span</span>&gt;</span><span class="language-tag">&lt;<span class="language-title">span</span> <span class="language-attribute">class</span>=<span class="language-value">"p"</span>&gt;</span>.<span class="language-tag">&lt;/<span class="language-title">span</span>&gt;</span><span class="language-tag">&lt;<span class="language-title">span</span> <span class="language-attribute">class</span>=<span class="language-value">"nx"</span>&gt;</span>initConfig<span class="language-tag">&lt;/<span class="language-title">span</span>&gt;</span><span class="language-tag">&lt;<span class="language-title">span</span> <span class="language-attribute">class</span>=<span class="language-value">"p"</span>&gt;</span>({<span class="language-tag">&lt;/<span class="language-title">span</span>&gt;</span>
+  <span class="language-tag">&lt;<span class="language-title">span</span> <span class="language-attribute">class</span>=<span class="language-value">"nx"</span>&gt;</span>assemble<span class="language-tag">&lt;/<span class="language-title">span</span>&gt;</span><span class="language-tag">&lt;<span class="language-title">span</span> <span class="language-attribute">class</span>=<span class="language-value">"o"</span>&gt;</span>:<span class="language-tag">&lt;/<span class="language-title">span</span>&gt;</span> <span class="language-tag">&lt;<span class="language-title">span</span> <span class="language-attribute">class</span>=<span class="language-value">"p"</span>&gt;</span>{<span class="language-tag">&lt;/<span class="language-title">span</span>&gt;</span>
+    <span class="language-tag">&lt;<span class="language-title">span</span> <span class="language-attribute">class</span>=<span class="language-value">"nx"</span>&gt;</span>options<span class="language-tag">&lt;/<span class="language-title">span</span>&gt;</span><span class="language-tag">&lt;<span class="language-title">span</span> <span class="language-attribute">class</span>=<span class="language-value">"o"</span>&gt;</span>:<span class="language-tag">&lt;/<span class="language-title">span</span>&gt;</span> <span class="language-tag">&lt;<span class="language-title">span</span> <span class="language-attribute">class</span>=<span class="language-value">"p"</span>&gt;</span>{<span class="language-tag">&lt;/<span class="language-title">span</span>&gt;</span>
+      <span class="language-tag">&lt;<span class="language-title">span</span> <span class="language-attribute">class</span>=<span class="language-value">"nx"</span>&gt;</span>assets<span class="language-tag">&lt;/<span class="language-title">span</span>&gt;</span><span class="language-tag">&lt;<span class="language-title">span</span> <span class="language-attribute">class</span>=<span class="language-value">"o"</span>&gt;</span>:<span class="language-tag">&lt;/<span class="language-title">span</span>&gt;</span> <span class="language-tag">&lt;<span class="language-title">span</span> <span class="language-attribute">class</span>=<span class="language-value">"s1"</span>&gt;</span>'docs/assets'<span class="language-tag">&lt;/<span class="language-title">span</span>&gt;</span><span class="language-tag">&lt;<span class="language-title">span</span> <span class="language-attribute">class</span>=<span class="language-value">"p"</span>&gt;</span>,<span class="language-tag">&lt;/<span class="language-title">span</span>&gt;</span>
+      <span class="language-tag">&lt;<span class="language-title">span</span> <span class="language-attribute">class</span>=<span class="language-value">"nx"</span>&gt;</span>data<span class="language-tag">&lt;/<span class="language-title">span</span>&gt;</span><span class="language-tag">&lt;<span class="language-title">span</span> <span class="language-attribute">class</span>=<span class="language-value">"o"</span>&gt;</span>:<span class="language-tag">&lt;/<span class="language-title">span</span>&gt;</span> <span class="language-tag">&lt;<span class="language-title">span</span> <span class="language-attribute">class</span>=<span class="language-value">"s1"</span>&gt;</span>'src/data/*.{json,yml}'<span class="language-tag">&lt;/<span class="language-title">span</span>&gt;</span><span class="language-tag">&lt;<span class="language-title">span</span> <span class="language-attribute">class</span>=<span class="language-value">"p"</span>&gt;</span>,<span class="language-tag">&lt;/<span class="language-title">span</span>&gt;</span>
+      <span class="language-tag">&lt;<span class="language-title">span</span> <span class="language-attribute">class</span>=<span class="language-value">"nx"</span>&gt;</span>helpers<span class="language-tag">&lt;/<span class="language-title">span</span>&gt;</span><span class="language-tag">&lt;<span class="language-title">span</span> <span class="language-attribute">class</span>=<span class="language-value">"o"</span>&gt;</span>:<span class="language-tag">&lt;/<span class="language-title">span</span>&gt;</span> <span class="language-tag">&lt;<span class="language-title">span</span> <span class="language-attribute">class</span>=<span class="language-value">"s1"</span>&gt;</span>'src/custom-helpers.js'<span class="language-tag">&lt;/<span class="language-title">span</span>&gt;</span><span class="language-tag">&lt;<span class="language-title">span</span> <span class="language-attribute">class</span>=<span class="language-value">"p"</span>&gt;</span>,<span class="language-tag">&lt;/<span class="language-title">span</span>&gt;</span>
+      <span class="language-tag">&lt;<span class="language-title">span</span> <span class="language-attribute">class</span>=<span class="language-value">"nx"</span>&gt;</span>partials<span class="language-tag">&lt;/<span class="language-title">span</span>&gt;</span><span class="language-tag">&lt;<span class="language-title">span</span> <span class="language-attribute">class</span>=<span class="language-value">"o"</span>&gt;</span>:<span class="language-tag">&lt;/<span class="language-title">span</span>&gt;</span> <span class="language-tag">&lt;<span class="language-title">span</span> <span class="language-attribute">class</span>=<span class="language-value">"p"</span>&gt;</span>[<span class="language-tag">&lt;/<span class="language-title">span</span>&gt;</span><span class="language-tag">&lt;<span class="language-title">span</span> <span class="language-attribute">class</span>=<span class="language-value">"s1"</span>&gt;</span>'src/partials/**/*.{hbs,md}'<span class="language-tag">&lt;/<span class="language-title">span</span>&gt;</span><span class="language-tag">&lt;<span class="language-title">span</span> <span class="language-attribute">class</span>=<span class="language-value">"p"</span>&gt;</span>]<span class="language-tag">&lt;/<span class="language-title">span</span>&gt;</span>
+    <span class="language-tag">&lt;<span class="language-title">span</span> <span class="language-attribute">class</span>=<span class="language-value">"p"</span>&gt;</span>},<span class="language-tag">&lt;/<span class="language-title">span</span>&gt;</span>
+    <span class="language-tag">&lt;<span class="language-title">span</span> <span class="language-attribute">class</span>=<span class="language-value">"nx"</span>&gt;</span>pages<span class="language-tag">&lt;/<span class="language-title">span</span>&gt;</span><span class="language-tag">&lt;<span class="language-title">span</span> <span class="language-attribute">class</span>=<span class="language-value">"o"</span>&gt;</span>:<span class="language-tag">&lt;/<span class="language-title">span</span>&gt;</span> <span class="language-tag">&lt;<span class="language-title">span</span> <span class="language-attribute">class</span>=<span class="language-value">"p"</span>&gt;</span>{<span class="language-tag">&lt;/<span class="language-title">span</span>&gt;</span>
+      <span class="language-tag">&lt;<span class="language-title">span</span> <span class="language-attribute">class</span>=<span class="language-value">"nx"</span>&gt;</span>options<span class="language-tag">&lt;/<span class="language-title">span</span>&gt;</span><span class="language-tag">&lt;<span class="language-title">span</span> <span class="language-attribute">class</span>=<span class="language-value">"o"</span>&gt;</span>:<span class="language-tag">&lt;/<span class="language-title">span</span>&gt;</span> <span class="language-tag">&lt;<span class="language-title">span</span> <span class="language-attribute">class</span>=<span class="language-value">"p"</span>&gt;</span>{<span class="language-tag">&lt;/<span class="language-title">span</span>&gt;</span>
+        <span class="language-tag">&lt;<span class="language-title">span</span> <span class="language-attribute">class</span>=<span class="language-value">"nx"</span>&gt;</span>layout<span class="language-tag">&lt;/<span class="language-title">span</span>&gt;</span><span class="language-tag">&lt;<span class="language-title">span</span> <span class="language-attribute">class</span>=<span class="language-value">"o"</span>&gt;</span>:<span class="language-tag">&lt;/<span class="language-title">span</span>&gt;</span> <span class="language-tag">&lt;<span class="language-title">span</span> <span class="language-attribute">class</span>=<span class="language-value">"s1"</span>&gt;</span>'default.hbs'<span class="language-tag">&lt;/<span class="language-title">span</span>&gt;</span>
+      <span class="language-tag">&lt;<span class="language-title">span</span> <span class="language-attribute">class</span>=<span class="language-value">"p"</span>&gt;</span>},<span class="language-tag">&lt;/<span class="language-title">span</span>&gt;</span>
+      <span class="language-tag">&lt;<span class="language-title">span</span> <span class="language-attribute">class</span>=<span class="language-value">"nx"</span>&gt;</span>files<span class="language-tag">&lt;/<span class="language-title">span</span>&gt;</span><span class="language-tag">&lt;<span class="language-title">span</span> <span class="language-attribute">class</span>=<span class="language-value">"o"</span>&gt;</span>:<span class="language-tag">&lt;/<span class="language-title">span</span>&gt;</span> <span class="language-tag">&lt;<span class="language-title">span</span> <span class="language-attribute">class</span>=<span class="language-value">"p"</span>&gt;</span>{<span class="language-tag">&lt;/<span class="language-title">span</span>&gt;</span>
+        <span class="language-tag">&lt;<span class="language-title">span</span> <span class="language-attribute">class</span>=<span class="language-value">"s1"</span>&gt;</span>'./'<span class="language-tag">&lt;/<span class="language-title">span</span>&gt;</span><span class="language-tag">&lt;<span class="language-title">span</span> <span class="language-attribute">class</span>=<span class="language-value">"o"</span>&gt;</span>:<span class="language-tag">&lt;/<span class="language-title">span</span>&gt;</span> <span class="language-tag">&lt;<span class="language-title">span</span> <span class="language-attribute">class</span>=<span class="language-value">"p"</span>&gt;</span>[<span class="language-tag">&lt;/<span class="language-title">span</span>&gt;</span><span class="language-tag">&lt;<span class="language-title">span</span> <span class="language-attribute">class</span>=<span class="language-value">"s1"</span>&gt;</span>'src/templates/pages/index.hbs'<span class="language-tag">&lt;/<span class="language-title">span</span>&gt;</span><span class="language-tag">&lt;<span class="language-title">span</span> <span class="language-attribute">class</span>=<span class="language-value">"p"</span>&gt;</span>]<span class="language-tag">&lt;/<span class="language-title">span</span>&gt;</span>
+      <span class="language-tag">&lt;<span class="language-title">span</span> <span class="language-attribute">class</span>=<span class="language-value">"p"</span>&gt;</span>}<span class="language-tag">&lt;/<span class="language-title">span</span>&gt;</span>
+    <span class="language-tag">&lt;<span class="language-title">span</span> <span class="language-attribute">class</span>=<span class="language-value">"p"</span>&gt;</span>}<span class="language-tag">&lt;/<span class="language-title">span</span>&gt;</span>
+  <span class="language-tag">&lt;<span class="language-title">span</span> <span class="language-attribute">class</span>=<span class="language-value">"p"</span>&gt;</span>}<span class="language-tag">&lt;/<span class="language-title">span</span>&gt;</span>
+<span class="language-tag">&lt;<span class="language-title">span</span> <span class="language-attribute">class</span>=<span class="language-value">"p"</span>&gt;</span>};<span class="language-tag">&lt;/<span class="language-title">span</span>&gt;</span>
+<span class="language-tag">&lt;/<span class="language-title">pre</span>&gt;</span><span class="language-tag">&lt;/<span class="language-title">div</span>&gt;</span>
+</code></pre>
+
+
+    </div>
+    <script src="../../assets/highlight.pack.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+  </body>
+</html>

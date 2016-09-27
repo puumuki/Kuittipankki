@@ -1,0 +1,17 @@
+{
+  "name": "handlebars-helper-md",
+  "version": "0.2.0",
+  "main": [
+    "./index.js"
+  ],
+  "homepage": "https://github.com/helpers/handlebars-helper-md",
+  "_release": "0.2.0",
+  "_resolution": {
+    "type": "version",
+    "tag": "v0.2.0",
+    "commit": "ddc2ed112aea31dc1d4e8bf2074aabdb41efb5fe"
+  },
+  "_source": "https://github.com/helpers/handlebars-helper-md.git",
+  "_target": "^0.2.0",
+  "_originalSource": "handlebars-helper-md"
+}
