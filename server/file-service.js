@@ -134,6 +134,33 @@ function getFileInformation( fileName ) {
   return data.message !== 'could not load data' ? data : null;
 }
 
+function readDirectory(directory) {
+  var deferred = Q.defer();
+
+  fs.readdir( directory, function( err, files ) {
+    if( err ) {
+      deferred.reject(err);
+    } else {
+      deferred.resolve( files );
+    }
+  });
+
+  return deferred.promise;
+}
+
+function readFileMetaInformation() {
+  var deferred = Q.defer();
+
+  fileMetaDataStorage.all(function(err, data) {
+    if( err ) {
+      deferred.reject( err );
+    } else {
+      deferred.resolve( data );
+    }
+  });
+
+  return deferred.promise;
+}
 
 /**
  * Load pictures all pictures
@@ -141,36 +168,47 @@ function getFileInformation( fileName ) {
  */
 function loadFiles() {
 
-  var files = fs.readdirSync(UPLOAD_DIRECTORY);
+  var deferred = Q.defer();
 
-  files = _.filter(files, function(file) {
-    var parts = file.split('.');
-    var fileType = _.last(parts);
-    return _.indexOf( SUPPORTED_FILE_TYPES, fileType ) >= 0;
-  });
+  Q.all( [readDirectory( UPLOAD_DIRECTORY ), readFileMetaInformation()] )
+  .fail( function( error ) {
+    deferred.reject( error );
+  })
+  .done( function( responseArray ) {
 
-  var fileMetaInformation = fileMetaDataStorage.allSync();
+    var files = responseArray[0];
+    var fileMetaInformation = responseArray[1];
 
-  var images = _.map( files, function(filename) {
+    files = _.filter(files, function(file) {
 
-    var mimetype = mime.lookup(filename);
-    var informationData = fileMetaInformation[filename] || {};
-    var stats = fs.statSync(path.join(UPLOAD_DIRECTORY, filename));
-
-    return _.extend( informationData, {
-      filename: filename,
-      thumbnail: getFileTypeThumbnail(mimetype, filename),
-      mimetype: mimetype,
-      created: stats.ctime,
-      size: stats.size
+      var parts = file.split('.');
+      var fileType = _.last(parts);
+      return _.indexOf( SUPPORTED_FILE_TYPES, fileType ) >= 0;
     });
+
+    var images = _.map( files, function(filename) {
+
+      var mimetype = mime.lookup(filename);
+      var informationData = fileMetaInformation[filename] || {};
+      var stats = fs.statSync(path.join(UPLOAD_DIRECTORY, filename));
+
+      return _.extend( informationData, {
+        filename: filename,
+        thumbnail: getFileTypeThumbnail(mimetype, filename),
+        mimetype: mimetype,
+        created: stats.ctime,
+        size: stats.size
+      });
+    });
+
+    images.sort(function(a, b) {
+      return timeService.compareDateTimes(a.created, b.created);
+    });
+
+    deferred.resolve( images );
   });
 
-  images.sort(function(a, b) {
-    return timeService.compareDateTimes(a.created, b.created);
-  });
-
-  return images;
+  return deferred.promise;
 }
 
 /**

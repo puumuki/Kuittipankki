@@ -121,20 +121,29 @@ router.get('/receipts', authentication.isAuthorized, function(req, res) {
 
   res.setHeader('Content-Type', 'application/json');
 
+  logging.profile("LoadingFiles");
+
   storage.all(function(err, receipts) {
     if( err ) {
       errorHandler(req, res, err);
     } else {
-      var files = fileService.loadFiles();
 
-      var _receipts = _.chain(receipts).map(function(receipt, id) {
-        receipt.files = fileService.filterFilesByReceiptID(receipt.id, files);
-        return receipt;
-      }).filter(function(receipt) {
-        return (receipt.deleted === undefined || receipt.deleted === false) && receipt.user_id === req.user.id;
-      }).value();
+      fileService.loadFiles()
+      .then(function(files) {
+        logging.profile("LoadFile");
+        var _receipts = _.chain(receipts).map(function(receipt, id) {
+          receipt.files = fileService.filterFilesByReceiptID(receipt.id, files);
+          return receipt;
+        }).filter(function(receipt) {
+          return (receipt.deleted === undefined || receipt.deleted === false) && receipt.user_id === req.user.id;
+        }).value();
+        logging.profile("LoadFile");
 
-      res.send(_receipts);
+
+        logging.profile("LoadingFiles");
+
+        res.send(_receipts);
+      });
     }
   });
 });
