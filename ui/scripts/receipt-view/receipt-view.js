@@ -67,7 +67,13 @@ define(function(require) {
       });
     },
 
+    onClose: function() {
+      // Removes all callbacks on `object`. This prevent that render is not called after view is 'destroyd'.
+      this.model.off();
+    },
+
     render: function() {
+
       ReceiptView.__super__.render.apply(this, arguments);
       this.$('[data-toggle="tooltip"]').tooltip();
       window.scrollTo( 0, 0 );

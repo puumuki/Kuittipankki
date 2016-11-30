@@ -32,6 +32,11 @@ define(function(require) {
 
   var Communicator = require('communicator');
 
+  function showView( region, view ) {
+    region.reset();
+    region.show( view );
+  }
+
   Backbone.Marionette.Region.prototype.open = function(view){
     if(_.isFunction( view.attachView )) {
       _.bind( view.attachView, this)(view) ;
@@ -42,8 +47,8 @@ define(function(require) {
 
   var loginView = new LoginView();
 
-  contentRegion.show(loginView);
-  menuRegion.show(new MenuView());
+  showView( contentRegion, loginView );
+  showView( menuRegion, new MenuView());
 
   var ApplicationRouter = Backbone.Router.extend({
 
@@ -73,11 +78,11 @@ define(function(require) {
       });
 
       promise.then(function(receipt) {
-        contentRegion.show(new ReceiptView({
+        showView( contentRegion, new ReceiptView({
           model: receipt
         }));
       }).fail(function(error) {
-        contentRegion.show(new PageNotFoundView());
+        showView( contentRegion, new PageNotFoundView());
         console.error('Could not fetch receipts', error);
       });
     },
@@ -85,7 +90,8 @@ define(function(require) {
     receiptList: function(page) {
 
       var receiptListLayout = new ReceiptListLayout();
-      contentRegion.show(receiptListLayout);
+
+      showView( contentRegion, receiptListLayout);
 
       receiptListLayout.receiptListView.show( new LoadingView() );
 
@@ -113,11 +119,11 @@ define(function(require) {
       var promise = receiptService.fetchReceipt({id:id});
 
       promise.then(function(receipt) {
-         contentRegion.show(new ReceiptEditView({
+         showView( contentRegion, new ReceiptEditView({
           model: receipt
         }));
       }).fail(function(error) {
-        contentRegion.show(new PageNotFoundView());
+        showView( contentRegion, new PageNotFoundView());
         //TODO: Teepäs tähän utiliteetti dialogi error hässäkkä
         console.error('Could not fetch receipts', error);
       });
@@ -125,7 +131,7 @@ define(function(require) {
 
     newReceipt: function() {
       receiptService.saveReceipt(new Receipt()).then(function(receipt) {
-        contentRegion.show(new ReceiptEditView({
+        showView( contentRegion, new ReceiptEditView({
           model: receipt
         }));
       }).fail(function(error) {
@@ -142,19 +148,19 @@ define(function(require) {
       promise.then(function(receipt) {
         var _file = receipt.findFile( fileName );
 
-        contentRegion.show(new PictureView({
+        showView( contentRegion, new PictureView({
           receipt: receipt,
           file: _file
         }));
       }).fail(function(error) {
-        contentRegion.show(new PageNotFoundView());
+        showView( contentRegion, new PageNotFoundView());
         //TODO: Teepäs tähän utiliteetti dialogi error hässäkkä
         console.error('Could not fetch receipts', error);
       });
     },
 
     login: function() {
-      contentRegion.show(loginView);
+      showView( contentRegion, loginView );
     },
 
     logout: function() {
@@ -173,7 +179,7 @@ define(function(require) {
     searchTags: function( searchKey ) {
 
       var receiptListLayout = new ReceiptListLayout();
-      contentRegion.show(receiptListLayout);
+      showView( contentRegion, receiptListLayout);
 
       receiptListLayout.receiptListView.show( new LoadingView() );
 
