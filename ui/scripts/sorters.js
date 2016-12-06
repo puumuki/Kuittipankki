@@ -22,9 +22,14 @@ define(function(require) {
       }
 
       return this.reverse ? -(order) : order;
-    };      
+    };
   };
 
+  /**
+   * Return date sorter function user as BackboneCollection.sort function.
+   * @param attributeName {String}
+   * @return {Function} sorter function
+   */
   var dateSorter = function(attributeName) {
     return function(a,b){
 
@@ -42,9 +47,14 @@ define(function(require) {
       }
 
       return this.reverse ? -(order) : order;
-    };    
+    };
   };
 
+  /**
+   * Return date time sorter function user as BackboneCollection.sort function.
+   * @param attributeName {String}
+   * @return {Function} sorter function
+   */
   var dateTimeSorter = function(attributeName) {
     return function(a,b){
 
@@ -62,8 +72,8 @@ define(function(require) {
       }
 
       return this.reverse ? -(order) : order;
-    };    
-  };  
+    };
+  };
 
   return {
     alphabeticalSorter: alphabeticalSorter,

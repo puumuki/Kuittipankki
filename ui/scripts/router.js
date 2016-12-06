@@ -27,19 +27,27 @@ define(function(require) {
 
   /* Regions */
   var menuRegion = regionManager.addRegion('menu','#menu');
-  regionManager.addRegion('dialog', '#dialog');
   var contentRegion = regionManager.addRegion('content','#content');
+  var dialogRegion = regionManager.addRegion('dialog', '#dialog');
 
   var Communicator = require('communicator');
 
+  /**
+   * Show view in region
+   * @param {Marionette.Region} region, region where view is shown
+   * @param {Marionette.View} view, view to be shown
+   */
   function showView( region, view ) {
     region.reset();
     region.show( view );
   }
 
+  /**
+   * Way to customize view transition
+   */
   Backbone.Marionette.Region.prototype.open = function(view){
     if(_.isFunction( view.attachView )) {
-      _.bind( view.attachView, this)(view) ;
+      _.bind( view.attachView, this)(view);
     } else {
       this.$el.html(view.el);
     }
@@ -50,6 +58,11 @@ define(function(require) {
   showView( contentRegion, loginView );
   showView( menuRegion, new MenuView());
 
+
+  /**
+   * @class ApplicationRouter
+   * Application router coordinate transitions between views and routers
+   */
   var ApplicationRouter = Backbone.Router.extend({
 
     initialize: function() {
