@@ -28,7 +28,7 @@ define(function(require) {
   /* Regions */
   var menuRegion = regionManager.addRegion('menu','#menu');
   var contentRegion = regionManager.addRegion('content','#content');
-  var dialogRegion = regionManager.addRegion('dialog', '#dialog');
+  regionManager.addRegion('dialog', '#dialog');
 
   var Communicator = require('communicator');
 
