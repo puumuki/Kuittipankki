@@ -9,7 +9,8 @@ define(function(require) {
    * @return {string} html
    */
   function markdownHelper(value) {
-    return markdown.toHTML(value);
+    var text = value || '';
+    return markdown.toHTML(text);
   }
 
   Handlebars.registerHelper('markdown', markdownHelper);
