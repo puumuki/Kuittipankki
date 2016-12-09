@@ -12,6 +12,7 @@
   var userService = require('services/user-service');
   var effectService = require('services/effect-service');
 
+  var LoadingDialogView   = require('loading-dialog-view/loading-dialog-view');
   var ImageDialogView = require('image-dialog-view/image-dialog-view');
   var _ = require('underscore');
 
@@ -71,22 +72,32 @@
     },
 
     _cloneReceipt: function() {
+
+      LoadingDialogView.show("Monistetaan kuittia..");
+
       var promise = receiptService.cloneReceipt(this.model);
 
       promise.then(function(receipt) {
-        App.router.navigate('#receipt/'+receipt.get('id'), {trigger:true});
+        LoadingDialogView.hide();
+        App.router.navigate('#receipt/edit/'+receipt.get('id'), {trigger:true});
       }).fail(function(error) {
+        LoadingDialogView.showErrorMessage( "Kohtasimme ongleman moniastessame kuittia..", JSON.stringify(error) );
         console.error(error);
         //TODO: Make error handling
       });
     },
 
     _deleteReceipt: function() {
+
+      LoadingDialogView.show("Poistetaan kuittia..");
+
       var promise = receiptService.deleteReceipt(this.model);
 
       promise.then(function(data) {
         App.router.navigate('#', {trigger:true});
+        LoadingDialogView.hide();
       }).fail(function(error) {
+        LoadingDialogView.showErrorMessage( "Kohtasimme ongleman poistaessamme kuittia..", JSON.stringify(error) );
         console.error(error);
         //TODO: Make error handling
       });
@@ -127,6 +138,8 @@
 
     _save: function(e) {
 
+      LoadingDialogView.show("Tallentaa kuittia..");
+
       this.model.set('name', this.ui.name.val() );
       this.model.set('store', this.ui.store.val() );
       this.model.set('warrantlyEndDate', formatDate( this.ui.warrantlyEndDate.val() ));
@@ -139,8 +152,10 @@
       var promise = receiptService.saveReceipt(this.model);
 
       promise.then(function(receipt) {
+        LoadingDialogView.hide();
         App.router.navigate('#receipt/view/'+receipt.get('id'), {trigger:true});
       }).fail(function(error) {
+        LoadingDialogView.showErrorMessage( "Kohtasimme ongleman kuittia tallentaessa..", JSON.stringify(error) );
         console.log(error);
         //TODO: Implementoi virhekäsittely
       });
