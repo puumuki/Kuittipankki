@@ -40,18 +40,19 @@ define(function(require) {
       this.items = opts.items;
 
       Communicator.mediator.on('app:user:logout', _.bind(this._logout,this));
-      
+
       //Triggered by ReceiptListMenuView when a key is pressed down
       Communicator.mediator.on('app:receipt:search', _.bind(this._onReceiptSearch, this));
-      
+
       //Triggered by ReceiptListMenuView when a search text box is empty
       Communicator.mediator.on('app:receipt:searchend', _.bind(this._onReceiptSearchEnds, this));
-      
+
       //Triggered when a receipts are sorted by date or name
       Communicator.mediator.on('app:receipt:sort', _.bind(this._sortBy,this));
     },
 
     _onReceiptSearchEnds: function() {
+      receiptService.resetReceiptSearch();
       this.collection = receiptService.getReceiptCollection();
       this.render();
     },
@@ -113,16 +114,20 @@ define(function(require) {
       App.router.navigate('#search/tag/' + tag, {trigger:true} );
     },
 
+    isSearchOn: function() {
+      return this.isSearchOn;
+    },
+
     serializeData: function() {
 
       this.collection.comparator = _.bind(
-        ReceiptCollection.sorters[this.sort.attribute], 
+        ReceiptCollection.sorters[this.sort.attribute],
         {reverse: this.sort.order === 'desc'}
       );
-      
+
       this.collection.sort();
 
-      var slice = this.collection.slice( (this.page-1) * this.items, 
+      var slice = this.collection.slice( (this.page-1) * this.items,
                                           this.page * this.items );
 
       return {

@@ -29,6 +29,7 @@ define(function(require) {
   var menuRegion = regionManager.addRegion('menu','#menu');
   var contentRegion = regionManager.addRegion('content','#content');
   regionManager.addRegion('dialog', '#dialog');
+  regionManager.addRegion('loadingdialog', '#loadingdialog');
 
   var Communicator = require('communicator');
 
@@ -66,8 +67,8 @@ define(function(require) {
   var ApplicationRouter = Backbone.Router.extend({
 
     initialize: function() {
-      this.on('route', function() {
-        Communicator.mediator.trigger('app:route');
+      this.on('route', function( route ) {
+        Communicator.mediator.trigger('app:route', route);
       });
     },
 

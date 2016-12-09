@@ -33,9 +33,11 @@ define(function(require) {
       });
     },
 
-    _endSearch: function() {
-      this.ui.searchNav.fadeOut('slow');
-      Communicator.mediator.trigger('app:receipt:searchend');
+    _endSearch: function(route) {
+      if( route != 'receiptList' ) {
+        this.ui.searchNav.fadeOut('slow');
+        Communicator.mediator.trigger('app:receipt:searchend');
+      }
     },
 
     _onLogout: function() {

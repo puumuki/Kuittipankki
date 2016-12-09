@@ -12,7 +12,10 @@ define(function(require) {
   /**
    * Easier time to debug collections internal s
    */
-  window.__data = { receipts: _collection };
+  window.__data = {
+    receipts: _collection,
+    searchResult: null
+  };
 
   communicator.mediator.on('app:user:logout', function() {
     _collection.reset(null);//Clear receipt in memory after logout
@@ -92,7 +95,9 @@ define(function(require) {
 
     var deferred = Q.defer();
 
-    if( _collection.size() === 0 || ops.fetch ) {
+    if( __data.searchResult ) {
+      deferred.resolve( __data.searchResult );
+    } else if( _collection.size() === 0 || ops.fetch ) {
       _collection.fetch({
         success: function() {
           deferred.resolve(_collection);
@@ -176,7 +181,11 @@ define(function(require) {
       keys: keys
     });
 
-    return new ReceiptCollection( fuse.search( search ) );
+    return __data.searchResult = new ReceiptCollection( fuse.search( search ) );
+  }
+
+  function resetReceiptSearch() {
+    __data.searchResult = null;
   }
 
   /**
@@ -190,6 +199,7 @@ define(function(require) {
   return {
     getReceiptCollection: getReceiptCollection,
     fetchReceiptCollection:fetchReceiptCollection,
+    resetReceiptSearch: resetReceiptSearch,
     fetchReceipt:fetchReceipt,
     saveReceipt:saveReceipt,
     deleteReceipt: deleteReceipt,

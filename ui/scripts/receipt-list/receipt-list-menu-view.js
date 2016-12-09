@@ -4,6 +4,8 @@ define(function(require) {
   var template = require('hbs!receipt-list/receipt-list-menu');
   var Communicator = require('communicator');
 
+  var lastSearchText = "";
+
   var ReceiptListMenuView = Backbone.Marionette.ItemView.extend({
 
     template: template,
@@ -21,6 +23,7 @@ define(function(require) {
     },
 
     _search: function( search ) {
+      lastSearchText = search;
       if( search === '' ) {
         Communicator.mediator.trigger('app:receipt:searchend');
       } else {
@@ -32,7 +35,7 @@ define(function(require) {
       var searchInputSelector = $(event.currentTarget).data('searchinput');
       var searchText = this.$(searchInputSelector).val();
       this._search( searchText );
-    },   
+    },
 
     _onSearchSmall: function(event) {
       this._search( this.ui.searchInputSmall.val() );
@@ -44,7 +47,8 @@ define(function(require) {
 
     serializeData: function() {
       return {
-        sort: this.sort
+        sort: this.sort,
+        searchText: lastSearchText
       };
     },
 
