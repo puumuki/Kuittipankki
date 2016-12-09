@@ -3,7 +3,6 @@ define(function(require) {
 
   var Backbone = require('backbone');
   var template = require('hbs!loading-dialog-view/loading-dialog');
-  var _ = require('underscore');
   var regionManager = require('region-manager');
 
   var LoadingDialogView = Backbone.Marionette.ItemView.extend({

@@ -4,7 +4,7 @@ define(function(require) {
   var template = require('hbs!receipt-list/receipt-list-menu');
   var Communicator = require('communicator');
 
-  var lastSearchText = "";
+  var lastSearchText = '';
 
   var ReceiptListMenuView = Backbone.Marionette.ItemView.extend({
 

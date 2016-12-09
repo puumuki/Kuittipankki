@@ -9,13 +9,15 @@ define(function(require) {
   var Receipt = require('receipt');
   var moment = require('moment');
 
-  /**
-   * Easier time to debug collections internal s
-   */
-  window.__data = {
+  var __data = {
     receipts: _collection,
     searchResult: null
   };
+
+  /**
+   * Easier time to debug collections internal s
+   */
+  window.__data = __data;
 
   communicator.mediator.on('app:user:logout', function() {
     _collection.reset(null);//Clear receipt in memory after logout
@@ -181,7 +183,9 @@ define(function(require) {
       keys: keys
     });
 
-    return __data.searchResult = new ReceiptCollection( fuse.search( search ) );
+    __data.searchResult = new ReceiptCollection( fuse.search( search ) );
+
+    return __data;
   }
 
   function resetReceiptSearch() {

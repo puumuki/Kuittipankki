@@ -34,7 +34,7 @@ define(function(require) {
     },
 
     _endSearch: function(route) {
-      if( route != 'receiptList' ) {
+      if( route !== 'receiptList' ) {
         this.ui.searchNav.fadeOut('slow');
         Communicator.mediator.trigger('app:receipt:searchend');
       }

@@ -73,7 +73,7 @@
 
     _cloneReceipt: function() {
 
-      LoadingDialogView.show("Monistetaan kuittia..");
+      LoadingDialogView.show('Monistetaan kuittia..');
 
       var promise = receiptService.cloneReceipt(this.model);
 
@@ -81,7 +81,7 @@
         LoadingDialogView.hide();
         App.router.navigate('#receipt/edit/'+receipt.get('id'), {trigger:true});
       }).fail(function(error) {
-        LoadingDialogView.showErrorMessage( "Kohtasimme ongleman moniastessame kuittia..", JSON.stringify(error) );
+        LoadingDialogView.showErrorMessage( 'Kohtasimme ongleman moniastessame kuittia..', JSON.stringify(error) );
         console.error(error);
         //TODO: Make error handling
       });
@@ -89,7 +89,7 @@
 
     _deleteReceipt: function() {
 
-      LoadingDialogView.show("Poistetaan kuittia..");
+      LoadingDialogView.show('Poistetaan kuittia..');
 
       var promise = receiptService.deleteReceipt(this.model);
 
@@ -97,7 +97,7 @@
         App.router.navigate('#', {trigger:true});
         LoadingDialogView.hide();
       }).fail(function(error) {
-        LoadingDialogView.showErrorMessage( "Kohtasimme ongleman poistaessamme kuittia..", JSON.stringify(error) );
+        LoadingDialogView.showErrorMessage( 'Kohtasimme ongleman poistaessamme kuittia..', JSON.stringify(error) );
         console.error(error);
         //TODO: Make error handling
       });
@@ -138,7 +138,7 @@
 
     _save: function(e) {
 
-      LoadingDialogView.show("Tallentaa kuittia..");
+      LoadingDialogView.show('Tallentaa kuittia..');
 
       this.model.set('name', this.ui.name.val() );
       this.model.set('store', this.ui.store.val() );
@@ -155,7 +155,7 @@
         LoadingDialogView.hide();
         App.router.navigate('#receipt/view/'+receipt.get('id'), {trigger:true});
       }).fail(function(error) {
-        LoadingDialogView.showErrorMessage( "Kohtasimme ongleman kuittia tallentaessa..", JSON.stringify(error) );
+        LoadingDialogView.showErrorMessage( 'Kohtasimme ongleman kuittia tallentaessa..', JSON.stringify(error) );
         console.log(error);
         //TODO: Implementoi virhekäsittely
       });
