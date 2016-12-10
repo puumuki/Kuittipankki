@@ -62,7 +62,7 @@ require.config({
     bootstraptagsinput: '../bower_components/bootstrap-tagsinput/dist/bootstrap-tagsinput.min',
 
     /* alias all marionette libs */
-    'backbone.marionette': '../bower_components/backbone.marionette/lib/backbone.marionette',
+    'backbone.marionette': '../bower_components/backbone.marionette/lib/core/amd/backbone.marionette',
     'backbone.wreqr': '../bower_components/backbone.wreqr/lib/amd/backbone.wreqr',
     'backbone.babysitter': '../bower_components/backbone.babysitter/lib/amd/backbone.babysitter',
 

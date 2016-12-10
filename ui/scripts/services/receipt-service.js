@@ -185,7 +185,7 @@ define(function(require) {
 
     __data.searchResult = new ReceiptCollection( fuse.search( search ) );
 
-    return __data;
+    return __data.searchResult;
   }
 
   function resetReceiptSearch() {
