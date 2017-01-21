@@ -1,0 +1,5 @@
+log.html
+geckodriver.log
+output.xml
+report.xml
+*.png
