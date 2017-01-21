@@ -1,5 +1,5 @@
 
-<div class="container center-block">
+<div id="receipt-view-form" class="container center-block">
   <div class="hero-unit">
 
     <div class="row bottom-margin" data-id="{{id}}">
@@ -26,7 +26,7 @@
                 <label for="name">Tuotteen nimi</label>
               </div>
               <div class="col-md-9 col-sm-6 col-xs-6">
-                {{name}}
+                <span id="name">{{name}}</span>
               </div>
             </div>
 
@@ -35,14 +35,14 @@
                 <label for="date">Hankintapäivä</label>
               </div>
               <div class="col-md-9 col-sm-6 col-xs-6">
-                <span>{{datetime purchaseDate}}</span>
+                <span id="purchaseDate">{{datetime purchaseDate}}</span>
               </div>
             </div>
 
             <div class="row top-margin ">
               <div class="col-md-3 col-sm-3 col-xs-6"><label for="varrantlyend">Takuupäättyy</label></div>
               <div class="col-md-9 col-sm-6 col-xs-6 text-left">
-                {{{datetime warrantlyEndDate}}}
+                <span id="warrantlyEndDate">{{{datetime warrantlyEndDate}}}</span>
               </div>
             </div>
 
@@ -51,7 +51,7 @@
                 <label for="varrantlyend">Kauppa</label>
               </div>
               <div class="col-md-9 col-sm-6 col-xs-6">
-                {{store}}
+                <span id="store">{{store}}</span>
               </div>
             </div>
 
@@ -60,7 +60,7 @@
                 <label for="varrantlyend">Tuotteen hinta</label>
               </div>
               <div class="col-md-9 col-sm-9 col-xs-6">
-                {{price}} {{#if price}}€{{/if}}
+                <span id="price">{{price}}</span> {{#if price}}€{{/if}}
               </div>
             </div>
 
@@ -69,7 +69,7 @@
                 <label for="varrantlyend">Rekisteröity</label>
               </div>
               <div class="col-md-9 col-sm-6 col-xs-6">
-                {{datetime registered}}
+                <span id="registered">{{datetime registered}}</span>
               </div>
             </div>
 
@@ -77,7 +77,7 @@
               <div class="col-md-3 col-sm-3 col-xs-6">
                 <label for="varrantlyend">Muuta</label>
               </div>
-              <div class="col-md-9 col-sm-6 col-xs-6">
+              <div class="col-md-9 col-sm-6 col-xs-6" id="description">
                 {{{markdown description}}}
               </div>
             </div>
@@ -86,7 +86,7 @@
               <div class="col-md-3 col-sm-3">
                 <label for="varrantlyend">Avainsanat</label>
               </div>
-              <div class="col-md-9 col-sm-6">
+              <div class="col-md-9 col-sm-6" id="tags">
                 {{#each tags}}
                   <a href="#search/tag/{{this}}"><span class="badge badge-info">{{this}}</span></a>
                 {{/each}}
@@ -97,7 +97,7 @@
               <h3>Kuvat</h3>
             </div>
 
-            <div class="row top-margin">
+            <div class="row top-margin" id="images">
               {{#each files}}
                 <div class="col-md-3 col-sm-3 image">
                   <a class="thumbnail" href="{{fileurl this}}"

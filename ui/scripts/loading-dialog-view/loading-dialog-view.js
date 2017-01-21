@@ -1,35 +1,37 @@
-
 define(function(require) {
 
   var Backbone = require('backbone');
   var template = require('hbs!loading-dialog-view/loading-dialog');
   var regionManager = require('region-manager');
+  var _ = require('underscore');
 
   var LoadingDialogView = Backbone.Marionette.ItemView.extend({
 
     template: template,
 
     events : {
-      'click button[name="close"]' : 'hideDialog'
+      'click button[name="close"]' : 'closeDialog'
     },
 
     initialize: function( options ) {
-      this.setTitle( options && options.title || 'Lataa...' );
+      this.setParams( options && options.title, options && options.message );
     },
 
-    setTitle: function(title) {
+    setParams: function( title, message ) {
       this._title = title;
-    },
 
-    setMessage: function(message) {
-      this._message = message;
+      if( typeof message === 'object' || _.isArray( message ) ) {
+        JSON.stringify( message );
+      } else {
+        this._message = message;
+      }
     },
 
     _onCancelClick: function(event) {
       event.preventDefault();
     },
 
-    hideDialog: function() {
+    closeDialog: function() {
       //Close modal
       this.$el.find('.modal').modal('hide');
 
@@ -55,30 +57,26 @@ define(function(require) {
 
   //Static methods
   {
-    hide: function() {
-      if( this._instance ) {
-        this._instance.hideDialog();
-      }
-    },
-
-    showErrorMessage: function(title, message) {
+    getInstance: function() {
       if( !this._instance ) {
         this._instance = new LoadingDialogView();
       }
+      return this._instance;
+    },
 
-      this._instance.setTitle( title );
-      this._instance.setMessage( message );
+    hide: function() {
+      LoadingDialogView.getInstance().closeDialog();
+    },
 
+    showErrorMessage: function(title, message) {
+      var loadingDialog = LoadingDialogView.getInstance();
+      loadingDialog.setParams( title, message );
       regionManager.getRegion('loadingdialog').show(this._instance);
     },
 
     show: function(title) {
-      if( !this._instance ) {
-        this._instance = new LoadingDialogView();
-      }
-
-      this._instance.setTitle( title );
-
+      var loadingDialog = LoadingDialogView.getInstance();
+      loadingDialog.setParams(title);
       regionManager.getRegion('loadingdialog').show(this._instance);
     }
   });

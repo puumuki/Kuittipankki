@@ -12,7 +12,10 @@
     </div>
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
-        <li class="active"><a href="#">Kuitit</a></li>
+        <li {{#equals active "receipts"}}class="active"{{/equals}}><a href="#">Kuitit</a></li>
+      </ul>
+      <ul class="nav navbar-nav">
+        <li {{#equals active "reports"}}class="active"{{/equals}}><a href="#/reports">Raportit</a></li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         {{#if user}}

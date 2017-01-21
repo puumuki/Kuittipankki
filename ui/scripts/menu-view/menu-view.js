@@ -6,6 +6,11 @@ define(function(require) {
   var template = require('hbs!menu-view/menu');
   var Communicator = require('communicator');
 
+  var MenuItems = {
+    'Receipts' : 'receipts',
+    'Reports' : 'reports'
+  };
+
   var RecipeListView = Backbone.Marionette.ItemView.extend({
 
     template: template,
@@ -22,22 +27,31 @@ define(function(require) {
     initialize: function(){
       Communicator.mediator.on('app:user:authenticated',_.bind( this._onAuthenticated, this));
       Communicator.mediator.on('app:user:logout', _.bind( this._onLogout, this));
-      Communicator.mediator.on('app:route', _.bind( this._endSearch, this));
+      Communicator.mediator.on('app:route', _.bind( this._routeChanged, this));
     },
 
     serializeData: function() {
       var data =RecipeListView.__super__.serializeData.call(this);
 
       return _.extend( data, {
-        user: this._userobject
+        user: this._userobject,
+        active: this._active
       });
     },
 
-    _endSearch: function(route) {
+    _routeChanged: function(route) {
+      this._active = MenuItems.Receipts;
+
       if( route !== 'receiptList' ) {
         this.ui.searchNav.fadeOut('slow');
         Communicator.mediator.trigger('app:receipt:searchend');
       }
+
+      if( route.includes('reports') ) {
+        this._active = MenuItems.Reports;
+      }
+
+      this.render();
     },
 
     _onLogout: function() {

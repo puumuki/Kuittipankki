@@ -1,0 +1,44 @@
+
+<table class="table table-striped">
+<thead>
+  <tr>
+    <th colspan="4">Kuitteja yhteensä {{count}} kpl</th>
+    <th colspan="2"><a href="data:{{{exportCSV}}}">Vie CSV tiedostona</a></th>
+    <th><a href="data:{{{exportJSON}}}" download="receipts.json">Vie JSON tiedostona</a></th>
+  </tr>
+  <tr>
+    <th>Nimi</th>
+    <th>Kauppa</th>
+    <th>Ostopäivämäärä</th>
+    <th>Takuu päättyy</th>
+    <th>Rekisteröity</th>
+    <th>Hinta</th>
+    <th>Tagit</th>
+  </tr>
+</thead>
+<tbody>
+{{#each receipts}}
+<tr>
+  <td><a href="#/receipt/view/{{id}}">
+    {{#if name}}{{name}}{{else}} -- ei nimeä -- {{/if}}
+    </a>
+  </td>
+  <td>{{store}}</td>
+  <td>{{datetime purchaseDate}}</td>
+  <td>{{datetime warrantEndDate}}</td>
+  <td>{{datetime registered}}</td>
+  <td>{{price}}</td>
+  <td>
+  {{#each tags}}
+    <span data-tag="{{this}}" class="tag-link badge badge-info hidden-xs">{{this}}</span>
+  {{/each}}
+  </td>
+</tr>
+{{/each}}
+</tbody>
+<tfooter>
+<tr>
+  <th colspan="7">Kuitteja yhteensä {{count}} kpl</th>
+</tr>
+</tfooter>
+</table>

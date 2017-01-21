@@ -21,6 +21,8 @@ define(function(require) {
   var Receipt             = require('receipt');
   var PageNotFoundView    = require('page-not-found-view');
 
+  var ReportView          = require('report-view/report-view');
+
   var regionManager       = require('region-manager');
   var receiptService      = require('services/receipt-service');
   var userService         = require('services/user-service');
@@ -79,8 +81,12 @@ define(function(require) {
       'receipt/edit/:id': 'editReceipt',
       'receipt/edit': 'editReceipt',
       'receipt/new': 'newReceipt',
+
       'files/:fileName': 'file',
       'search/tag/:searchKey': 'searchTags',
+
+      'reports':'reports',
+
       'login': 'login',
       'logout': 'logout'
     },
@@ -210,6 +216,46 @@ define(function(require) {
           collection: searchCollection,
           page: 1
         }));
+
+      }).fail(function(data) {
+        console.error('Could not fetch receipts', data);
+        if( data.res.status === 403 ) {
+          App.router.navigate('#login', {trigger:true});
+        }
+      });
+    },
+
+    reports: function() {
+      var promise = receiptService.fetchReceiptCollection();
+
+      promise.then(function(receiptCollection) {
+        var reportView = new ReportView({collection: receiptCollection});
+        showView( contentRegion, reportView );
+      }).fail(function(data) {
+        console.error('Could not fetch receipts', data);
+        if( data.res.status === 403 ) {
+          App.router.navigate('#login', {trigger:true});
+        }
+      });
+    },
+
+    exportjson: function() {
+      var promise = receiptService.fetchReceiptCollection();
+
+      promise.then(function(receiptCollection) {
+
+      }).fail(function(data) {
+        console.error('Could not fetch receipts', data);
+        if( data.res.status === 403 ) {
+          App.router.navigate('#login', {trigger:true});
+        }
+      });
+    },
+
+    exportcsv: function() {
+      var promise = receiptService.fetchReceiptCollection();
+
+      promise.then(function(receiptCollection) {
 
       }).fail(function(data) {
         console.error('Could not fetch receipts', data);

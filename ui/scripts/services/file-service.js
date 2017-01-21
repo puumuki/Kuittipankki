@@ -4,6 +4,9 @@ define(function(require) {
 
   /**
    * Delete picture from server
+   * @param {string} picture name
+   * @return {Q.promise} promise is resolved when a picture is deleted
+   *                     or rejected when an error is encountered.
    */
   function deletePicture( picture ) {
     var deferred = Q.defer();
