@@ -1,18 +1,20 @@
 define(function(require) {
 
-  var Backbone = require('backbone');
   var template = require('hbs!receipt-view/receipt');
   var userService = require('services/user-service');
   var _ = require('underscore');
 
-  var communicator = require('communicator');
   var effectService = require('services/effect-service');
   var moment = require('moment');
 
   var ImageDialogView = require('image-dialog-view/image-dialog-view');
   var FileDialogView = require('file-dialog-view/file-dialog-view');
 
-  var ReceiptView = Backbone.Marionette.ItemView.extend({
+  var helpers = require('handlebar-helpers/helpers');
+
+  var BaseItemView = require('base-view/base-item-view');
+
+  var ReceiptView = BaseItemView.extend({
 
     attachView: effectService.fadeIn,
 
@@ -23,7 +25,8 @@ define(function(require) {
     },
 
     initialize: function() {
-      communicator.mediator.on('app:user:logout', _.bind(this.render, this));
+      ReceiptView.__super__.initialize.call(this);
+      this.bindListener('app:user:logout',this.render);
       this.model.on('change', this.render);
     },
 
@@ -57,7 +60,8 @@ define(function(require) {
       var format = 'YYYY-MM-DD hh:mm:ss';
       var purchaseDate = moment(date , format);
       var diff =moment(moment()).diff(purchaseDate);
-      return moment.duration(diff,'ms').format('y [vuotta] d [päivää]');
+      var translation = helpers.translate('receipt.age');
+      return moment.duration(diff,'ms').format(translation);
     },
 
     serializeData: function() {
@@ -70,10 +74,10 @@ define(function(require) {
     onClose: function() {
       // Removes all callbacks on `object`. This prevent that render is not called after view is 'destroyd'.
       this.model.off();
+      ReceiptView.__super__.onClose.call(this);
     },
 
     render: function() {
-
       ReceiptView.__super__.render.apply(this, arguments);
       this.$('[data-toggle="tooltip"]').tooltip();
       window.scrollTo( 0, 0 );

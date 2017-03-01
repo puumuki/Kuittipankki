@@ -1,52 +1,37 @@
 define(function(require) {
 
-  var Backbone = require('backbone'), 
-      Communicator = require('communicator'), 
-      Router = require('router'), 
-      $ = require('jquery'),
-      userService = require('services/user-service');
+  var Backbone = require('backbone');
+  var Communicator = require('communicator');
+  var Router = require('router');
+  var $ = require('jquery');
+  var userService = require('services/user-service');
+  var localizationService = require('localization/localization-service');
 
   require('jqueryui');
   require('moment-duration-format');
+  require('handlebar-helpers/helpers');
 
   var App = new Backbone.Marionette.Application();
 
   App.router = new Router();
 
-  //TODO: mode datapicker to seperated class
-  $.datepicker.regional.fi = {
-               closeText: 'Sulje',
-               prevText: '&laquo;Edellinen',
-               nextText: 'Seuraava&raquo;',
-              currentText: 'T&auml;n&auml;&auml;n',
-      monthNames: ['Tammikuu','Helmikuu','Maaliskuu','Huhtikuu','Toukokuu','Kes&auml;kuu',
-        'Hein&auml;kuu','Elokuu','Syyskuu','Lokakuu','Marraskuu','Joulukuu'],
-        monthNamesShort: ['Tammi','Helmi','Maalis','Huhti','Touko','Kes&auml;',
-        'Hein&auml;','Elo','Syys','Loka','Marras','Joulu'],
-                dayNamesShort: ['Su','Ma','Ti','Ke','To','Pe','Su'],
-                dayNames: ['Sunnuntai','Maanantai','Tiistai','Keskiviikko','Torstai','Perjantai','Lauantai'],
-                dayNamesMin: ['Su','Ma','Ti','Ke','To','Pe','La'],
-                weekHeader: 'Vk',
-        dateFormat: 'dd.mm.yy',
-                firstDay: 1,
-                isRTL: false,
-                showMonthAfterYear: false,
-                yearSuffix: ''
-  };
-      
-  $.datepicker.setDefaults($.datepicker.regional.fi);
+  var localizations = localizationService.getLocalizations('fi');
 
-
+  //Datepicker localizations
+  $.datepicker.regional.fi = localizations.datePickerTranslation;
+  $.datepicker.setDefaults( localizations.datePickerTranslation );
 
   /* Add initializers here */
   App.addInitializer( function () {
-    
+
     userService.fetchAuthenticatedUser().then(function(user) {
       Communicator.mediator.trigger('app:user:authenticated', user);
+    }).fail(function() {
+      Communicator.mediator.trigger('app:user:notauthenticated');
     });
 
     Communicator.mediator.trigger('app:start');
-    
+
     Backbone.history.start();
 
   });

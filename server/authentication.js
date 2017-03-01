@@ -37,8 +37,8 @@ var authenticationStrategy = new LocalStrategy(
 
       if(!user) {
         logging.info('User not found ');
-        return done(null, false, {message:'User not found'});  
-      } 
+        return done(null, false, {message:'User not found'});
+      }
       else if(matchpasswords(user, password)) {
         logging.info('User ', user.username, ' authenticated');
         return done(null, {
@@ -47,8 +47,8 @@ var authenticationStrategy = new LocalStrategy(
         });
       } else {
         logging.info('User ', user.username, ' authentication failed');
-        return done(null, false, {message:'User not found'});  
-      }     
+        return done(null, false, {message:'User not found'});
+      }
     });
   }
 );
@@ -75,7 +75,7 @@ function loginRouteResponse(req, res) {
       res.send({
         id: user.id,
         username: user.username
-      });  
+      });
     }
   });
 }
@@ -85,10 +85,10 @@ function loginRouteResponse(req, res) {
  */
 function isAuthorized(req, res, next) {
   if( !req.user ) {
-    return res.status(403).send({message:'UnisAuthorized'});  
+    return res.status(403).send({message:'Unauthorized'});
   } else {
     next();
-  }  
+  }
 }
 
 module.exports = {

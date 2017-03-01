@@ -4,13 +4,13 @@
   <!-- Buttons for sm and xs -->
   <div class="hidden-lg hidden-md hidden-sm col-sm-4 col-xs-12 receipt-menu-item">
     <div class="btn-group" role="group" aria-label="...">
-      <button data-sort="name" data-order="{{sort.order}}" type="button" class="btn btn-default sort">Nimi</button>
-      <button data-sort="purchaseDate" data-order="{{sort.order}}" type="button" class="btn btn-default sort">Päivämäärä</button>
+      <button data-sort="name" data-order="{{sort.order}}" type="button" class="btn btn-default sort">{{t "receipt-list.sort.name"}}</button>
+      <button data-sort="purchaseDate" data-order="{{sort.order}}" type="button" class="btn btn-default sort">{{t "receipt-list.sort.date"}}</button>
     </div>
 
     <div class="btn-group pull-right" role="group" aria-label="...">
       <a href="#/receipt/new">
-        <button data-sort="name" type="button" class="btn btn-default">Uusi</button>
+        <button data-sort="name" type="button" class="btn btn-default">{{t "receipt-list.new-receipt"}}</button>
       </a>
     </div>
 
@@ -30,8 +30,8 @@
   <!-- Buttons for md, lg -->
   <div class="hidden-xs col-md-4 col-sm-4 receipt-menu-item">
     <div class="btn-group" role="group" aria-label="...">
-      <button data-sort="name" data-order="{{sort.order}}" type="button" class="btn btn-default sort">Nimi</button>
-      <button data-sort="purchaseDate" data-order="{{sort.order}}" type="button" class="btn btn-default sort">Päivämäärä</button>
+      <button data-sort="name" data-order="{{sort.order}}" type="button" class="btn btn-default sort">{{t "receipt-list.sort.name"}}</button>
+      <button data-sort="purchaseDate" data-order="{{sort.order}}" type="button" class="btn btn-default sort">{{t "receipt-list.sort.date"}}</button>
     </div>
   </div>
 
@@ -48,7 +48,7 @@
   <div class="hidden-xs  col-md-1 col-sm-1 col-xs-12 receipt-menu-item">
     <div class="btn-group pull-right" role="group" aria-label="...">
       <a id="receipt-new" href="#/receipt/new">
-        <button data-sort="name" type="button" class="btn btn-default">Uusi</button>
+        <button data-sort="name" type="button" class="btn btn-default">{{t "receipt-list.new-receipt"}}</button>
       </a>
     </div>
   </div>

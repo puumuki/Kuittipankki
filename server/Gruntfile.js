@@ -12,7 +12,7 @@ module.exports = function (grunt) {
 
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
-    
+
     // linting
     jshint: {
         options: {
@@ -23,6 +23,7 @@ module.exports = function (grunt) {
             '!Gruntfile.js',
             'routes/*.js',
             '*.js',
+            'test/*.js'
         ]
     },
 

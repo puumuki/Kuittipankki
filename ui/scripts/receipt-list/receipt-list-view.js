@@ -1,16 +1,15 @@
 define(function(require) {
 
-  var Backbone = require('backbone');
   var template = require('hbs!receipt-list/receipt-list');
   var ReceiptCollection = require('receipt-collection');
   var userService = require('services/user-service');
-  var Communicator = require('communicator');
   var receiptService = require('services/receipt-service');
   var _ = require('underscore');
+  var BaseItemView = require('base-view/base-item-view');
 
   var items = 10;
 
-  var ReceiptListView = Backbone.Marionette.ItemView.extend({
+  var ReceiptListView = BaseItemView.extend({
 
     template: template,
 
@@ -26,6 +25,8 @@ define(function(require) {
      */
     initialize: function( options ) {
 
+      ReceiptListView.__super__.initialize.call(this);
+
       this.sort = {
         attribute: 'name',
         order: 'asc'
@@ -39,16 +40,16 @@ define(function(require) {
       this.page = parseInt( opts.page, 10 );
       this.items = opts.items;
 
-      Communicator.mediator.on('app:user:logout', _.bind(this._logout,this));
+      this.bindListener('app:user:logout', this._logout, this);
 
       //Triggered by ReceiptListMenuView when a key is pressed down
-      Communicator.mediator.on('app:receipt:search', _.bind(this._onReceiptSearch, this));
+      this.bindListener('app:receipt:search', this._onReceiptSearch, this);
 
       //Triggered by ReceiptListMenuView when a search text box is empty
-      Communicator.mediator.on('app:receipt:searchend', _.bind(this._onReceiptSearchEnds, this));
+      this.bindListener('app:receipt:searchend', this._onReceiptSearchEnds, this);
 
       //Triggered when a receipts are sorted by date or name
-      Communicator.mediator.on('app:receipt:sort', _.bind(this._sortBy,this));
+      this.bindListener('app:receipt:sort', this._sortBy, this);
     },
 
     _onReceiptSearchEnds: function() {

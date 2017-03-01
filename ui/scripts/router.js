@@ -13,8 +13,11 @@ define(function(require) {
 
   var ReceiptEditView     = require('receipt-edit-view/receipt-edit-view');
 
+  var LoadingDialogView   = require('loading-dialog-view/loading-dialog-view');
+
   var LoginView           = require('login-view/login-view');
   var PictureView         = require('picture-view');
+  var EmptyView           = require('empty-view/empty-view');
 
   var MenuView            = require('menu-view/menu-view');
 
@@ -30,6 +33,7 @@ define(function(require) {
   /* Regions */
   var menuRegion = regionManager.addRegion('menu','#menu');
   var contentRegion = regionManager.addRegion('content','#content');
+
   regionManager.addRegion('dialog', '#dialog');
   regionManager.addRegion('loadingdialog', '#loadingdialog');
 
@@ -61,6 +65,10 @@ define(function(require) {
   showView( contentRegion, loginView );
   showView( menuRegion, new MenuView());
 
+  //On user is not authenticated
+  //Communicator.mediator.on('app:user:sessionended', function() {
+  //  showView( contentRegion, loginView );
+  //});
 
   /**
    * @class ApplicationRouter
@@ -75,33 +83,35 @@ define(function(require) {
     },
 
     routes: {
-      '' : 'receiptList',
-      'receipts/:page':'receiptList',
-      'receipt/view/:id': 'receipt',    // #help
-      'receipt/edit/:id': 'editReceipt',
-      'receipt/edit': 'editReceipt',
-      'receipt/new': 'newReceipt',
-
-      'files/:fileName': 'file',
+      ''                     : 'receiptList',
+      'receipts/:page'       : 'receiptList',
+      'receipt/view/:id'     : 'receipt',    // #help
+      'receipt/edit/:id'     : 'editReceipt',
+      'receipt/edit'         : 'editReceipt',
+      'receipt/new'          : 'newReceipt',
+      'files/:fileName'      : 'file',
       'search/tag/:searchKey': 'searchTags',
-
-      'reports':'reports',
-
-      'login': 'login',
-      'logout': 'logout'
+      'reports'              :'reports',
+      'login'                : 'login',
+      'logout'               : 'logout'
     },
 
     receipt: function(id) {
+
+      showView( contentRegion, new EmptyView() );
+      LoadingDialogView.show();
 
       var promise = receiptService.fetchReceipt({
         id:id
       });
 
       promise.then(function(receipt) {
+        LoadingDialogView.hide();
         showView( contentRegion, new ReceiptView({
           model: receipt
         }));
       }).fail(function(error) {
+        LoadingDialogView.hide();
         showView( contentRegion, new PageNotFoundView());
         console.error('Could not fetch receipts', error);
       });
@@ -113,7 +123,7 @@ define(function(require) {
 
       showView( contentRegion, receiptListLayout);
 
-      receiptListLayout.receiptListView.show( new LoadingView() );
+      receiptListLayout.receiptListView.show(new LoadingView());
 
       var promise = receiptService.fetchReceiptCollection();
 
@@ -136,13 +146,19 @@ define(function(require) {
     },
 
     editReceipt: function(id) {
+
+      showView( contentRegion, new EmptyView() );
+      LoadingDialogView.show();
+
       var promise = receiptService.fetchReceipt({id:id});
 
       promise.then(function(receipt) {
-         showView( contentRegion, new ReceiptEditView({
+        LoadingDialogView.hide();
+        showView( contentRegion, new ReceiptEditView({
           model: receipt
         }));
       }).fail(function(error) {
+        LoadingDialogView.hide();
         showView( contentRegion, new PageNotFoundView());
         //TODO: Teepäs tähän utiliteetti dialogi error hässäkkä
         console.error('Could not fetch receipts', error);
@@ -161,6 +177,10 @@ define(function(require) {
     },
 
     file: function(fileName) {
+
+      showView( contentRegion, new EmptyView() );
+      LoadingDialogView.show();
+
       var promise = receiptService.fetchReceipt({
         id: _.first( fileName.split('.') )
       });
@@ -172,10 +192,14 @@ define(function(require) {
           receipt: receipt,
           file: _file
         }));
+
+        LoadingDialogView.hide();
+
       }).fail(function(error) {
         showView( contentRegion, new PageNotFoundView());
         //TODO: Teepäs tähän utiliteetti dialogi error hässäkkä
         console.error('Could not fetch receipts', error);
+        LoadingDialogView.hide();
       });
     },
 

@@ -1,12 +1,12 @@
 define(function(require) {
 
-  var Backbone = require('backbone');
   var template = require('hbs!receipt-list/receipt-list-menu');
   var Communicator = require('communicator');
+  var BaseItemView = require('base-view/base-item-view');
 
   var lastSearchText = '';
 
-  var ReceiptListMenuView = Backbone.Marionette.ItemView.extend({
+  var ReceiptListMenuView = BaseItemView.extend({
 
     template: template,
 

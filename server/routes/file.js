@@ -28,13 +28,15 @@ function validateReceiptInfo( req, receiptId ) {
 
   storage.get(receiptId, function(err, receipt) {
     if(err || !receipt) {
-      logging.log('Could not found receipt', receiptId);
-      deferred.reject(err);
+      logging.info('Receipt '+receiptId+' not found');
+      deferred.reject({ status: 404, message: "Receipt "+ receiptId +" not found"});
     }
-
     //Check that receipt is user receipt
-    if( receipt.user_id === req.user.id ) {
+    else if( receipt.user_id === req.user.id ) {
       deferred.resolve(receipt);
+    } else {
+      logging.warn('Error on uploading picture to server, receipt is not currently logged user receipt.');
+      deferred.reject({ status: 401, message: "Not authorized, you have no access to upload image to this receipt"});
     }
   });
 
@@ -48,10 +50,18 @@ function validateReceiptInfo( req, receiptId ) {
  */
 router.post('/upload', authentication.isAuthorized, multipart(), function(req, res) {
 
-  if( !req.user ) {
-    logging.error('Unauthorized access, trying upload picture');
-    return res.status(403).send({message:'Unauthorized'});
+  logging.info("Starting uploading file");
+
+  var receiptID = req.headers['receipt-id'];
+
+  if( !receiptID ) {
+    return res.status(400).send(JSON.stringify( {message:"Attribute receiptID is missing"} ));
   }
+
+  if( _.keys( req.files ).length == 0 ) {
+    return res.status(400).send(JSON.stringify( {message:"Request don't contain any file"} ));
+  }
+
 
   function generateFilePath(receiptId, fileEnding) {
 
@@ -124,8 +134,6 @@ router.post('/upload', authentication.isAuthorized, multipart(), function(req, r
     return deferred.promise;
   }
 
-  var receiptID = req.headers['receipt-id'];
-
   fs.readFile(req.files.file.path, function (err, data) {
 
     var promise = validateReceiptInfo(req, receiptID);
@@ -151,23 +159,19 @@ router.post('/upload', authentication.isAuthorized, multipart(), function(req, r
       });
 
       logging.info('Saving files', req.files.file.path );
-    }).fail(function(error) {
-      logging.error('Error on uploading picture to server, receipt is not currently logged user receipt.', error);
+      res.status(204).end();
+
+    }).fail(function(errorObject) {
+      res.status(errorObject.status).send({message: errorObject.message}).end();
     });
   });
 
-  res.status(204).end();
 });
 
 /* GET - Return all pictures */
 
 /* DELETE - Delete picture  */
-router.delete('/picture/:picture', function(req, res) {
-
-  if( !req.user ) {
-    logging.error('Unauthorized access, trying to delete picture');
-    return res.status(403).send({message:'Unauthorized'});
-  }
+router.delete('/picture/:picture', authentication.isAuthorized, function(req, res) {
 
   var pictureName = req.params.picture;
 

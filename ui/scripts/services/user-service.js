@@ -19,7 +19,7 @@ define(function(require) {
    * @return Q.promise
    */
   function authenticate(username, password) {
-    
+
     var deferred = Q.defer();
 
     $.ajax({
@@ -40,7 +40,7 @@ define(function(require) {
   }
 
   /**
-   * Fetch currently authenticated user from server, 
+   * Fetch currently authenticated user from server,
    * it user is not authenticated nothing is returned.
    * @return Q.promise
    */
@@ -51,6 +51,7 @@ define(function(require) {
       url: '/userauthenticated',
       type: 'get',
       success: function(user) {
+        console.log( user );
         _authenticatedUser = user;
         deferred.resolve(user);
       },
@@ -82,7 +83,7 @@ define(function(require) {
       }
     });
 
-    return deferred.promise;    
+    return deferred.promise;
   }
 
   function getAuthenticatedUser() {
@@ -103,8 +104,8 @@ define(function(require) {
         console.log('Not authenticated', error);
         Communicator.mediator.trigger('app:user:sessionended');
       });
-    } 
-    
+    }
+
     //Every 5 minutes
     setInterval(testIsSession, 5 * 60 * 1000);
   }

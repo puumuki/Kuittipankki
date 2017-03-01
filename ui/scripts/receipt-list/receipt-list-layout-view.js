@@ -15,4 +15,4 @@ define(function(require) {
 
   return ReceiptListLayout;
 
-});  
+});

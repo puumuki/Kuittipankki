@@ -4,7 +4,10 @@ var _              = require('underscore');
 var authentication = require('./../authentication');
 var logging        = require('../logging');
 var storage        = require('../storage-service').receiptStorage;
-var fileService = require('../file-service');
+var fileService    = require('../file-service');
+
+var receiptSchema    = require('../schemas/receipt.schema');
+var jsonSchemaValidator = require('../schemas/schema-middleware')(receiptSchema);
 
 var router = express.Router();
 
@@ -21,18 +24,18 @@ function sanitize(req){
 }
 
 function errorHandler(req, res, error) {
-  logging.error('Error',error);
-  res.status(500);
-  res.send({});
+  if( error.message === 'could not load data' ) {
+    var msg = req.params.id ? 'Receipt is not found with a given id ' + req.params.id : 'No receipts found';
+    res.status(404).send({message:msg});
+  } else {
+    logging.error('Error',error);
+    res.status(500);
+    res.send({});
+  }
 }
 
 /* POST - Save receipt. */
-router.post('/receipt', authentication.isAuthorized, function(req, res) {
-
-  if( !req.user ) {
-    logging.error('Unauthorized access, trying to create a new receipt');
-    return res.status(403).send({message:'Unauthorized'});
-  }
+router.post('/receipt', authentication.isAuthorized, jsonSchemaValidator, function(req, res) {
 
   res.setHeader('Content-Type', 'application/json');
 
@@ -44,7 +47,7 @@ router.post('/receipt', authentication.isAuthorized, function(req, res) {
     res.status(400);
     res.send(JSON.stringify(errors));
   } else {
-    logging.error('Saving a new receipt', req.body.name);
+    logging.log('Saving a new receipt', req.body.name);
     var receipt = req.body;
     receipt.user_id = req.user.id;
     var id = storage.saveSync(receipt);
@@ -54,17 +57,11 @@ router.post('/receipt', authentication.isAuthorized, function(req, res) {
 });
 
 /* PUT - Update receipt. */
-router.put('/receipt/:id', authentication.isAuthorized, function(req, res) {
-
-  if( !req.user ) {
-    return res.status(403).send({message:'Unauthorized'});
-  }
+router.put('/receipt/:id', authentication.isAuthorized, jsonSchemaValidator, function(req, res) {
 
   res.setHeader('Content-Type', 'application/json');
 
   sanitize(req);
-
-  req.checkParams('id','Receipt ID is missing');
 
   storage.get(req.params.id, function(err, receipt) {
 
@@ -110,9 +107,15 @@ router.delete('/receipt/:id', authentication.isAuthorized, function(req, res) {
   res.setHeader('Content-Type', 'application/json');
 
   storage.get(req.params.id, function(err, receipt) {
-    receipt.deleted = true;
-    storage.saveSync(receipt.id, receipt);
-    res.send(receipt);
+
+    if(err) {
+      errorHandler(req, res, err);
+    } else {
+      receipt.deleted = true;
+      storage.saveSync(receipt.id, receipt);
+      res.send(receipt);
+    }
+
   });
 });
 
@@ -126,7 +129,6 @@ router.get('/receipts', authentication.isAuthorized, function(req, res) {
       errorHandler(req, res, err);
     } else {
       var files = fileService.loadFiles();
-
       var _receipts = _.chain(receipts).map(function(receipt, id) {
         receipt.files = fileService.filterFilesByReceiptID(receipt.id, files);
         return receipt;
@@ -149,18 +151,19 @@ router.get('/receipt/:id', authentication.isAuthorized, function(req, res) {
 
     res.setHeader('Content-Type', 'application/json');
 
-    var files = fileService.loadFiles();
-    receipt.files = fileService.filterFilesByReceiptID(receipt.id, files);
-
     if( err ) {
       errorHandler(req, res, err);
     } else if( !receipt ) {
       res.status(404);
-      res.send(JSON.stringify(err));
+      res.send({message:"Receipt is not found with an id " + req.params.id});
     } else if( receipt.user_id !== req.user.id ) {
-      res.status(403);
-      res.send({});
+      res.status(404);
+      res.send({message:"Receipt is not found with an id " + req.params.id});
+      logging.warn("Unauthorized access attempt to receipt that is not signed user own. "+
+                      "The receipt id that is tried to access is " + req.params.id );
     } else {
+      var files = fileService.loadFiles();
+      receipt.files = fileService.filterFilesByReceiptID(receipt.id, files);
       res.send(JSON.stringify(receipt));
     }
   });

@@ -20,6 +20,7 @@ module.exports = function (grunt) {
     require('time-grunt')(grunt);
 
     grunt.loadNpmTasks('grunt-contrib-csslint');
+    grunt.loadNpmTasks('grunt-mocha-test');
 
     // configurable paths
     var yeomanConfig = {
@@ -56,12 +57,16 @@ module.exports = function (grunt) {
             }
         },
 
-        // mocha command
-        exec: {
-            mocha: {
-                command: 'mocha-phantomjs http://localhost:<%= connect.testserver.options.port %>/test',
-                stdout: true
-            }
+        mochaTest: {
+          test: {
+            options: {
+              reporter: 'spec',
+              quiet: false, // Optionally suppress output to standard out (defaults to false)
+              clearRequireCache: false, // Optionally clear the require cache before running tests (defaults to false)
+              noFail: false // Optionally set to not fail on failed tests (will still fail on other errors)
+            },
+            src: ['test/**/*.js']
+          },
         },
 
         csslint: {
@@ -267,15 +272,7 @@ module.exports = function (grunt) {
         ]);
     });
 
-    // todo fix these
-    grunt.registerTask('test', [
-        'clean:server',
-        'createDefaultTemplate',
-        'handlebars',
-        'compass',
-        'connect:testserver',
-        'exec:mocha'
-    ]);
+    grunt.registerTask('test', 'mochaTest');
 
     grunt.registerTask('build', [
         'jshint',

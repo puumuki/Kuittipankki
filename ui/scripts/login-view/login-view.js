@@ -40,6 +40,16 @@ define(function(require) {
       });
     },
 
+    _redirection: function() {
+      var hash = window.location.hash.substring(1);
+
+      if( hash === 'login' ) {
+        return '';
+      } else {
+        return hash;
+      }
+    },
+
     _login: function(event) {
       event.preventDefault();
       var promise = userService.authenticate(this.ui.username.val(),
@@ -47,7 +57,7 @@ define(function(require) {
 
       promise.then(_.bind(function(data) {
         this._loginFailed = false;
-        App.router.navigate('',{trigger:true} );
+        App.router.navigate( this._redirection(), {trigger:true} );
       }, this)).fail(_.bind(function(error) {
         this._loginFailed = true;
         this.render();

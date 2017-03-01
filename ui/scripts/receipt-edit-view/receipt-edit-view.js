@@ -2,7 +2,6 @@
 
   var template = require('hbs!receipt-edit-view/receipt-edit');
 
-  var Backbone = require('backbone');
   var moment = require('moment');
   var Communicator = require('communicator');
 
@@ -14,6 +13,8 @@
 
   var LoadingDialogView   = require('loading-dialog-view/loading-dialog-view');
   var ImageDialogView = require('image-dialog-view/image-dialog-view');
+  var BaseItemView = require('base-view/base-item-view');
+
   var _ = require('underscore');
 
   require('bootstraptagsinput');
@@ -23,7 +24,7 @@
     return date.isValid() ? date.format('YYYY-MM-DD HH:mm:ss') : '';
   }
 
-  var ReceiptEditView = Backbone.Marionette.ItemView.extend({
+  var ReceiptEditView = BaseItemView.extend({
 
     attachView: effectService.fadeIn,
 
@@ -52,6 +53,7 @@
     },
 
     initialize: function() {
+      ReceiptEditView.__super__.initialize.call(this);
       Communicator.mediator.on('app:user:logout',_.bind(this._onLogout, this));
     },
 

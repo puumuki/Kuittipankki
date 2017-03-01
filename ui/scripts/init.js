@@ -80,10 +80,12 @@ require.config({
     json2: '../bower_components/require-handlebars-plugin/hbs/json2',
     hbs: '../bower_components/require-handlebars-plugin/hbs',
 
+    //Fuse is a full JavaScript fuzzy-search implementation that searches accross the keys of every record in a list.
     fuse: '../bower_components/fuse.js/src/fuse'
   },
 
   hbs: {
-    disableI18n: true
+    disableI18n: true,
+    disableHelpers: true,
   }
 });

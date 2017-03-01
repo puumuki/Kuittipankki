@@ -2,16 +2,16 @@ define(function(require) {
 
   var _ = require('underscore');
 
-  var Backbone = require('backbone');
   var template = require('hbs!menu-view/menu');
   var Communicator = require('communicator');
+  var BaseItemView = require('base-view/base-item-view');
 
   var MenuItems = {
     'Receipts' : 'receipts',
     'Reports' : 'reports'
   };
 
-  var RecipeListView = Backbone.Marionette.ItemView.extend({
+  var RecipeListView = BaseItemView.extend({
 
     template: template,
 
@@ -21,10 +21,12 @@ define(function(require) {
     },
 
     events: {
-      'click #menu-bar a' : '_onNavbarToggleClicked'
+      'click #menu-bar a' : '_onNavbarToggleClicked',
+      'click .translation' : '_changeLanguage'
     },
 
     initialize: function(){
+      RecipeListView.__super__.initialize.call(this);
       Communicator.mediator.on('app:user:authenticated',_.bind( this._onAuthenticated, this));
       Communicator.mediator.on('app:user:logout', _.bind( this._onLogout, this));
       Communicator.mediator.on('app:route', _.bind( this._routeChanged, this));
@@ -37,6 +39,14 @@ define(function(require) {
         user: this._userobject,
         active: this._active
       });
+    },
+
+    _changeLanguage: function(event) {
+      event.preventDefault();
+      var language = $(event.currentTarget).data('lang');
+      window.currentLanguage = language;
+      Communicator.mediator.trigger('language:change', language);
+      console.log("Changing language " + language);
     },
 
     _routeChanged: function(route) {

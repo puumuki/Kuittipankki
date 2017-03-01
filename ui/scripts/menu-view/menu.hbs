@@ -8,21 +8,30 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand title" href="#">Kuittipankki</a>
+      <a class="navbar-brand title" href="#">{{t "main-menu.title"}}</a>
     </div>
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
-        <li {{#equals active "receipts"}}class="active"{{/equals}}><a href="#">Kuitit</a></li>
+        <li {{#equals active "receipts"}}class="active"{{/equals}}><a href="#">{{t "main-menu.receipts"}}</a></li>
       </ul>
       <ul class="nav navbar-nav">
-        <li {{#equals active "reports"}}class="active"{{/equals}}><a href="#/reports">Raportit</a></li>
+        <li {{#equals active "reports"}}class="active"{{/equals}}><a href="#/reports">{{t "main-menu.reports"}}</a></li>
       </ul>
+
       <ul class="nav navbar-nav navbar-right">
         {{#if user}}
-        <li class=""><a href="#logout">{{user.username}} uloskirjaudu</a></li>
+        <li class=""><a href="#logout">{{t "main-menu.sign-out" username=user.username }} </a></li>
         {{else}}
-        <li class="active"><a href="#login">Kirjaudu</a></li>
+        <li class="active"><a href="#login">{{t "main-menu.sign-in"}}</a></li>
         {{/if}}
+
+      <ul class="nav navbar-nav">
+        <li><a class="translation" data-lang='fi' href="#/lang/fi">Suomi</a></li>
+      </ul>
+      <ul class="nav navbar-nav">
+        <li><a class="translation" data-lang='en' href="#/lang/en">Englanti</a></li>
+      </ul>
+
       </ul>
     </div><!--/.nav-collapse -->
   </div><!--/.container-fluid -->

@@ -13,9 +13,8 @@
           <div class="panel-body form-horizontal">
 
             <div class="form-group">
-              <label for="name"
-                     class="col-md-3 col-sm-3 control-label">
-                Tuotteen nimi
+              <label for="name" class="col-md-3 col-sm-3 control-label">
+                {{t "receipt.productname"}}
               </label>
               <div class="col-md-9 col-sm-9">
                 <input id="name" type="text" name="name" placeholder="Tuotteen nimi" class="form-control" value="{{name}}" {{#if readonly }}readonly{{/if}} />
@@ -25,7 +24,7 @@
             <div class="form-group">
               <label for="purchaseDate"
                      class="col-md-3 col-sm-3 control-label">
-                Hankintapäivä
+                {{t "receipt.purchasedate"}}
               </label>
               <div class="col-md-9 col-sm-9">
                 <input id="purchaseDate" type="text" name="purchaseDate" class="datepicker form-control" value="{{{datetime purchaseDate}}}" {{#if readonly }}readonly{{/if}} />
@@ -35,7 +34,7 @@
             <div class="form-group">
               <label for="warrantlyEndDate"
                      class="col-md-3 col-sm-3 control-label">
-                Takuupäättyy
+                {{t "receipt.guaranteedate"}}
               </label>
               <div class="col-md-9 col-sm-9">
                 <input id="warrantlyEndDate" type="text" name="warrantlyEndDate" class="datepicker form-control" value="{{{datetime warrantlyEndDate}}}" {{#if readonly }}readonly{{/if}} />
@@ -45,7 +44,7 @@
             <div class="form-group">
               <label for="store"
                      class="col-md-3 col-sm-3 control-label">
-                Kauppa
+                {{t "receipt.store"}}
               </label>
               <div class="col-md-9 col-sm-9">
                 <input id="store" type="text" name="store" placeholder="Hankintapaikka" class="form-control" value="{{store}}" {{#if readonly }}readonly{{/if}} />
@@ -55,7 +54,7 @@
             <div class="form-group">
               <label for="price"
                      class="col-md-3 col-sm-3 control-label">
-                Tuotteen hinta
+                {{t "receipt.price"}}
               </label>
               <div class="col-md-9 col-sm-9">
                 <input id="price" type="text" name="price" placeholder="20 €" class="form-control" value="{{price}}" {{#if readonly }}readonly{{/if}} />
@@ -65,7 +64,7 @@
             <div class="form-group">
               <label for="registered"
                      class="col-md-3 col-sm-3 control-label">
-                Rekisteröity
+                {{t "receipt.registered"}}
               </label>
               <div class="col-md-9 col-sm-9">
                 <input id="registered" type="text" name="registered" class="datepicker form-control" value="{{{datetime registered}}}" {{#if readonly }}readonly{{/if}} />
@@ -75,7 +74,7 @@
             <div class="form-group">
               <label for="description"
                      class="col-md-3 col-sm-3 control-label">
-                Muuta
+                {{t "receipt.description"}}
               </label>
               <div class="col-md-9 col-sm-9">
                 <textarea id="description" name="description" class="form-control shadow" {{#if readonly }}readonly{{/if}}>{{description}}</textarea>
@@ -85,7 +84,7 @@
             <div class="form-group">
               <label for="tags"
                      class="col-md-3 col-sm-3 control-label">
-                Avainsanat
+                {{t "receipt.keywords"}}
               </label>
               <div class="col-md-9 col-sm-9">
                 <input id="tags" type="text" name="tags" class="tags form-control" value="{{tags}}" {{#if readonly }}readonly{{/if}} />
@@ -99,20 +98,20 @@
 
             <div class="row top-margin hidden-sm hidden-xs">
               <div class="col-lg-6 col-md-6">
-                <button type="button" name="delete" class="btn btn-danger">Poista</button>
-                <button type="button" name="clone" class="btn btn-default">Monista</button>
+                <button type="button" name="delete" class="btn btn-danger">{{t "btn.delete"}}</button>
+                <button type="button" name="clone" class="btn btn-default">{{t "btn.copy"}}</button>
               </div>
               <div class="col-lg-6 col-md-6 text-right">
                 {{#unless readonly}}
-                <button type="button" name="save" class="btn btn-default">Tallenna</button>
+                <button type="button" name="save" class="btn btn-default">{{t "btn.save"}}</button>
                 {{/unless}}
                 {{#if id}}
                 <a href="#receipt/view/{{id}}">
-                  <button type="button" name="cancel" class="btn btn-default">Peruuta</button>
+                  <button type="button" name="cancel" class="btn btn-default">{{t "btn.cancel"}}</button>
                 </a>
                 {{else}}
                 <a href="#">
-                  <button type="button" name="cancel" class="btn btn-default">Peruuta</button>
+                  <button type="button" name="cancel" class="btn btn-default">{{t "btn.cancel"}}</button>
                 </a>
                 {{/if}}
               </div>
@@ -120,18 +119,18 @@
 
             <div class="row top-margin hidden-lg hidden-md">
               <div class="col-sm-12 col-xs-12">
-                <button type="button" name="delete" class="btn btn-danger">Poista</button>
-                <button type="button" name="clone" class="btn btn-default">Monista</button>
+                <button type="button" name="delete" class="btn btn-danger">{{t "btn.delete"}}</button>
+                <button type="button" name="clone" class="btn btn-default">{{t "btn.copy"}}</button>
                 {{#unless readonly}}
-                <button type="button" name="save" class="btn btn-default">Tallenna</button>
+                <button type="button" name="save" class="btn btn-default">{{t "btn.save"}}</button>
                 {{/unless}}
                 {{#if id}}
                 <a href="#receipt/view/{{id}}">
-                  <button type="button" name="cancel" class="btn btn-default">Peruuta</button>
+                  <button type="button" name="cancel" class="btn btn-default">{{t "btn.cancel"}}</button>
                 </a>
                 {{else}}
                 <a href="#">
-                  <button type="button" name="cancel" class="btn btn-default">Peruuta</button>
+                  <button type="button" name="cancel" class="btn btn-default">{{t "btn.cancel"}}</button>
                 </a>
                 {{/if}}
               </div>
