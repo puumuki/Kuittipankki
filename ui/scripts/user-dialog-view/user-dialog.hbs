@@ -1,0 +1,38 @@
+<div class="modal fade" tabindex="-1" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">{{t "user.dialog.title"}}</h4>
+      </div>
+
+      <div class="modal-body">
+
+          <div class="row">
+            <div class="col-md-3 col-sm-3 col-xs-6">
+              <label for="name" class="button-label">{{t "user.language"}}</label>
+            </div>
+            <div class="col-md-9 col-sm-6 col-xs-6 text-right">
+              <div class="btn-group" role="group" aria-label="...">
+                <button type="button" class="lang btn btn-default {{#if fi}}btn-primary{{/if}}" data-lang="fi">{{t "user.language.fi"}}</button>
+                <button type="button" class="lang btn btn-default {{#if en}}btn-primary{{/if}}" data-lang="en">{{t "user.language.en"}}</button>
+              </div>
+            </div>
+          </div>
+
+      </div>
+
+      <div class="modal-footer">
+
+        <button type="button"
+                class="btn btn-default save"
+                aria-label="Save">{{t "btn.save"}}</button>
+
+        <button type="button"
+                class="btn btn-default"
+                data-dismiss="modal"
+                aria-label="Close">{{t "btn.cancel"}}</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->

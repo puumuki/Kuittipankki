@@ -24,3 +24,10 @@ ui/templates/.DS_Store
 *.sublime-workspace
 server/data/*
 *.pid
+server/test/data/file-meta.json
+
+server/test/data/receipts.json
+
+server/kuittipankki.pid
+
+server/test/helloworld.txt

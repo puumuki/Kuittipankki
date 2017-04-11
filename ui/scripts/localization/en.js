@@ -46,7 +46,14 @@ define(function(require) {
     'main-menu.title'         : 'Kuittipankki',
     'receipt-list.sort.name'  : 'Name',
     'receipt-list.sort.date'  : 'Date',
-    'receipt-list.new-receipt': 'New'
+    'receipt-list.new-receipt': 'New',
+    'user.dialog.title'       : 'User Settings',
+    'user.language'           : 'Translation',
+    'user.language.fi'        : 'Finnish',
+    'user.language.en'        : 'English',
+    'report.totalcount'       : 'Receipt total count {{count}}',
+    'report.export.csv'       : 'Export as CSV',
+    'report.export.json'      : 'Export as JSON'
   };
 
 

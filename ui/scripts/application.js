@@ -15,17 +15,19 @@ define(function(require) {
 
   App.router = new Router();
 
-  var localizations = localizationService.getLocalizations('fi');
-
-  //Datepicker localizations
-  $.datepicker.regional.fi = localizations.datePickerTranslation;
-  $.datepicker.setDefaults( localizations.datePickerTranslation );
-
   /* Add initializers here */
   App.addInitializer( function () {
 
     userService.fetchAuthenticatedUser().then(function(user) {
       Communicator.mediator.trigger('app:user:authenticated', user);
+
+      var localizations = localizationService.getLocalizations(user.get('lang'));
+
+      //Datepicker localizations
+      $.datepicker.regional.fi = localizations.datePickerTranslation;
+      $.datepicker.setDefaults( localizations.datePickerTranslation );
+
+      window.currentLanguage = user.get('lang');
     }).fail(function() {
       Communicator.mediator.trigger('app:user:notauthenticated');
     });
@@ -33,7 +35,6 @@ define(function(require) {
     Communicator.mediator.trigger('app:start');
 
     Backbone.history.start();
-
   });
 
   //Exposing Application to global scope

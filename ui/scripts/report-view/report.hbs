@@ -2,25 +2,25 @@
 <table class="table table-striped">
 <thead>
   <tr>
-    <th colspan="4">Kuitteja yhteensä {{count}} kpl</th>
-    <th colspan="2"><a href="data:{{{exportCSV}}}">Vie CSV tiedostona</a></th>
-    <th><a href="data:{{{exportJSON}}}" download="receipts.json">Vie JSON tiedostona</a></th>
+    <th colspan="4">{{t "report.totalcount" count=count }}</th>
+    <th colspan="2"><a href="data:{{{exportCSV}}}">{{t "report.export.csv"}}</a></th>
+    <th><a href="data:{{{exportJSON}}}" download="receipts.json">{{t "report.export.json"}}</a></th>
   </tr>
   <tr>
-    <th>Nimi</th>
-    <th>Kauppa</th>
-    <th>Ostopäivämäärä</th>
-    <th>Takuu päättyy</th>
-    <th>Rekisteröity</th>
-    <th>Hinta</th>
-    <th>Tagit</th>
+    <th>{{t "receipt.productname"}}</th>
+    <th>{{t "receipt.store"}}</th>
+    <th>{{t "receipt.purchasedate"}}</th>
+    <th>{{t "receipt.guaranteedate"}}</th>
+    <th>{{t "receipt.registered"}}</th>
+    <th>{{t "receipt.price"}}</th>
+    <th>{{t "receipt.keywords"}}</th>
   </tr>
 </thead>
 <tbody>
 {{#each receipts}}
 <tr>
   <td><a href="#/receipt/view/{{id}}">
-    {{#if name}}{{name}}{{else}} -- ei nimeä -- {{/if}}
+    {{#if name}}{{name}}{{else}} {{t "receipt.noname"}} {{/if}}
     </a>
   </td>
   <td>{{store}}</td>
@@ -38,7 +38,7 @@
 </tbody>
 <tfooter>
 <tr>
-  <th colspan="7">Kuitteja yhteensä {{count}} kpl</th>
+  <th colspan="7">{{t "report.totalcount" count=count }}</th>
 </tr>
 </tfooter>
 </table>

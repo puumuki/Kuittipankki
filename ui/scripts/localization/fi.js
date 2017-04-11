@@ -33,6 +33,7 @@ define(function(require) {
     'receipt.keywords'        : 'Avainsanat',
     'receipt.purchaced-since' : 'Ostettu {{fromPurchase}} sitten',
     'receipt.age'             : 'y [vuotta] d [päivää]',
+    'receipt.noname'          : '-- ei nimeä --',
     'btn.edit'                : 'Muokkaa',
     'btn.copy'                : 'Kopio',
     'btn.delete'              : 'Poista',
@@ -47,7 +48,14 @@ define(function(require) {
     'receipt-list.no-receipts': 'Ei yhtään kuitteja saatavilla',
     'receipt-list.sort.name'  : 'Nimi',
     'receipt-list.sort.date'  : 'Päivämäärä',
-    'receipt-list.new-receipt': 'Uusi'
+    'receipt-list.new-receipt': 'Uusi',
+    'user.dialog.title'       : 'Käyttäjän asetukset',
+    'user.language'           : 'Kieli',
+    'user.language.fi'        : 'Suomi',
+    'user.language.en'        : 'Englanti',
+    'report.totalcount'       : 'Kuitteja yhteensä {{count}} kpl',
+    'report.export.csv'       : 'Vie CSV tiedostona',
+    'report.export.json'      : 'Vie JSON tiedostona'
   };
 
   return {

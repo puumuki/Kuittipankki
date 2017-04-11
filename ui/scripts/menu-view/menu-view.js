@@ -5,6 +5,7 @@ define(function(require) {
   var template = require('hbs!menu-view/menu');
   var Communicator = require('communicator');
   var BaseItemView = require('base-view/base-item-view');
+  var UserDialogView = require('user-dialog-view/user-dialog-view');
 
   var MenuItems = {
     'Receipts' : 'receipts',
@@ -22,7 +23,7 @@ define(function(require) {
 
     events: {
       'click #menu-bar a' : '_onNavbarToggleClicked',
-      'click .translation' : '_changeLanguage'
+      'click .user' : '_openUserDialog'
     },
 
     initialize: function(){
@@ -49,6 +50,11 @@ define(function(require) {
       console.log("Changing language " + language);
     },
 
+    _openUserDialog: function(event) {
+      event.preventDefault();
+      new UserDialogView();
+    },
+
     _routeChanged: function(route) {
       this._active = MenuItems.Receipts;
 
@@ -70,7 +76,7 @@ define(function(require) {
     },
 
     _onAuthenticated: function(data) {
-      this._userobject = data;
+      this._userobject = data.toJSON();
       this.render();
     },
 

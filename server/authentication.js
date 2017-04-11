@@ -43,7 +43,8 @@ var authenticationStrategy = new LocalStrategy(
         logging.info('User ', user.username, ' authenticated');
         return done(null, {
           id: user.id,
-          username: user.username
+          username: user.username,
+          lang: user.lang
         });
       } else {
         logging.info('User ', user.username, ' authentication failed');
@@ -74,7 +75,8 @@ function loginRouteResponse(req, res) {
     } else {
       res.send({
         id: user.id,
-        username: user.username
+        username: user.username,
+        lang: user.lang
       });
     }
   });
