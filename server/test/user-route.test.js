@@ -27,7 +27,7 @@ describe("Testing /user route endpoints",function() {
       .set('Content-Type','application/x-www-form-urlencoded; charset=UTF-8')
       .send({'username':'teemuki'})
       .send({'password':''})
-      .expect(400, done)
+      .expect(400, done);
   });
 
   it("/POST login - no attributes -> 400 (bad request) ", function(done) {
@@ -35,7 +35,7 @@ describe("Testing /user route endpoints",function() {
       .post('/login')
       .type('form')
       .set('Content-Type','application/x-www-form-urlencoded; charset=UTF-8')
-      .expect(400, done)
+      .expect(400, done);
   });
 
   it("/POST login - pass username and password wihtout value -> 400 (bad request) ", function(done) {
@@ -45,7 +45,7 @@ describe("Testing /user route endpoints",function() {
       .set('Content-Type','application/x-www-form-urlencoded; charset=UTF-8')
       .send({'username':''})
       .send({'password':''})
-      .expect(400, done)
+      .expect(400, done);
   });
 
   it("/GET users - fetch all users informations, without signing in -> 403 ", function(done) {

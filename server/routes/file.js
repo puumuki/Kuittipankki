@@ -58,7 +58,7 @@ router.post('/upload', authentication.isAuthorized, multipart(), function(req, r
     return res.status(400).send(JSON.stringify( {message:"Attribute receiptID is missing"} ));
   }
 
-  if( _.keys( req.files ).length == 0 ) {
+  if( _.keys( req.files ).length === 0 ) {
     return res.status(400).send(JSON.stringify( {message:"Request don't contain any file"} ));
   }
 

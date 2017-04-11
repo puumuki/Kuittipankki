@@ -68,7 +68,7 @@ describe("Testing /receipt route endpoints", function() {
           .end( (req, res) => {
             expect( _.isArray( res.body ) ).equal(true);
             done();
-          })
+          });
      });
   });
 
@@ -83,7 +83,7 @@ describe("Testing /receipt route endpoints", function() {
           .end( (req, res) => {
             expect( res.body.message ).equal('Receipt is not found with a given id desudesu');
             done();
-          })
+          });
      });
   });
 
@@ -98,7 +98,7 @@ describe("Testing /receipt route endpoints", function() {
           .end( (req, res) => {
             expect( res.body.message ).equal('Receipt is not found with a given id desudesu');
             done();
-          })
+          });
      });
   });
 

@@ -1,7 +1,5 @@
 process.env.NODE_ENV = 'test';
 
-const chai = require('chai');
-const expect = chai.expect; // we are using the "expect" style of Chai
 const request = require('supertest');
 const app = require('../app');
 
@@ -24,7 +22,7 @@ describe("Testing /login route",function() {
       .set('Content-Type','application/x-www-form-urlencoded; charset=UTF-8')
       .send({'username':'teemuki'})
       .send({'password':''})
-      .expect(400, done)
+      .expect(400, done);
   });
 
   it("/POST login - no attributes -> 400 (bad request) ", function(done) {
@@ -32,7 +30,7 @@ describe("Testing /login route",function() {
       .post('/login')
       .type('form')
       .set('Content-Type','application/x-www-form-urlencoded; charset=UTF-8')
-      .expect(400, done)
+      .expect(400, done);
   });
 
   it("/POST login - pass username and password wihtout value -> 400 (bad request) ", function(done) {
@@ -42,7 +40,7 @@ describe("Testing /login route",function() {
       .set('Content-Type','application/x-www-form-urlencoded; charset=UTF-8')
       .send({'username':''})
       .send({'password':''})
-      .expect(400, done)
+      .expect(400, done);
   });
 
 });
