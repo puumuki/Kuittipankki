@@ -67,7 +67,7 @@ define(function(require) {
    * @return {Function} sorter function
    */
   var dateTimeSorter = function(attributeName) {
-    return dateSorter(attributeName, 'YYYY-MM-DD hh:mm:ss')
+    return dateSorter(attributeName, 'YYYY-MM-DD hh:mm:ss');
   };
 
   return {

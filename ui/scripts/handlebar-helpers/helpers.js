@@ -22,7 +22,7 @@ define(function(require) {
 
     var translationObject = null;
 
-    if( _.isEmpty( args[args.length-1]) || args.length == 1 ) {
+    if( _.isEmpty( args[args.length-1]) || args.length === 1 ) {
       return translation;
     }
     else if( !_.isEmpty( args[args.length-1].hash) ) {
