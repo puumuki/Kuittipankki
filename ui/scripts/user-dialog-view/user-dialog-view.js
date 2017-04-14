@@ -19,7 +19,6 @@ define(function(require) {
     initialize: function() {
       this._user = userService.getAuthenticatedUser();
       regionManager.getRegion('dialog').show(this);
-      console.log( !!this._user );
     },
 
     _onCancelClick: function(event) {
