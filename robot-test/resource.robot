@@ -8,7 +8,7 @@ Library           Selenium2Library
 
 *** Variables ***
 ${SERVER}         localhost:9090
-${BROWSER}        Firefox
+${BROWSER}        safari
 ${DELAY}          0.5
 ${VALID USER}     teemuki
 ${VALID PASSWORD}    salakala

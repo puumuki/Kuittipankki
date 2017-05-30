@@ -6,7 +6,7 @@ Documentation     A test suite with a single test for valid login.
 Resource          resource.robot
 
 *** Variables ***
-${RECEIPT NAME}    Ferrari
+${RECEIPT NAME}    XDXDXDXD
 ${RECEIPT PRICE}   20
 ${RECEIPT PURCHASEDATE}   01.01.2017
 ${RECEIPT REGISTERED}   29.01.2017
@@ -32,7 +32,7 @@ Create Receipt
     Input Text    price    ${RECEIPT PRICE}
     Input Text    css=.bootstrap-tagsinput>input     ${RECEIPT TAG}
     Press Key     css=.bootstrap-tagsinput>input     \\13
-    Click Element    save
+    Click Element     save2
     Wait Until Page Contains Element    receipt-view-form
     Element Should Contain    name   ${RECEIPT NAME}
     Element Should Contain    purchaseDate    ${RECEIPT PURCHASEDATE}
@@ -40,6 +40,9 @@ Create Receipt
     Element Should Contain    warrantlyEndDate    ${RECEIPT WARRANTLY END DATE}
     Element Should Contain    store    ${RECEIPT STORE}
     Element Should Contain    price    ${RECEIPT PRICE}
+    Click Link    edit
+    Wait Until Page Contains Element    receipt-edit-form
+    Click Link    delete
+    Wait Until Page Contains Element    confirmation-dialog
+    Click Element     ok
     [Teardown]    Close Browser
-
-
