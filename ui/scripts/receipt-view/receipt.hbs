@@ -35,14 +35,14 @@
                 <label for="date">{{t "receipt.purchasedate"}}</label>
               </div>
               <div class="col-md-9 col-sm-6 col-xs-6">
-                <span id="purchaseDate">{{datetime purchaseDate}}</span>
+                <span id="purchaseDate">{{datetime purchaseDate "DD.MM.YYYY"}}</span>
               </div>
             </div>
 
             <div class="row top-margin ">
               <div class="col-md-3 col-sm-3 col-xs-6"><label for="varrantlyend">{{t "receipt.guaranteedate"}}</label></div>
               <div class="col-md-9 col-sm-6 col-xs-6 text-left">
-                <span id="warrantlyEndDate">{{{datetime warrantlyEndDate}}}</span>
+                <span id="warrantlyEndDate">{{{datetime warrantlyEndDate "DD.MM.YYYY"}}}</span>
               </div>
             </div>
 
@@ -69,7 +69,7 @@
                 <label for="varrantlyend">{{t "receipt.registered"}}</label>
               </div>
               <div class="col-md-9 col-sm-6 col-xs-6">
-                <span id="registered">{{datetime registered}}</span>
+                <span id="registered">{{datetime registered "DD.MM.YYYY"}}</span>
               </div>
             </div>
 

@@ -40,15 +40,26 @@ define(function(require) {
   }
 
   /**
-   * TODO
+   * Format given value as a DD.MM.YYYY HH:mm format.
+   * @param {string} value
+   * @param {string} format
+   * @return {string} html
    */
   function dateTimeHelper(value, format) {
+
+    var _format = 'DD.MM.YYYY HH:mm';
+
+    if( typeof( format ) === 'string' ) {
+      _format = format;
+    }
+
     if( moment(value).isValid() ) {
-      return new hbs.SafeString(moment(value).format('DD.MM.YYYY HH:mm'));
+      return new hbs.SafeString(moment(value).format(_format));
     } else {
       return '';
     }
   }
+
 
   /**
    * TODO
