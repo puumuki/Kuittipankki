@@ -42,7 +42,7 @@ Create Receipt
     Element Should Contain    price    ${RECEIPT PRICE}
     Click Link    edit
     Wait Until Page Contains Element    receipt-edit-form
-    Click Link    delete
+    Click Element    css=#delete
     Wait Until Page Contains Element    confirmation-dialog
     Click Element     ok
     [Teardown]    Close Browser
