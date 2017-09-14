@@ -1,15 +1,20 @@
 var express        = require('express');
-var router         = express.Router();
 
 //var crypto         = require('crypto');
 var _              = require('underscore');
-var storage        = require('../storage-service').userStorage;
 
 var authentication = require('./../authentication');
+var contenType     = require('../contenttype');
 
 var userSchema     = require('../schemas/user.schema');
 var jsonSchemaValidator = require('../schemas/schema-middleware')(userSchema);
+var userDb         = require('../db/user.db');
+var logging             = require('../logging');
 
+var router         = express.Router();
+
+//Set header 'Content-Type', 'application/json in all router routes
+router.use(contenType);
 
 //TODO validointi, autentikointi
 //https://github.com/flosse/json-file-store
@@ -54,31 +59,30 @@ var jsonSchemaValidator = require('../schemas/schema-middleware')(userSchema);
  */
 router.put('/user/:id', authentication.isAuthorized, jsonSchemaValidator, function(req, res) {
 
-  res.setHeader('Content-Type','application/json');
-
-  storage.get(req.params.id, function(err, user) {
-
-    if( err ) {
-      return res.status(404).send(JSON.stringify(err));
-    }
+  userDb.find(req.params.id).then(function( user ) {
 
     if( user ) {
 
-      user.username = req.body.username;
+      user.username= req.body.username;
       user.lang = req.body.lang;
 
-      storage.saveSync(req.params.id,user);
-
-      res.send({
-        id: user.id,
-        username: user.username,
-        lang: user.lang ? user.lang : 'fi'
+      userDb.save(user).then(function(user) {
+        res.send(user.toJSON());
+      }).catch(function(error) {
+        res.status(400).send( error );
       });
 
     } else {
-      res.status(500);
-      res.send({msg: "We should never end up here :<"});
+
+      res.status(404).send({
+        msg: "User resource not found"
+      });
     }
+
+  }).catch(function(error) {
+      logging.error("Error while updating user resource", req.params.id, error);
+      res.status(500);
+      res.send({msg: "Internal server error"});
   });
 
 });
@@ -92,20 +96,24 @@ router.put('/user/:id', authentication.isAuthorized, jsonSchemaValidator, functi
  */
 router.get('/users', authentication.isAuthorized, function(req, res) {
 
-  storage.all(function(err, users) {
+  userDb.findAll().then(function(users) {
 
-    if( err ) {
-      return res.status(500).send({msg:"Something whent wrong", errors: err});
+    try {
+      var _users = _.map( users, function(user) {
+        return user.toJSON();
+      });
+      res.send(_users);
+    } catch(error) {
+      logging.error( "Error while fetching users from the database", error );
+      res.status(500).send({
+        msg: "Internal server error"
+      });
     }
 
-    res.setHeader('Content-Type', 'application/json');
-
-    var usersArray = _.map( users, function(user, key ) {
-      return user;
-    });
-
-    res.send(JSON.stringify(usersArray));
+  }).catch(function(error) {
+    res.status(500).send({msg:"Something whent wrong", errors: error});
   });
+
 });
 
 /**
@@ -118,17 +126,20 @@ router.get('/users', authentication.isAuthorized, function(req, res) {
  */
 router.get('/user/:id', authentication.isAuthorized, function(req, res) {
 
-  storage.get(req.params.id, function(err, data) {
-
-    res.setHeader('Content-Type', 'application/json');
-
-    if( err ) {
+  userDb.find(req.params.id).then(function(user) {
+    if( !user ) {
       res.status(404);
-      res.send(JSON.stringify(err));
+      res.send({message:"User not found"});
     } else {
-      res.send(JSON.stringify(data));
+      res.send(user.toJSON());
     }
+  }).catch(function(error) {
+    logging.error("Error fetching /user/:", req.params.id, error );
+    res.status(500).send({
+      message: "Internal server error"
+    });
   });
+
 });
 
 /**
@@ -141,24 +152,22 @@ router.get('/user/:id', authentication.isAuthorized, function(req, res) {
 router.get('/userauthenticated', function(req, res) {
   if( req.user ) {
 
-    storage.get(req.user.id, function(err, user) {
+    userDb.find( req.user.userId ).then(function(user) {
 
-      if( err ) {
-        return res.status(403).res.send({
-          message: 'Session is expired'
-        });
+      if( user ) {
+        res.send(user.toJSON());
+      } else {
+        res.status(403);
+        res.send({message:'Unauthrorized'});
       }
 
-      res.send({
-        id: user.id,
-        username: user.username,
-        lang: user.lang ? user.lang : 'fi'
+    }).fail(function(error) {
+      return res.status(403).res.send({
+        message: 'Session is expired'
       });
     });
-  } else {
-    res.status(403);
-    res.send({message:'Unauthrorized'});
   }
+
 });
 
 module.exports = router;

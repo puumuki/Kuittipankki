@@ -67,7 +67,8 @@ define(function(require) {
     serializeData: function() {
       return _.extend(ReceiptView.__super__.serializeData.call(this), {
         readonly: !userService.getAuthenticatedUser(),
-        fromPurchase: this._durationFromDate(this.model.get('purchaseDate'))
+        fromPurchase: this._durationFromDate(this.model.get('purchaseDate')),
+        tags: this.model.get('tags').toJSON()
       });
     },
 

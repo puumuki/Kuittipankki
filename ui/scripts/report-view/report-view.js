@@ -1,7 +1,7 @@
 define(function(require) {
 
   var Backbone = require('backbone');
-  var ReceiptCollection = require('receipt-collection');
+  var ReceiptCollection = require('collections/receipt-collection');
   var template = require('hbs!report-view/report');
 
   var _ = require('underscore');

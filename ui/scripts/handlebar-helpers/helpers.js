@@ -36,7 +36,6 @@ define(function(require) {
       return hbs.compile( translation )( translationObject );
     }
 
-
   }
 
   /**
@@ -60,13 +59,9 @@ define(function(require) {
     }
   }
 
-
-  /**
-   * TODO
-   */
   function fileUrlHelper( fileObject ) {
 
-    if( fileObject.mimetype.includes('image') ) {
+    if( fileObject.mimetype && fileObject.mimetype.includes('image') ) {
       return new hbs.SafeString('#files/'+ fileObject.filename);
     } else {
       return new hbs.SafeString('files/'+ fileObject.filename);
@@ -96,7 +91,6 @@ define(function(require) {
     return options.inverse(this);
   }
 
-
   hbs.registerHelper('equals', equals);
   hbs.registerHelper('datetime', dateTimeHelper);
   hbs.registerHelper('datehourminutetime', dateTimeHelper);
@@ -110,6 +104,9 @@ define(function(require) {
    */
   return {
     translate: translate,
+    fileUrlHelper: fileUrlHelper,
+    equals:equals,
+    dateTimeHelper: dateTimeHelper,
     markdownHelper: markdownHelper
   };
 

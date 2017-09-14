@@ -38,7 +38,12 @@ var settings = {
   /**
    * Log directory
    */
-  log_directory: path.join(__dirname, 'logs')
+  log_directory: path.join(__dirname, 'logs'),
+
+  /**
+   * Database connection string
+   */
+   database: 'postgres://kuittipankki:kuittipankki@localhost:5432/kuittipankki'
 };
 
 module.exports = settings;

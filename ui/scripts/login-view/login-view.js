@@ -24,8 +24,8 @@ define(function(require) {
     ui: {
       'content' : '.row',
       'error'   : '.alert-warning',
-      'username':'input[name="username"]',
-      'password':'input[name="password"]'
+      'username': 'input[name="username"]',
+      'password': 'input[name="password"]'
     },
 
     events: {

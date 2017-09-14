@@ -15,6 +15,7 @@ var fileRouter        = require('./routes/file');
 var indexRouter       = require('./routes/index');
 var usersRouter       = require('./routes/user');
 var receiptsRouter    = require('./routes/receipts');
+var tagRouter         = require('./routes/tags');
 
 var authentication    = require('./authentication');
 var logging           = require('./logging');
@@ -72,6 +73,7 @@ app.use('/', fileRouter);
 app.use('/', indexRouter);
 app.use('/', usersRouter);
 app.use('/', receiptsRouter);
+app.use('/', tagRouter);
 
 app.get('/logout', function(req, res){
   req.logout();

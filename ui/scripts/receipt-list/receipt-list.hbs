@@ -3,10 +3,10 @@
 
     <div class="list-group top-margin">
       {{#each receipts}}
-         <a href="#receipt/view/{{id}}" class="list-group-item">
+         <a href="#receipt/view/{{receiptId}}" class="list-group-item">
           <b>{{name}}</b> {{datetime purchaseDate}}
           {{#each tags}}
-            <span data-tag="{{this}}" class="tag-link badge badge-info hidden-xs">{{this}}</span>
+            <span data-tag="{{id}}" class="tag-link badge badge-info hidden-xs">{{name}}</span>
           {{/each}}
         </a>
       {{else}}

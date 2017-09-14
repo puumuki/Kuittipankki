@@ -1,12 +1,12 @@
 define(function(require) {
 
-  var ReceiptCollection = require('receipt-collection');
+  var ReceiptCollection = require('collections/receipt-collection');
   var Q = require('q');
   var _ = require('underscore');
   var communicator = require('communicator');
   var Fuse = require('fuse');
   var _collection = new ReceiptCollection();
-  var Receipt = require('receipt');
+  var Receipt = require('models/receipt');
   var moment = require('moment');
 
   var __data = {

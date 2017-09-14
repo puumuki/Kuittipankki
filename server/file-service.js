@@ -11,9 +11,11 @@ var mime = require('mime-types');
 var util = require('util');
 var Q = require('q');
 var easyimg = require('easyimage');
-var fileMetaDataStorage = require('./storage-service').fileMetaDataStorage;
+//var fileMetaDataStorage = require('./storage-service').fileMetaDataStorage;
 var timeService = require('./time-service');
 const UPLOAD_DIRECTORY = settings.upload_directory;
+const fileDb = require('./db/file.db');
+const receiptDb = require('./db/receipt.db');
 
 /**
  * Configure here witch kind thumbnail is used to different type media types.
@@ -66,6 +68,12 @@ function createThumbnail( image ) {
   return deferred.promise;
 }
 
+/**
+ * Read file information from the file stored to upload directory
+ *
+ * @async
+ * @return {Promise} Promise is resolved with file information object
+ */
 function readFileInformation( image ) {
   return easyimg.info(path.join(UPLOAD_DIRECTORY, image));
 }
@@ -104,7 +112,7 @@ function getFileTypeThumbnail( mimetype, filename ) {
 /**
  * Store file information to file meta data storage
  * @param {object} fileInformation
- * @return {string} fileMetaDataId
+ * @return {Q.Promise} promise
  */
 function storeFileInformation( fileInformation ) {
 
@@ -113,15 +121,29 @@ function storeFileInformation( fileInformation ) {
     size: fileInformation.size,
     filename: fileInformation.fileName,
     mime: fileInformation.type,
+
     receiptId: fileInformation.receiptId,
+
     width: fileInformation.width,
     height: fileInformation.height,
     depth:  fileInformation.depth,
-    density: fileInformation.density,
-    created: timeService.currentDateTime()
+
+    densityY: fileInformation.density.y,
+    densityX: fileInformation.density.x,
   };
 
-  return fileMetaDataStorage.saveSync(fileInformation.fileName, fileInformationData);
+  var defer = Q.defer();
+
+  receiptDb.find( fileInformation.receiptId ).then(function(receipt) {
+
+    fileInformationData.userId = receipt.userId;
+
+    fileDb.save( fileInformationData ).then(defer.resolve)
+                                      .fail(defer.reject);
+
+  }).fail(defer.reject );
+
+  return defer.promise;
 }
 
 /**
@@ -134,44 +156,6 @@ function getFileInformation( fileName ) {
   return data.message !== 'could not load data' ? data : null;
 }
 
-
-/**
- * Load pictures all pictures
- * @return array of objects containing all pictures in pictures directory
- */
-function loadFiles() {
-
-  var files = fs.readdirSync(UPLOAD_DIRECTORY);
-
-  files = _.filter(files, function(file) {
-    var parts = file.split('.');
-    var fileType = _.last(parts);
-    return _.indexOf( SUPPORTED_FILE_TYPES, fileType ) >= 0;
-  });
-
-  var fileMetaInformation = fileMetaDataStorage.allSync();
-
-  var images = _.map( files, function(filename) {
-
-    var mimetype = mime.lookup(filename);
-    var informationData = fileMetaInformation[filename] || {};
-    var stats = fs.statSync(path.join(UPLOAD_DIRECTORY, filename));
-
-    return _.extend( informationData, {
-      filename: filename,
-      thumbnail: getFileTypeThumbnail(mimetype, filename),
-      mimetype: mimetype,
-      created: stats.ctime,
-      size: stats.size
-    });
-  });
-
-  images.sort(function(a, b) {
-    return timeService.compareDateTimes(a.created, b.created);
-  });
-
-  return images;
-}
 
 /**
  * Picture's filename has a receipt ID included, by that
@@ -235,7 +219,6 @@ function deletePicture(picture) {
 
 module.exports = {
   createThumbnail:createThumbnail,
-  loadFiles: loadFiles,
   filterFilesByReceiptID: filterFilesByReceiptID,
   deletePicture: deletePicture,
   filterPicturesByFilename:filterPicturesByFilename,

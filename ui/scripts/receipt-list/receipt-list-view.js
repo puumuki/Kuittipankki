@@ -1,7 +1,7 @@
 define(function(require) {
 
   var template = require('hbs!receipt-list/receipt-list');
-  var ReceiptCollection = require('receipt-collection');
+  var ReceiptCollection = require('collections/receipt-collection');
   var userService = require('services/user-service');
   var receiptService = require('services/receipt-service');
   var _ = require('underscore');
@@ -139,8 +139,11 @@ define(function(require) {
         pages: this._pages(this.page),
         showPagination: this._countOfPages() > 1,
         sort: this.sort,
-        receipts: _.map( slice, function(item) {
-          return item.toJSON();
+        receipts: _.map( slice, function(receipt) {
+          var receiptJSON = receipt.toJSON();
+          var tagJSON = receipt.get('tags').toJSON();
+          receiptJSON.tags = tagJSON;
+          return receiptJSON;
         })
       };
     }

@@ -44,7 +44,7 @@ define(function(require) {
     },
 
     _deleteFile: function(event) {
-      fileService.deletePicture(this.options.file.filename)
+      fileService.deletePicture(this.options.file.fileId)
       .then(_.bind(this._onDeletedFile, this))
       .fail(_.bind(this._onDeletingFail, this));
     },

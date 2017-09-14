@@ -11,8 +11,11 @@ var Q = require('q');
 var authentication = require('./../authentication');
 var logging = require('../logging');
 var fileService = require('../file-service');
-var storage = require('../storage-service').receiptStorage;
 var settings = require('../settings');
+
+var receiptDb  = require('../db/receipt.db');
+var fileDb = require('../db/file.db');
+
 
 const UPLOAD_DIRECTORY = settings.upload_directory;
 
@@ -26,18 +29,24 @@ const UPLOAD_DIRECTORY = settings.upload_directory;
 function validateReceiptInfo( req, receiptId ) {
   var deferred = Q.defer();
 
-  storage.get(receiptId, function(err, receipt) {
-    if(err || !receipt) {
+  receiptDb.find( receiptId ).then((receipt) => {
+
+    if(!receipt) {
       logging.info('Receipt '+receiptId+' not found');
-      deferred.reject({ status: 404, message: "Receipt "+ receiptId +" not found"});
+      deferred.reject({ status: 404, msg: "Receipt resource "+ receiptId +" not found"});
     }
     //Check that receipt is user receipt
-    else if( receipt.user_id === req.user.id ) {
+    else if( receipt.user_id === req.user.user_id ) {
       deferred.resolve(receipt);
     } else {
       logging.warn('Error on uploading picture to server, receipt is not currently logged user receipt.');
-      deferred.reject({ status: 401, message: "Not authorized, you have no access to upload image to this receipt"});
+      deferred.reject({ status: 401, msg: "Not authorized, you have no access to upload image to this receipt"});
     }
+
+
+  }).fail(function( error ) {
+    logging.error("Error occurred while validating receipt information", error );
+    deferred.reject({ status: 500, msg: "Internal error occurred"});
   });
 
   return deferred.promise;
@@ -48,11 +57,14 @@ function validateReceiptInfo( req, receiptId ) {
  * @method POST
  * @route upload
  */
+ try {
+
+
 router.post('/upload', authentication.isAuthorized, multipart(), function(req, res) {
 
   logging.info("Starting uploading file");
 
-  var receiptID = req.headers['receipt-id'];
+  var receiptID = req.headers.receiptid;
 
   if( !receiptID ) {
     return res.status(400).send(JSON.stringify( {message:"Attribute receiptID is missing"} ));
@@ -102,7 +114,7 @@ router.post('/upload', authentication.isAuthorized, multipart(), function(req, r
 
         deferred.resolve(fileInformation);
       }).fail(function( fileInformationReadError ) {
-        console.log('Error reading file information read error');
+        logging.info('Error reading file information read error');
         deferred.reject(fileInformationReadError);
       });
 
@@ -153,9 +165,16 @@ router.post('/upload', authentication.isAuthorized, multipart(), function(req, r
         logging.info('File type is not supported skipping the file');
       }
 
+      logging.info("SAVED");
+
       //After file is uploaded succesfully this is called with all
       deferred.then(function(fileInformation) {
-        fileService.storeFileInformation( _.extend(fileInformation, req.files.file ) );
+        fileService.storeFileInformation( _.extend(fileInformation, req.files.file ) ).then(function() {
+          logging.info("Saved file information from ", req.files.file, " to database succesfully.");
+        }).fail(function(error) {
+          logging.error(error);
+          logging.error("Error while saving file information from ");
+        });
       });
 
       logging.info('Saving files', req.files.file.path );
@@ -168,42 +187,53 @@ router.post('/upload', authentication.isAuthorized, multipart(), function(req, r
 
 });
 
+} catch( error ) {
+  console.log( error );
+}
+
 /* GET - Return all pictures */
+router.get('/files/:receiptId', authentication.isAuthorizedReceipt, function(res, req) {
+  res.status(501).send({msg:"Not implemented"});
+});
 
-/* DELETE - Delete picture  */
-router.delete('/picture/:picture', authentication.isAuthorized, function(req, res) {
 
-  var pictureName = req.params.picture;
+/* DELETE - delete file  */
+router.delete('/file/:fileId', authentication.isAuthorized, function(req, res) {
 
-  //TODO: validate file name correctly
-  if( !pictureName || pictureName === 'undefined'  ) {
-    return res.status(400).send({message:'Parameter picture missing'});
-  }
+  var fileId = req.params.fileId;
 
-  var pictures = fileService.loadFiles();
-  var picture = fileService.filterPicturesByFilename(pictureName, pictures);
-  var receiptId = _.first( pictureName.split('.') );
+  fileDb.find( fileId ).then(function( file ) {
 
-  storage.get(receiptId, function(err, receipt) {
-
-    if( err ) {
-      logging.error('Error on loading receipe', err );
-    }
-
-    if( receipt.user_id !== req.user.id ) {
+    if( file.user_id !== req.user.user_id ) {
       res.status(403);
-      res.send({message:'Unauthorized access'});
+      res.send({message:'Unauthorized access, file you are trying to delete is not yours.'});
     } else {
-      if( picture ) {
-        logging.log('Deleting picture', picture.filename);
-        fileService.deletePicture(picture);
-        res.send({message:'Picture deleted '+picture.filename});
+      if( file ) {
+
+        logging.log('Deleting file', file.filename);
+
+        fileDb.delete( file.fileId ).then(function(_file) {
+          fileService.deletePicture( file );
+            res.send(_file);
+        }).catch(function(error) {
+          logging.error("Error occurred while deleting File resouce from the db");
+          res.status(500).send({msg: "Internal error occurred"});
+        });
+
       } else {
         res.status(404);
         res.send({message:'Picture not found'});
       }
     }
+
+  }).catch(function( error ) {
+    if( error ) {
+      logging.error('Error occurred while fetching receipt for deleting file', error );
+    }
+
+    res.status(500).send({msg: "Internal error occurred"});
   });
+
 });
 
 module.exports = router;

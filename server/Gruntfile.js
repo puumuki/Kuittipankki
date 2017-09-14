@@ -22,6 +22,7 @@ module.exports = function (grunt) {
         all: [
             '!Gruntfile.js',
             'routes/*.js',
+            'db/*.js',
             '*.js',
             'test/*.js'
         ]

@@ -1,11 +1,22 @@
 var moment = require('moment');
 
+const DATE_TIME_FORMAT = 'YYYY-MM-DD HH:mm:ss';
+
 /**
  * Return current date as a ISO8601 formatted date string
  * @return {string} ISO8601 formatted form, like 2013-02-04T22:44:30.652Z
  */
 function currentDateTime() {
 	return moment().toISOString();
+}
+
+function postgresCurrentTime() {
+  return moment().format( DATE_TIME_FORMAT );
+}
+
+function parseDateTime( datetimestring ) {
+  var datetime = moment( datetimestring );
+  return datetime.isValid() ? datetime.format(DATE_TIME_FORMAT)  : null;
 }
 
 /**
@@ -29,5 +40,7 @@ function compareDateTimes( a, b ) {
 
 module.exports = {
   currentDateTime: currentDateTime,
-  compareDateTimes: compareDateTimes
+  compareDateTimes: compareDateTimes,
+  parseDateTime: parseDateTime,
+  postgresCurrentTime: postgresCurrentTime
 };

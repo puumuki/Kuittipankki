@@ -8,10 +8,10 @@ define(function(require){
    */
   var User = Backbone.Model.extend({
 
-    idAttribute: 'userId',
+    idAttribute: 'tagId',
 
     url: function() {
-      return this.get('id') ? '/user/' + this.get('id') : '/user';
+      return this.get('tagId') ? '/tag/' + this.get('tagId') : '/tag';
     }
   });
 

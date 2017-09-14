@@ -15,6 +15,8 @@
   var ImageDialogView = require('image-dialog-view/image-dialog-view');
   var BaseItemView = require('base-view/base-item-view');
 
+  var Tag = require('models/tag');
+
   var _ = require('underscore');
 
   require('bootstraptagsinput');
@@ -147,15 +149,16 @@
       this.model.set('warrantlyEndDate', formatDate( this.ui.warrantlyEndDate.val() ));
       this.model.set('registered', formatDate( this.ui.registered.val() ));
       this.model.set('purchaseDate', formatDate( this.ui.purchaseDate.val() ));
-      this.model.set('tags', this.ui.tags.val().split(',') );
       this.model.set('description', this.ui.description.val());
       this.model.set('price', this.ui.price.val());
+
+      this._saveTags();
 
       var promise = receiptService.saveReceipt(this.model);
 
       promise.then(function(receipt) {
         LoadingDialogView.hide();
-        App.router.navigate('#receipt/view/'+receipt.get('id'), {trigger:true});
+        App.router.navigate('#receipt/view/'+receipt.get('receiptId'), {trigger:true});
       }).fail(function(error) {
         LoadingDialogView.showErrorMessage( 'Kohtasimme ongleman kuittia tallentaessa..', JSON.stringify(error) );
         console.log(error);
@@ -165,9 +168,6 @@
 
     serializeData: function() {
       return _.extend( this.model.toJSON(), {
-        tags: _.filter( this.model.get('tags'), function(tag) {
-          return tag !== '';
-        }).join(','),
         readonly: !userService.getAuthenticatedUser()
       });
     },
@@ -178,6 +178,30 @@
       });
     },
 
+    _saveTags: function() {
+      var items = this.$('.tags').tagsinput('items');
+
+      var tagCollection = this.model.get('tags');
+
+      _.each( items, function( item ) {
+        var tag = tagCollection.get( item.id );
+
+        if( tag ) {
+          tag.set('name',item.text);
+        } else {
+
+          tag = new Tag({
+            name: item.text,
+            receiptId: this.model.get('receiptId'),
+          });
+
+          tag.save();
+
+          tagCollection.add(tag);
+        }
+      }, this);
+    },
+
     _renderDropZone: function() {
 
       this.dropzone = new window.Dropzone(this.$('.dropzone').get(0), {
@@ -186,7 +210,7 @@
         addRemoveLinks: false,
         dictDefaultMessage: 'Raahaa kuvat ja pudota kuvat tähän, latausta varten.',
         headers: {
-          'receipt-id':this.model.get('id')
+          'receiptid':this.model.get('receiptId')
         },
         init: function() {}
       });
@@ -242,6 +266,33 @@
       }
     },
 
+    _tagInputChanges: function(e) {
+      var text = $(e.currentTarget).val();
+
+      this.ui.tags.tagsinput('add', {
+        "id": text,
+        "text": text
+      });
+
+      $(e.currentTarget).val("");
+    },
+
+    _renderTagInput: function() {
+      this.ui.tags.tagsinput({
+        itemValue: 'id',
+        itemText: 'text'
+      });
+
+      this.ui.tags.tagsinput('input').change(_.bind( this._tagInputChanges, this ));
+
+      this.model.get('tags').each(function( tag ) {
+        this.ui.tags.tagsinput('add', {
+          "id": tag.get('tagId'),
+          "text": tag.get('name')
+        });
+      }, this);
+    },
+
     render: function() {
 
       ReceiptEditView.__super__.render.apply(this, arguments);
@@ -252,11 +303,8 @@
       this._setDateField('warrantlyEndDate', this.model.get('warrantlyEndDate'));
       this._setDateField('registered', this.model.get('registered'));
 
-      if(userService.getAuthenticatedUser()) {
-        this.$('.tags').tagsinput();
-      }
-
       this._renderDropZone();
+      this._renderTagInput();
 
       return this;
     }

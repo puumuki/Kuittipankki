@@ -1,11 +1,11 @@
 /**
  * Authentication module contains are things needed to authenticate users.
  */
-var _ = require('underscore');
 var LocalStrategy = require('passport-local').Strategy;
 var crypto = require('crypto');
 var logging = require('./logging');
-var storage = require('./storage-service').userStorage;
+var userDb = require('./db/user.db');
+var receiptDb = require('./db/receipt.db');
 
 /**
  * Simple password hash check.
@@ -25,15 +25,7 @@ function matchpasswords( user, password ) {
 var authenticationStrategy = new LocalStrategy(
   function(username, password, done) {
 
-    storage.all(function(err, users) {
-
-      if(err) {
-        logging.error(err);
-      }
-
-      var user = _.find( users, function(user) {
-        return user.username.toLowerCase() === username.toLowerCase();
-      });
+    userDb.fetchUserByUsername( username ).then(function(user) {
 
       if(!user) {
         logging.info('User not found ');
@@ -41,8 +33,9 @@ var authenticationStrategy = new LocalStrategy(
       }
       else if(matchpasswords(user, password)) {
         logging.info('User ', user.username, ' authenticated');
+
         return done(null, {
-          id: user.id,
+          id: user.user_id,
           username: user.username,
           lang: user.lang
         });
@@ -58,27 +51,30 @@ function serializeUser(user, done) {
   done(null, user.id);
 }
 
-function deserializeUser(id, done) {
-  storage.get(id, function(err, user) {
-    done(err, user);
+function deserializeUser(user_id, done) {
+  userDb.find( user_id ).then(function(user) {
+    done(null, {
+      userId: user.user_id,
+      username: user.username,
+      lang: user.lang
+    });
+  }).fail(function(error) {
+    done(error, null);
   });
 }
 
 function loginRouteResponse(req, res) {
 
-  storage.get(req.session.passport.user, function(err, user) {
-
-    if( err ) {
-      logging.error('User not found', err);
+  userDb.find( req.session.passport.user ).then(function(user) {
+    res.send({
+      userId: user.user_id,
+      username: user.username,
+      lang: user.lang
+    });
+  }).catch(function(error) {
+      logging.error('User not found', error);
       res.status(500);
       res.send({});
-    } else {
-      res.send({
-        id: user.id,
-        username: user.username,
-        lang: user.lang
-      });
-    }
   });
 }
 
@@ -87,10 +83,34 @@ function loginRouteResponse(req, res) {
  */
 function isAuthorized(req, res, next) {
   if( !req.user ) {
-    return res.status(403).send({message:'Unauthorized'});
+    return res.status(403).send({msg:'Unauthorized access, please login before use the resource.'});
   } else {
     next();
   }
+}
+
+/**
+ * Middleware that check is user authenticated and has an access to check receipt
+ */
+function isAuthorizedReceipt(req, res, next) {
+
+  if( !req.params.receiptId ) {
+    logging.error("Expected parameter receiptId is missing, please check that you are using function correctly");
+    return res.status(403).send({msg:'Expected parameter receiptId is missing'});
+  }
+
+  receiptDb.findReceipt( req.params.receiptId ).then(function( receipt ) {
+
+    if( req.user && req.user.userId === receipt.user_id ) {
+      next();
+    } else {
+      return res.status(403).send({msg:'Unauthorized access, please login before use the resource.'});
+    }
+
+  }).catch((error) => {
+    logging.error("Error while checking iaAuthorizedReceipt()", error);
+    res.status(500).send("Internal server error");
+  });
 }
 
 module.exports = {
@@ -98,5 +118,6 @@ module.exports = {
   deserializeUser: deserializeUser,
   authenticationStrategy: authenticationStrategy,
   loginRouteResponse:loginRouteResponse,
-  isAuthorized: isAuthorized
+  isAuthorized: isAuthorized,
+  isAuthorizedReceipt: isAuthorizedReceipt
 };

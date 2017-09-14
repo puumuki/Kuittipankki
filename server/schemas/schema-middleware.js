@@ -10,12 +10,14 @@ function schemaValidatorMiddleware( schema ) {
   var jsvEnviroment = JSV.createEnvironment();
 
   return function( req, res, next ) {
+
     var report = jsvEnviroment.validate( req.body, schema );
 
     if( report.errors.length > 0 ) {
       return res.status(400).send({
         message: "JSON-validation failed validate against schema",
-        errors: report.errors
+        errors: report.errors,
+        data: req.body
       });
     } else {
       next();

@@ -4,7 +4,7 @@ define(function(require) {
 
   /**
    * Delete picture from server
-   * @param {string} picture name
+   * @param {File} File object
    * @return {Q.promise} promise is resolved when a picture is deleted
    *                     or rejected when an error is encountered.
    */
@@ -12,7 +12,7 @@ define(function(require) {
     var deferred = Q.defer();
 
     $.ajax({
-      url: '/picture/' + picture,
+      url: '/file/' + picture,
       type: 'delete',
       data: { picture: picture },
       success: function(data) {

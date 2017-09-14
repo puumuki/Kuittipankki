@@ -88,7 +88,7 @@
               </div>
               <div class="col-md-9 col-sm-6" id="tags">
                 {{#each tags}}
-                  <a href="#search/tag/{{this}}"><span class="badge badge-info">{{this}}</span></a>
+                  <a href="#search/tag/{{tagId}}"><span class="badge badge-info">{{name}}</span></a>
                 {{/each}}
               </div>
             </div>
@@ -115,7 +115,7 @@
               <div class="col-md-12 text-right">
 
                 {{#unless readonly}}
-                <a href="#receipt/edit/{{id}}" id="edit">
+                <a href="#receipt/edit/{{receiptId}}" id="edit">
                   <button type="button" name="edit" class="btn btn-default">{{t "btn.edit"}}</button>
                 </a>
                 {{/unless}}

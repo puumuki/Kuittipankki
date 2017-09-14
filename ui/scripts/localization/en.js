@@ -47,6 +47,7 @@ define(function(require) {
     'receipt-list.sort.name'  : 'Name',
     'receipt-list.sort.date'  : 'Date',
     'receipt-list.new-receipt': 'New',
+    'receipt-list.no-receipts': 'No receipts available',
     'user.dialog.title'       : 'User Settings',
     'user.language'           : 'Translation',
     'user.language.fi'        : 'Finnish',

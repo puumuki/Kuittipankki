@@ -29,10 +29,12 @@
     "passport": "^0.3.2",
     "passport-local": "^1.0.0",
     "q": "^1.4.1",
+    "sequelize": "^4.8.0",
     "serve-favicon": "^2.3.0",
     "session-file-store": "0.0.24",
     "shortid": "^2.2.4",
     "underscore": "^1.8.3",
+    "underscore.string": "^3.3.4",
     "validator": "^4.5.0",
     "winston": "^2.1.1"
   },

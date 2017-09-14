@@ -21,7 +21,7 @@ define(function(require) {
 
   var MenuView            = require('menu-view/menu-view');
 
-  var Receipt             = require('receipt');
+  var Receipt             = require('models/receipt');
   var PageNotFoundView    = require('page-not-found-view');
 
   var ReportView          = require('report-view/report-view');
