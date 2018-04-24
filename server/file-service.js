@@ -7,26 +7,12 @@ var fs = require('fs');
 var path = require('path');
 var logging = require('./logging');
 var settings = require('./settings');
-var mime = require('mime-types');
-var util = require('util');
 var Q = require('q');
 var easyimg = require('easyimage');
-//var fileMetaDataStorage = require('./storage-service').fileMetaDataStorage;
-var timeService = require('./time-service');
 const UPLOAD_DIRECTORY = settings.upload_directory;
 const fileDb = require('./db/file.db');
 const receiptDb = require('./db/receipt.db');
-
-/**
- * Configure here witch kind thumbnail is used to different type media types.
- */
-const THUMBNAIL_BY_TYPE = {
-  '_default':'thumbnail.default.svg',
-  'image/*': 'thumbnail.%s',
-  'application/pdf': 'thumbnail.pdf.svg',
-  'application/txt': 'thumbnail.txt.svg',
-  'text/plain': 'thumbnail.txt.svg'
-};
+const fileUtils = require('./file-utils');
 
 const SUPPORTED_IMAGE_TYPES = {
   'image/gif':'gif',
@@ -79,37 +65,6 @@ function readFileInformation( image ) {
 }
 
 /**
- * Return right thumbnail based on file mimetype
- * @param {string} mimetype, application/txt or image/pdf or something that sort
- * @param {string} filename, optional can be used if it's required to attached to filename
- * @return {string} thumbnail file name or undefined if no a thumbnail was not found
- */
-function getFileTypeThumbnail( mimetype, filename ) {
-
-  //Default thumbnail
-  var thumbnail = THUMBNAIL_BY_TYPE._default;
-
-  if( !mimetype || !filename ) {
-    return thumbnail;
-  }
-
-  var parts = mimetype.split('/');
-
-  var toplevel = parts[0];
-
-  //First search specific configuration
-  if( THUMBNAIL_BY_TYPE[mimetype] ) {
-    thumbnail = THUMBNAIL_BY_TYPE[mimetype];
-
-  //Secondery option is to use top level thumbnail
-  } else if( THUMBNAIL_BY_TYPE[toplevel+'/*'] ) {
-    thumbnail = THUMBNAIL_BY_TYPE[toplevel+'/*'];
-  }
-
-  return util.format( thumbnail, filename ).split(' ')[0];
-}
-
-/**
  * Store file information to file meta data storage
  * @param {object} fileInformation
  * @return {Q.Promise} promise
@@ -120,7 +75,7 @@ function storeFileInformation( fileInformation ) {
     originalFilename: fileInformation.originalFilename,
     size: fileInformation.size,
     filename: fileInformation.fileName,
-    mime: fileInformation.type,
+    mimetype: fileInformation.type,
 
     receiptId: fileInformation.receiptId,
 
@@ -128,9 +83,13 @@ function storeFileInformation( fileInformation ) {
     height: fileInformation.height,
     depth:  fileInformation.depth,
 
-    densityY: fileInformation.density.y,
-    densityX: fileInformation.density.x,
+    thumbnail: 'thumbnail.' + fileInformation.fileName
   };
+
+  if( fileInformation.density ) {
+    fileInformationData.densityY = fileInformation.density.y;
+    fileInformationData.densityX = fileInformation.density.x;
+  }
 
   var defer = Q.defer();
 
@@ -145,17 +104,6 @@ function storeFileInformation( fileInformation ) {
 
   return defer.promise;
 }
-
-/**
- * Return file information data if the data is available.
- * @param {string} fileName
- * @return {*} file information object or null if information is not available
- */
-function getFileInformation( fileName ) {
-  var data = fileMetaDataStorage.getSync( fileName );
-  return data.message !== 'could not load data' ? data : null;
-}
-
 
 /**
  * Picture's filename has a receipt ID included, by that
@@ -196,7 +144,6 @@ function deletePicture(picture) {
   logging.info('Deleting thumbnail and picture', picture);
 
   var picturePath = path.join( UPLOAD_DIRECTORY, picture.filename);
-  var thumbnailPath = path.join( UPLOAD_DIRECTORY, picture.thumbnail);
 
   try {
     fs.accessSync(picturePath, fs.F_OK);
@@ -206,7 +153,10 @@ function deletePicture(picture) {
     logging.info('Could\'t delete picture', picturePath, error);
   }
 
-  if( picture.mimetype in SUPPORTED_IMAGE_TYPES ) {
+  if( picture.mimetype in SUPPORTED_IMAGE_TYPES && picture.thumbnail) {
+
+    var thumbnailPath = path.join( UPLOAD_DIRECTORY, picture.thumbnail);
+
     try {
       fs.accessSync(thumbnailPath, fs.F_OK);
       logging.info('Deleting thumbnail', thumbnailPath);
@@ -222,11 +172,9 @@ module.exports = {
   filterFilesByReceiptID: filterFilesByReceiptID,
   deletePicture: deletePicture,
   filterPicturesByFilename:filterPicturesByFilename,
-  getFileTypeThumbnail:getFileTypeThumbnail,
+  getFileTypeThumbnail: fileUtils.getFileTypeThumbnail,
   storeFileInformation:storeFileInformation,
-  getFileInformation:getFileInformation,
   readFileInformation:readFileInformation,
-  THUMBNAIL_BY_TYPE:THUMBNAIL_BY_TYPE,
   SUPPORTED_IMAGE_TYPES:SUPPORTED_IMAGE_TYPES,
   SUPPORTED_FILE_TYPES:SUPPORTED_FILE_TYPES,
   SUPPORTED_OTHER_FILE_TYPES:SUPPORTED_OTHER_FILE_TYPES

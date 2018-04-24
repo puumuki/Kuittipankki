@@ -121,7 +121,7 @@ define(function(require) {
    * @return {Q.promise} promise object
    */
   function saveReceipt( receipt ) {
-    var id = receipt.get('id');
+    var id = receipt.get('receiptId');
 
     if( !id ) {
       _collection.add(receipt);
@@ -150,13 +150,13 @@ define(function(require) {
   function cloneReceipt( receipt ) {
     var receiptData = receipt.toJSON();
 
-    delete receiptData.id;
+    delete receiptData.receiptId;
     receiptData.files = [];
 
     var time = moment().format('DD.MM.YYYY HH:mm');
     receiptData.name = receiptData.name + ' kopio (' + time + ')';
 
-    return saveReceipt(new Receipt( receiptData ));
+    return saveReceipt(new Receipt( receiptData, {parse:true}));
   }
 
   /**

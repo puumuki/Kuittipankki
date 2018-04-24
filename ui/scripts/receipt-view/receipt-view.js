@@ -37,8 +37,8 @@ define(function(require) {
       var mimeType = $(event.currentTarget).data('mimetype');
       var url = $(event.currentTarget).data('url');
 
-      var file = _.find( this.model.get('files'), function( file ) {
-        return file.filename === url;
+      var file = this.model.get('files').find(function(file) {
+        return file.get('filename') === url;
       });
 
       if( mimeType.startsWith('image') ) {
@@ -65,11 +65,11 @@ define(function(require) {
     },
 
     serializeData: function() {
-      return _.extend(ReceiptView.__super__.serializeData.call(this), {
+      var data = _.extend(ReceiptView.__super__.serializeData.call(this), {
         readonly: !userService.getAuthenticatedUser(),
-        fromPurchase: this._durationFromDate(this.model.get('purchaseDate')),
-        tags: this.model.get('tags').toJSON()
+        fromPurchase: this._durationFromDate(this.model.get('purchaseDate'))
       });
+      return data;
     },
 
     onClose: function() {

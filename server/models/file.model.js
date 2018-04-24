@@ -25,7 +25,25 @@ module.exports = function(sequelize, DataTypes) {
     mimetype: {
       type: DataTypes.STRING
     },
+    original_filename: {
+      type: DataTypes.STRING
+    },
     size: {
+      type: DataTypes.INTEGER
+    },
+    density_x: {
+      type: DataTypes.INTEGER
+    },
+    density_y: {
+      type: DataTypes.INTEGER
+    },
+    width: {
+      type: DataTypes.INTEGER
+    },
+    height: {
+      type: DataTypes.INTEGER
+    },
+    depth: {
       type: DataTypes.INTEGER
     },
     removed: {

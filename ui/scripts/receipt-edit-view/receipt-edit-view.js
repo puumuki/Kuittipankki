@@ -83,7 +83,7 @@
 
       promise.then(function(receipt) {
         LoadingDialogView.hide();
-        App.router.navigate('#receipt/edit/'+receipt.get('id'), {trigger:true});
+        App.router.navigate('#receipt/edit/'+receipt.get('receiptId'), {trigger:true});
       }).fail(function(error) {
         LoadingDialogView.showErrorMessage( 'Kohtasimme ongleman moniastessame kuittia..', JSON.stringify(error) );
         console.error(error);
@@ -183,6 +183,19 @@
 
       var tagCollection = this.model.get('tags');
 
+      var deletedTags = tagCollection.filter(function(tag) {
+        var tagId = tag.get('tagId');
+        return !_.find( items, function( item ) {
+          var id = parseInt(item.id);
+          return _.isNumber( id ) && id === parseInt(tagId);
+        });
+      });
+
+      _.each( deletedTags, function(tag) {
+        tag.destroy();
+        tagCollection.remove( tag );
+      });
+
       _.each( items, function( item ) {
         var tag = tagCollection.get( item.id );
 
@@ -234,11 +247,11 @@
         });
       }, this ));
 
-      _.each(this.model.get('files'), _.bind(function(picture) {
+      this.model.get('files').each(function(picture) {
 
         var mockFile = {
-          name: picture.filename,
-          size: picture.size
+          name: picture.get('filename'),
+          size: picture.get('size')
         }; // here we get the file name and size as response
 
         var url = 'files/'+mockFile.name;
@@ -249,7 +262,7 @@
         this.dropzone.createThumbnailFromUrl(mockFile, url);
 
         this.dropzone.emit('complete', mockFile);
-      }, this ));
+      }, this);
 
       if( !userService.getAuthenticatedUser() ) {
         this.dropzone.disable();

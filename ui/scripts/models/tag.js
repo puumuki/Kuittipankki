@@ -3,10 +3,10 @@ define(function(require){
   var Backbone = require('backbone');
 
   /**
-   * User model class
+   * Tag model class
    * @class {Backbone.Model}
    */
-  var User = Backbone.Model.extend({
+  var Tag = Backbone.Model.extend({
 
     idAttribute: 'tagId',
 
@@ -15,5 +15,5 @@ define(function(require){
     }
   });
 
-  return User;
+  return Tag;
 });

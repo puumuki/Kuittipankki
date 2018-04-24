@@ -22,11 +22,10 @@ define(function(require) {
     },
 
     serializeData: function() {
-      console.log( this.options.file );
       return _.extend(this.options.receipt.toJSON(), {
-        img: '/files/' + this.options.file.filename,
+        img: '/files/' + this.options.file.get('filename'),
         error: this._error,
-        file: this.options.file
+        file: this.options.file.toJSON()
       });
     },
 

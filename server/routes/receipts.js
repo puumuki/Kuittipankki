@@ -140,7 +140,7 @@ router.get('/receipts', authentication.isAuthorized, function(req, res) {
   receiptDb.fetchReceipts( req.user.userId ).then(function(receiptJSON) {
     res.send( receiptJSON );
   }).fail(function( error ) {
-    logging.send( error );
+    logging.error( error );
     res.status(500).send("Internal Error");
   });
 });

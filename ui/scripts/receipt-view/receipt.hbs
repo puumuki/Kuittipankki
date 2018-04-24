@@ -100,7 +100,7 @@
             <div class="row top-margin" id="images">
               {{#each files}}
                 <div class="col-md-3 col-sm-3 image">
-                  <a class="thumbnail" href="{{fileurl this}}"
+                  <a class="thumbnail" href="#files/{{receiptId}}/{{fileId}}"
                      data-url="{{filename}}" data-mimetype="{{mimetype}}">
                     <img src="files/{{thumbnail}}" class="img-rounded" alt="{{thumbnail}}"
                      title="{{originalFilename}}" data-toggle="tooltip" data-toggle="tooltip">

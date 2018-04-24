@@ -54,6 +54,8 @@ function save( file ) {
   _json.created_on = timeService.postgresCurrentTime();
   _json.updated_on = timeService.postgresCurrentTime();
 
+  console.log( "JSON",_json );
+
   models.File.create( _json ).then(function( _file ) {
     logging.info("File saved to database");
     defer.resolve( _file.toJSON() );
@@ -76,8 +78,9 @@ function deleteFile( fileId ) {
       defer.resolve( null );
     } else {
       _file.removed = true;
-      _file.save().then(defer.resolve)
-                 .catch( defer.reject );
+      _file.save().then(function() {
+        defer.resolve( _file.toJSON() );
+      }).catch( defer.reject );
     }
   }).catch(defer.reject);
 

@@ -169,6 +169,7 @@ router.post('/upload', authentication.isAuthorized, multipart(), function(req, r
 
       //After file is uploaded succesfully this is called with all
       deferred.then(function(fileInformation) {
+
         fileService.storeFileInformation( _.extend(fileInformation, req.files.file ) ).then(function() {
           logging.info("Saved file information from ", req.files.file, " to database succesfully.");
         }).fail(function(error) {
@@ -191,12 +192,6 @@ router.post('/upload', authentication.isAuthorized, multipart(), function(req, r
   console.log( error );
 }
 
-/* GET - Return all pictures */
-router.get('/files/:receiptId', authentication.isAuthorizedReceipt, function(res, req) {
-  res.status(501).send({msg:"Not implemented"});
-});
-
-
 /* DELETE - delete file  */
 router.delete('/file/:fileId', authentication.isAuthorized, function(req, res) {
 
@@ -213,10 +208,10 @@ router.delete('/file/:fileId', authentication.isAuthorized, function(req, res) {
         logging.log('Deleting file', file.filename);
 
         fileDb.delete( file.fileId ).then(function(_file) {
-          fileService.deletePicture( file );
-            res.send(_file);
+          fileService.deletePicture( _file );
+          res.send(_file);
         }).catch(function(error) {
-          logging.error("Error occurred while deleting File resouce from the db");
+          logging.error("Error occurred while deleting File resouce from the db", error);
           res.status(500).send({msg: "Internal error occurred"});
         });
 
@@ -225,7 +220,6 @@ router.delete('/file/:fileId', authentication.isAuthorized, function(req, res) {
         res.send({message:'Picture not found'});
       }
     }
-
   }).catch(function( error ) {
     if( error ) {
       logging.error('Error occurred while fetching receipt for deleting file', error );

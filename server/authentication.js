@@ -43,6 +43,8 @@ var authenticationStrategy = new LocalStrategy(
         logging.info('User ', user.username, ' authentication failed');
         return done(null, false, {message:'User not found'});
       }
+    }).fail(function(error) {
+      logging.info(error);
     });
   }
 );
@@ -53,11 +55,17 @@ function serializeUser(user, done) {
 
 function deserializeUser(user_id, done) {
   userDb.find( user_id ).then(function(user) {
-    done(null, {
-      userId: user.user_id,
-      username: user.username,
-      lang: user.lang
-    });
+
+    if( user ) {
+      done(null, {
+        userId: user.user_id,
+        username: user.username,
+        lang: user.lang
+      });
+    } else {
+      done("User not found", null);
+    }
+
   }).fail(function(error) {
     done(error, null);
   });
@@ -99,7 +107,7 @@ function isAuthorizedReceipt(req, res, next) {
     return res.status(403).send({msg:'Expected parameter receiptId is missing'});
   }
 
-  receiptDb.findReceipt( req.params.receiptId ).then(function( receipt ) {
+  receiptDb.find( req.params.receiptId ).then(function( receipt ) {
 
     if( req.user && req.user.userId === receipt.user_id ) {
       next();

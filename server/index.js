@@ -36,8 +36,6 @@ models.sequelize.authenticate().then(() => {
     console.log( error );
   }
 
-
-
     /**
      * Shutdown server grafully as possible
      * @param {string} msg message printed when event is handled
@@ -61,6 +59,11 @@ models.sequelize.authenticate().then(() => {
 
     process.on('SIGTERM', shutdownServer('-- Server shutting down -- SIGTERM -- Process killed') );
     process.on('SIGINT', shutdownServer('-- Server shutting down -- SIGINT -- CTRL+C') );
+
+    process.on('unhandledRejection', (err) => {
+      console.error(err);
+      process.exit(1);
+    });
 
     var errorHandler = {
       EADDRINUSE: function( error ) {

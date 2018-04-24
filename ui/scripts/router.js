@@ -85,11 +85,11 @@ define(function(require) {
     routes: {
       ''                     : 'receiptList',
       'receipts/:page'       : 'receiptList',
-      'receipt/view/:id'     : 'receipt',    // #help
+      'receipt/view/:id'     : 'receipt',
       'receipt/edit/:id'     : 'editReceipt',
       'receipt/edit'         : 'editReceipt',
       'receipt/new'          : 'newReceipt',
-      'files/:fileName'      : 'file',
+      'files/:receiptId/:fileId' : 'file',
       'search/tag/:searchKey': 'searchTags',
       'reports'              :'reports',
       'login'                : 'login',
@@ -176,17 +176,18 @@ define(function(require) {
       });
     },
 
-    file: function(fileName) {
+    file: function(receiptId, fileId) {
 
       showView( contentRegion, new EmptyView() );
       LoadingDialogView.show();
 
       var promise = receiptService.fetchReceipt({
-        id: _.first( fileName.split('.') )
+        id: receiptId
       });
 
       promise.then(function(receipt) {
-        var _file = receipt.findFile( fileName );
+
+        var _file = receipt.get('files').get( fileId );
 
         showView( contentRegion, new PictureView({
           receipt: receipt,

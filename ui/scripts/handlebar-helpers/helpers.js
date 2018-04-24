@@ -60,7 +60,6 @@ define(function(require) {
   }
 
   function fileUrlHelper( fileObject ) {
-
     if( fileObject.mimetype && fileObject.mimetype.includes('image') ) {
       return new hbs.SafeString('#files/'+ fileObject.filename);
     } else {

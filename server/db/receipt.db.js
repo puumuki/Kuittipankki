@@ -6,7 +6,9 @@ var util   = require('util');
 var models = require('../models');
 var _ = require('underscore');
 var objectService = require('../object-service');
+
 var timeService = require('../time-service');
+var fileUtils = require('../file-utils');
 
 function findReceiptTags( receiptId ) {
   return models.sequelize.query( "SELECT * FROM tag WHERE receipt_id = :receipt_id AND removed = false;" , {
@@ -46,7 +48,10 @@ function update( receipt ) {
         var json = receiptModel.toJSON();
 
         json.tags = _.map( tags, objectService.camelizeObject );
-        json.files = _.map( files, objectService.camelizeObject );
+        json.files = _.map( files, function( file ) {
+          file.thumbnail = fileUtils.getFileTypeThumbnail( file.mimetype, file.filename );
+          return objectService.camelizeObject( file );
+        });
 
         defer.resolve( json );
       }).catch(function(error) {
@@ -92,7 +97,10 @@ function save( receipt ) {
       var json = receiptModel.toJSON();
 
       json.tags = _.map( tags, objectService.camelizeObject );
-      json.files = _.map( files, objectService.camelizeObject );
+      json.files = _.map( files, function( file ) {
+        file.thumbnail = fileUtils.getFileTypeThumbnail( file.mimetype, file.filename );
+        return objectService.camelizeObject( file );
+      });
 
       defer.resolve( json );
     }).catch(function(error) {
@@ -130,7 +138,11 @@ function find( receiptId ) {
         var receiptJSON = receipt.toJSON();
 
         receiptJSON.tags = _.map( tags, objectService.camelizeObject );
-        receiptJSON.files = _.map( files, objectService.camelizeObject );
+
+        receiptJSON.files = _.map( files, function( file ) {
+          file.thumbnail = fileUtils.getFileTypeThumbnail( file.mimetype, file.filename );
+          return objectService.camelizeObject( file );
+        });
 
         deferred.resolve( receiptJSON );
 
@@ -170,13 +182,20 @@ function fetchReceipts( userId ) {
       return receipt.receipt_id;
     });
 
-    var tagQuery = "SELECT * FROM tag WHERE receipt_id in ( %s ) AND removed=false;";
-    tagQuery = util.format( tagQuery, receiptIds );
-    var tagPromise = models.sequelize.query( tagQuery );
+    //If user has no any receipts, we resolve promises with empty arrays.
+    //Simplifies lot of writing those native SQL queries
+    var  tagPromise = Promise.resolve([[]]);
+    var  filePromise = Promise.resolve([[]]);
 
-    var fileQuery = "SELECT * FROM file WHERE receipt_id in ( %s ) AND removed=false;";
-    fileQuery = util.format( fileQuery, receiptIds );
-    var filePromise = models.sequelize.query( fileQuery );
+    if( receiptIds.length > 0 ) {
+      var tagQuery = "SELECT * FROM tag WHERE receipt_id in ( %s ) AND removed=false;";
+      tagQuery = util.format( tagQuery, receiptIds );
+      tagPromise = models.sequelize.query( tagQuery );
+
+      var fileQuery = "SELECT * FROM file WHERE receipt_id in ( %s ) AND removed=false;";
+      fileQuery = util.format( fileQuery, receiptIds );
+      filePromise = models.sequelize.query( fileQuery );
+    }
 
     models.sequelize.Promise.all([ tagPromise, filePromise ])
       .spread(function( tagsResult, fileResult ) {
@@ -201,6 +220,7 @@ function fetchReceipts( userId ) {
         });
 
         json.files = _files.map(function(file) {
+          file.thumbnail = fileUtils.getFileTypeThumbnail( file.mimetype, file.filename );
           return objectService.camelizeObject( file );
         });
 
@@ -224,7 +244,7 @@ function deleteReceipt( receiptId ) {
   var defer = Q.defer();
 
   models.Receipt.findById( receiptId ).then(function(_repeipt) {
-
+    //TODO: include files and tags
     if( _repeipt ) {
       _repeipt.removed = true;
       _repeipt.save()

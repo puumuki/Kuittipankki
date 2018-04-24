@@ -28,14 +28,14 @@ define(function(require) {
     _onDeletePictureClick: function(event) {
       event.preventDefault();
       new ConfirmationDialogView({
-        title: 'Kuvan poisto',
-        text: 'Haluato varmasti poistaa kuvan?',
+        title: 'Kuvan poisto',//TODO: translate
+        text: 'Haluato varmasti poistaa kuvan?',//TODO: translate
         onOk: _.bind( this._deletePicture, this )
       });
     },
 
     _deletePicture: function(event) {
-      fileService.deletePicture(this.options.file.fileId)
+      fileService.deletePicture(this.options.file.get('fileId'))
       .then(_.bind(this._onDeletedPicture, this))
       .fail(_.bind(this._onDeletingFail, this));
     },
@@ -43,6 +43,7 @@ define(function(require) {
     _onDeletedPicture: function(response) {
       //Remove picture from Receipt object
       this.options.receipt.removePicture( this.options.file );
+      this.options.receipt.trigger('change');
       this._closeDialog();
     },
 
@@ -64,7 +65,7 @@ define(function(require) {
     },
 
     serializeData: function() {
-      return _.extend( this.options.file, {
+      return _.extend( this.options.file.toJSON(), {
         title: this.options.title
       });
     },

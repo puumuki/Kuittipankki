@@ -30,7 +30,7 @@ define(function(require) {
     },
 
     _onOpenFileClick: function() {
-        window.open( 'files/' + this.options.file.filename );
+        window.open( 'files/' + this.options.file.get('filename') );
         this._closeDialog();
     },
 
@@ -44,7 +44,7 @@ define(function(require) {
     },
 
     _deleteFile: function(event) {
-      fileService.deletePicture(this.options.file.fileId)
+      fileService.deletePicture(this.options.file.get('fileId') )
       .then(_.bind(this._onDeletedFile, this))
       .fail(_.bind(this._onDeletingFail, this));
     },
@@ -52,6 +52,7 @@ define(function(require) {
     _onDeletedFile: function(response) {
       //Remove picture from Receipt object
       this.options.receipt.removePicture( this.options.file );
+      this.options.receipt.trigger('change');
       this._closeDialog();
     },
 
@@ -73,8 +74,8 @@ define(function(require) {
     },
 
     serializeData: function() {
-      return _.extend(this.options.file,{
-        title: this.options.title + ' ' + this.options.file.filename
+      return _.extend(this.options.file.toJSON(),{
+        title: this.options.title + ' ' + this.options.file.get('filename')
       });
     },
 
