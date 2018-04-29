@@ -79,10 +79,10 @@ define(function(require) {
 
     /**
      * When a new image is uploaded to the Kuittipankki server
-     * an thumbnail image is created. This can take some time, if user
-     * goes to ReceiptView while thubnail is created it causes 404 error.
-     * 
-     * In this case and loading.gif is shown when the error occurs.
+     * an thumbnail image is created from the uploaded image. 
+     * This can take some time depending on how big the image is.
+     * If user goes to ReceiptView while thubnail is created it causes 404 error and thubnail
+     * image is not loaded. In this case and loading.gif is shown when the error occurs.
      * 
      * Correct picture is going to be tried to load again after short period of time.
      */
@@ -96,7 +96,7 @@ define(function(require) {
       //Time to time making thumbnail images take a moment and
       //this causes image load error.
       setTimeout(function() {
-        console.log("trying to load again");
+        console.info("Trying to load image again", orginalImage);
         $target.attr({src: orginalImage});
       }, 5000);
     },
