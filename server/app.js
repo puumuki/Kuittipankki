@@ -64,8 +64,8 @@ app.use(passport.session());
 app.use(expressValidator() );
 app.use(cookieParser());
 app.use(express.static( settings.ui_path ));
-
 app.use('/fonts', express.static( path.join(__dirname, 'fonts') ));
+app.use('/images', express.static( path.join(__dirname, 'public', 'images') ));
 app.use('/files', express.static( settings.upload_directory ));
 app.use('/', indexRouter);
 app.use('/', fileRouter);

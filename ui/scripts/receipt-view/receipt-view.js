@@ -77,9 +77,34 @@ define(function(require) {
       ReceiptView.__super__.onClose.call(this);
     },
 
+    /**
+     * When a new image is uploaded to the Kuittipankki server
+     * an thumbnail image is created. This can take some time, if user
+     * goes to ReceiptView while thubnail is created it causes 404 error.
+     * 
+     * In this case and loading.gif is shown when the error occurs.
+     * 
+     * Correct picture is going to be tried to load again after short period of time.
+     */
+    _onImageLoadError: function( event ) {
+      var $target = $( event.target );
+      var orginalImage = $target.attr('src');
+      
+      //Replace the orginal image with loading.gif 
+      $target.attr({src:'images/loading.gif'});
+
+      //Time to time making thumbnail images take a moment and
+      //this causes image load error.
+      setTimeout(function() {
+        console.log("trying to load again");
+        $target.attr({src: orginalImage});
+      }, 5000);
+    },
+
     render: function() {
       ReceiptView.__super__.render.apply(this, arguments);
       this.$('[data-toggle="tooltip"]').tooltip();
+      this.$('#images').find('img').error(this._onImageLoadError);
       window.scrollTo( 0, 0 );
       return this;
     }
